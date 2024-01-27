@@ -184,4 +184,5 @@ class ConversationFragment : ChatBaseFragment(), ConversationUserCall, OnRefresh
         helper.onDestroy()
         super.onDestroyView()
     }
+
 }
