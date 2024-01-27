@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/chat_conversation_bottom_panel"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/chat_dp7"
+        android:paddingBottom="@dimen/chat_dp7"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/voice"
+            android:layout_width="@dimen/chat_dp40"
+            android:layout_height="@dimen/chat_dp40"
+            android:layout_marginLeft="@dimen/chat_dp5"
+            android:paddingLeft="@dimen/chat_dp2"
+            android:paddingRight="@dimen/chat_dp2"
+            android:src="@drawable/kit_input_voice" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_dp5"
+            android:layout_marginRight="@dimen/chat_dp8"
+            android:layout_weight="1"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/voice_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chat_dp40"
+                android:background="@drawable/kit_voice_btn1"
+                android:gravity="center"
+                android:text="@string/kit_voice_t1"
+                android:textColor="@color/kit_input_text"
+                android:textSize="@dimen/chat_dp15"
+                android:visibility="gone" />
+
+            <io.im.kit.widget.text.ChatEditText
+                android:id="@+id/edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/kit_input_edit"
+                android:lineSpacingMultiplier="1.1"
+                android:maxLines="5"
+                android:minHeight="@dimen/chat_dp40"
+                android:paddingHorizontal="@dimen/chat_dp7"
+                android:textColor="@color/kit_input_text"
+                android:textSize="@dimen/chat_dp15"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/emoji"
+            android:layout_width="@dimen/chat_dp40"
+            android:layout_height="@dimen/chat_dp40"
+            android:paddingLeft="@dimen/chat_dp2"
+            android:paddingRight="@dimen/chat_dp2"
+            android:src="@drawable/kit_input_emoji" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/add"
+            android:layout_width="@dimen/chat_dp40"
+            android:layout_height="@dimen/chat_dp40"
+            android:layout_marginRight="@dimen/chat_dp8"
+            android:paddingLeft="@dimen/chat_dp2"
+            android:paddingRight="@dimen/chat_dp2"
+            android:src="@drawable/kit_input_add"
+            android:visibility="visible" />
+
+        <FrameLayout
+            android:id="@+id/send_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_dp5"
+            android:paddingRight="@dimen/chat_dp12"
+            android:paddingBottom="@dimen/chat_dp2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/chat_dp36"
+                android:layout_gravity="bottom"
+                android:background="@drawable/kit_chat_send"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/chat_dp12"
+                android:paddingRight="@dimen/chat_dp12"
+                android:text="@string/kit_send"
+                android:textColor="@color/chat_white"
+                android:textSize="@dimen/chat_dp15" />
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>

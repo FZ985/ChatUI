@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/base_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#aed"
+    android:paddingVertical="@dimen/chat_dp10">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/base_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/chat_theme"
+        android:gravity="center_horizontal"
+        android:text="14:53"
+        android:textColor="@color/chat_color_999999"
+        android:textDirection="locale"
+        android:textSize="@dimen/chat_sp13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="14:53" />
+
+    <ImageView
+        android:id="@+id/base_edit_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/chat_dp10"
+        android:src="@drawable/kit_check_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/base_content_root" />
+
+    <ImageView
+        android:id="@+id/base_left_avatar"
+        android:layout_width="@dimen/chat_dp38"
+        android:layout_height="@dimen/chat_dp38"
+        android:layout_marginStart="@dimen/chat_dp12"
+        android:src="@drawable/kit_default_avatar"
+        app:layout_constraintStart_toEndOf="@id/base_edit_iv"
+        app:layout_constraintTop_toTopOf="@id/base_content_root" />
+
+    <ImageView
+        android:id="@+id/base_right_avatar"
+        android:layout_width="@dimen/chat_dp38"
+        android:layout_height="@dimen/chat_dp38"
+        android:layout_marginRight="@dimen/chat_dp12"
+        android:src="@drawable/kit_default_avatar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/base_content_root" />
+
+    <LinearLayout
+        android:id="@+id/base_content_root"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/chat_dp10"
+        android:layout_marginTop="@dimen/chat_dp10"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/base_right_avatar"
+        app:layout_constraintStart_toEndOf="@id/base_left_avatar"
+        app:layout_constraintTop_toBottomOf="@id/base_time">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/base_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/chat_dp5"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/chat_skin_Text"
+            android:textDirection="locale"
+            android:textSize="@dimen/chat_sp14"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/base_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/base_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/chat_dp10"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorSize="@dimen/chat_dp14"
+                app:trackCornerRadius="@dimen/chat_dp3"
+                app:trackThickness="@dimen/chat_dp2" />
+
+            <ImageView
+                android:id="@+id/base_warning"
+                android:layout_width="@dimen/chat_dp33"
+                android:layout_height="@dimen/chat_dp33"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/chat_dp3"
+                android:padding="@dimen/chat_dp5"
+                android:src="@drawable/kit_ic_message_error"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/base_read_receipt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="@dimen/chat_dp4"
+                android:src="@drawable/kit_ic_message_read_receipt"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/base_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/base_edit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

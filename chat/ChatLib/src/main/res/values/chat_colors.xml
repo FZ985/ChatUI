@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_theme">#FF6750A4</color>
+    <color name="chat_theme10">#ff21005d</color>
+    <color name="chat_theme20">#ff381e72</color>
+    <color name="chat_theme30">#ff4f378b</color>
+    <color name="chat_theme40">#ff6750a4</color>
+    <color name="chat_theme50">#ff7f67be</color>
+    <color name="chat_theme60">#ff9a82db</color>
+    <color name="chat_theme70">#ffb69df8</color>
+    <color name="chat_theme80">#ffd0bcff</color>
+    <color name="chat_theme90">#ffeaddff</color>
+    <color name="chat_theme95">#fff6edff</color>
+    <color name="chat_theme99">#fffffbfe</color>
+
+    <color name="chat_transparent">#00000000</color>
+
+    <color name="chat_white">#FFFFFF</color>
+    <color name="chat_black">#000000</color>
+
+    <color name="chat_white_10">#1Affffff</color>
+    <color name="chat_white_20">#33ffffff</color>
+    <color name="chat_white_30">#4Dffffff</color>
+    <color name="chat_white_40">#66ffffff</color>
+    <color name="chat_white_50">#7Fffffff</color>
+    <color name="chat_white_60">#99ffffff</color>
+    <color name="chat_white_70">#B3ffffff</color>
+    <color name="chat_white_80">#CCffffff</color>
+    <color name="chat_white_90">#E6ffffff</color>
+
+    <color name="chat_black_10">#1A000000</color>
+    <color name="chat_black_20">#33000000</color>
+    <color name="chat_black_30">#4D000000</color>
+    <color name="chat_black_40">#66000000</color>
+    <color name="chat_black_50">#7F000000</color>
+    <color name="chat_black_60">#99000000</color>
+    <color name="chat_black_70">#B3000000</color>
+    <color name="chat_black_80">#CC000000</color>
+    <color name="chat_black_90">#E6000000</color>
+
+    <color name="chat_Grey_50">#FAFAFA</color>
+    <color name="chat_Grey_100">#F5F5F5</color>
+    <color name="chat_Grey_200">#EEEEEE</color>
+    <color name="chat_Grey_300">#E0E0E0</color>
+    <color name="chat_Grey_350">#d9d9d9</color>
+    <color name="chat_Grey_400">#BDBDBD</color>
+    <color name="chat_Grey_500">#9E9E9E</color>
+    <color name="chat_Grey_600">#757575</color>
+    <color name="chat_Grey_700">#616161</color>
+    <color name="chat_Grey_800">#424242</color>
+
+    <color name="chat_color_111111">#ff111111</color>
+    <color name="chat_color_222222">#ff222222</color>
+    <color name="chat_color_333333">#ff333333</color>
+    <color name="chat_color_444444">#ff444444</color>
+    <color name="chat_color_555555">#ff555555</color>
+    <color name="chat_color_666666">#ff666666</color>
+    <color name="chat_color_777777">#ff777777</color>
+    <color name="chat_color_888888">#ff888888</color>
+    <color name="chat_color_999999">#ff999999</color>
+
+    <color name="chat_color_F2F2F2">#ffF2F2F2</color>
+    <color name="chat_color_F6F6F6">#ffF6F6F6</color>
+    <color name="chat_color_F7F7F7">#ffF7F7F7</color>
+    <color name="chat_color_424242">#ff424242</color>
+    <color name="chat_color_757575">#ff757575</color>
+    <color name="chat_color_858585">#ff858585</color>
+    <color name="chat_color_1A1A1A">#ff1A1A1A</color>
+
+    <!--    <color name="chat_color_212121">#ff212121</color>-->
+    <!--    <color name="chat_color_303030">#ff303030</color>-->
+    <!--    <color name="chat_color_c9c9c9">#ffc9c9c9</color>-->
+    <!--    <color name="chat_color_e0e0e0">#ffe0e0e0</color>-->
+    <!--    <color name="chat_color_eeeeee">#ffeeeeee</color>-->
+    <!--    <color name="chat_color_f5f5f5">#fff5f5f5</color>-->
+    <!--    <color name="chat_color_fafafa">#fffafafa</color>-->
+    <!--    <color name="chat_color_cccccc">#ffcccccc</color>-->
+    <!--    <color name="chat_color_e4e4e4">#ffe4e4e4</color>-->
+    <!--    <color name="chat_color_808080">#ff808080</color>-->
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_skin_window">@color/chat_black</color>
+    <color name="chat_skin_black_white">@color/chat_white</color>
+    <color name="chat_skin_white_black">@color/chat_black</color>
+
+    <!--    1级背景 亮色: 浅灰;  深色: 深黑 -->
+    <color name="chat_skin_bg_leve1">@color/chat_black</color>
+    <!--    1级背景 亮色: 白色;  深色: 深黑 -->
+    <color name="chat_skin_bg_leve1_1">@color/chat_black</color>
+
+    <!--    2级背景     亮色: 白色;  深色: 222222 -->
+    <color name="chat_skin_bg_leve2">@color/chat_color_222222</color>
+    <!--    2级背景之上 亮色: 白色;  深色: 333333 -->
+    <color name="chat_skin_bg_leve2_1">@color/chat_color_333333</color>
+
+    <!--   文字颜色 -->
+    <color name="chat_skin_Text">@color/chat_color_858585</color>
+
+    <!--    线的颜色 -->
+    <color name="chat_skin_line">@color/chat_color_333333</color>
+
+    <color name="chat_skin_status_bar">@color/chat_color_222222</color>
+    <color name="chat_skin_navigation_bar">@color/chat_black</color>
+</resources>

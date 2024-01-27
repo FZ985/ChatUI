@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Kit_Conversation_Theme_Base" parent="Chat_Theme.Base">
+        <item name="android:navigationBarColor">@color/chat_conversation_bottom_panel</item>
+    </style>
+
+    <style name="Kit_Conversation_Theme" parent="Kit_Conversation_Theme_Base"/>
+
+</resources>

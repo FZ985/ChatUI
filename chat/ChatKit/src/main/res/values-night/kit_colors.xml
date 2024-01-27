@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_conversation_toolbar">@color/chat_color_222222</color>
+    <color name="chat_conversation_toolbar_title">@color/chat_color_858585</color>
+    <color name="chat_conversation_bottom_panel">@color/chat_color_222222</color>
+
+    <color name="kit_input_icon">@color/chat_color_858585</color>
+    <color name="kit_input_text">@color/chat_color_999999</color>
+
+
+    <color name="kit_voice_pressed">@color/chat_color_444444</color>
+</resources>

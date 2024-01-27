@@ -1,0 +1,9 @@
+ext {
+    appNamespace = "io.im.app"
+    appApplicationId = "io.im.app"
+    appCompileSdk = 34
+    appMinSdk = 23
+    appTargetSdk = 34
+    appVersionCode = 1
+    appVersionName = "1.0.0"
+}

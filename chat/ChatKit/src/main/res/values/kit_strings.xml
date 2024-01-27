@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kit_voice_t1">按住 说话</string>
+    <string name="kit_voice_t2">松开 结束</string>
+
+    <string name="kit_send">发送</string>
+
+    <string name="kit_default_message">暂不支持此 UI</string>
+    <string name="kit_message_unknown">当前版本暂不支持查看此消息</string>
+
+    <!--  日期相关 -->
+    <string name="kit_date_yesterday">昨天</string>
+    <string name="kit_date_year">年</string>
+    <string name="kit_date_month">月</string>
+    <string name="kit_date_day">日</string>
+    <string name="kit_date_sunday">星期日</string>
+    <string name="kit_date_monday">星期一</string>
+    <string name="kit_date_tuesday">星期二</string>
+    <string name="kit_date_wednesday">星期三</string>
+    <string name="kit_date_thursday">星期四</string>
+    <string name="kit_date_friday">星期五</string>
+    <string name="kit_date_saturday">星期六</string>
+    <string name="kit_date_morning">凌晨</string>
+    <string name="kit_date_am">上午</string>
+    <string name="kit_date_noon">中午</string>
+    <string name="kit_date_pm">下午</string>
+    <string name="kit_date_night">晚上</string>
+</resources>

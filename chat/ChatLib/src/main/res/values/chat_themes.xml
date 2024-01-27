@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Chat_Theme.Base" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/chat_theme</item>
+        <item name="colorPrimaryVariant">@color/chat_theme</item>
+        <item name="colorOnPrimary">@color/chat_white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/chat_theme</item>
+        <item name="colorSecondaryVariant">@color/chat_theme</item>
+        <item name="colorOnSecondary">@color/chat_black</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/chat_skin_window</item>
+        <item name="android:statusBarColor">@color/chat_skin_status_bar</item>
+        <item name="android:navigationBarColor">@color/chat_skin_navigation_bar</item>
+    </style>
+
+</resources>
