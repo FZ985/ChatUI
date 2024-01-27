@@ -28,7 +28,7 @@ import io.im.lib.utils.JLog;
 /**
  * author : JFZ
  * date : 2024/1/27 13:42
- * description :
+ * description :消息总类
  */
 public abstract class BaseMessageItemProvider<T extends MessageContent> implements ConversationMessageProvider<T> {
 
