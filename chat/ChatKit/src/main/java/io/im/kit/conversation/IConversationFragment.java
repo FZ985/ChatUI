@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 import io.im.kit.R;
+import io.im.kit.callback.ConversationUserCall;
+import io.im.kit.conversation.extension.ConversationHelper;
 import io.im.kit.databinding.KitFragmentConversationBinding;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.FixedLinearLayoutManager;
@@ -42,7 +44,7 @@ import io.im.lib.utils.JLog;
  * date : 2024/1/30 13:02
  * description :
  */
-public class IConversationFragment extends ChatBaseFragment implements SwipeRefreshLayout.OnRefreshListener,
+public class IConversationFragment extends ChatBaseFragment implements ConversationUserCall, SwipeRefreshLayout.OnRefreshListener,
         IViewProviderListener<UiMessage> {
 
     private final String TAG = "IConversationFragment";
@@ -55,6 +57,8 @@ public class IConversationFragment extends ChatBaseFragment implements SwipeRefr
     private UserInfo userInfo;
 
     private PanelSwitchHelper mHelper;
+
+    private final ConversationHelper helper = new ConversationHelper();
 
     @Nullable
     @Override
@@ -94,6 +98,8 @@ public class IConversationFragment extends ChatBaseFragment implements SwipeRefr
                 return gd.onTouchEvent(e);
             }
         });
+
+
         test();
     }
 
@@ -252,5 +258,21 @@ public class IConversationFragment extends ChatBaseFragment implements SwipeRefr
 
     private void closeExpand() {
         mHelper.hookSystemBackByPanelSwitcher();
+    }
+
+    @Override
+    public void updateUser(UserInfo user) {
+        this.userInfo = user;
+        helper.updateConversationUserCall(this);
+    }
+
+    @Override
+    public UserInfo getUser() {
+        return userInfo;
+    }
+
+
+    public ConversationType getConversationType() {
+        return conversationType;
     }
 }

@@ -21,6 +21,8 @@ public class ChatEditText extends AppCompatEditText {
 
     private List<TextWatcher> mTextWatcherList;
 
+    private final List<OnFocusChangeListener> focusList = new ArrayList<>();
+
     public ChatEditText(@NonNull Context context) {
         super(context);
         addTextWatcher();
@@ -97,4 +99,23 @@ public class ChatEditText extends AppCompatEditText {
         super.removeTextChangedListener(mTextWatcher);
         super.addTextChangedListener(mTextWatcher);
     }
+
+    @Override
+    public void setOnFocusChangeListener(OnFocusChangeListener l) {
+        if (!focusList.contains(l)) {
+            focusList.add(l);
+        }
+        super.setOnFocusChangeListener(_innerListener);
+    }
+
+    private final OnFocusChangeListener _innerListener = (view, b) -> {
+        try {
+            for (OnFocusChangeListener l : focusList) {
+                if (l != null) {
+                    l.onFocusChange(view, b);
+                }
+            }
+        } catch (Exception e) {
+        }
+    };
 }
