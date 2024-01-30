@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners
+        android:bottomLeftRadius="@dimen/chat_dp15"
+        android:bottomRightRadius="@dimen/chat_dp15"
+        android:topLeftRadius="@dimen/chat_dp0"
+        android:topRightRadius="@dimen/chat_dp15" />
+
+    <stroke
+        android:width="@dimen/chat_dp0_9"
+        android:color="@color/kit_bubble_left_stroke_color" />
+
+    <solid android:color="@color/kit_bubble_left_color" />
+</shape>

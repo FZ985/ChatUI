@@ -5,16 +5,13 @@
     android:id="@+id/base_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#aed"
     android:paddingVertical="@dimen/chat_dp10">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/base_time"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/chat_theme"
         android:gravity="center_horizontal"
-        android:text="14:53"
         android:textColor="@color/chat_color_999999"
         android:textDirection="locale"
         android:textSize="@dimen/chat_sp13"
@@ -28,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/chat_dp10"
+        android:visibility="gone"
         android:src="@drawable/kit_check_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/base_content_root" />
@@ -54,7 +52,7 @@
         android:id="@+id/base_content_root"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/chat_dp10"
+        android:layout_marginHorizontal="@dimen/chat_dp7"
         android:layout_marginTop="@dimen/chat_dp10"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/base_right_avatar"

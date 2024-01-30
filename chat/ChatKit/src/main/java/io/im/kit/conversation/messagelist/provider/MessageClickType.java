@@ -14,6 +14,8 @@ public class MessageClickType {
 
     public static final int USER_PORTRAIT_LONG_CLICK = -5;
 
+    public static final int EDIT_CLICK = -6;
+
 
 //
 //
@@ -26,8 +28,6 @@ public class MessageClickType {
 //
 //    public static final int REEDIT_CLICK = -8;
 //
-//
-//    public static final int EDIT_CLICK = -10;
 //
 //    public static final int MORE_MESSAGE_RECORD = -12;
 //

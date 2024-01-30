@@ -2,14 +2,15 @@ package io.im.kit.widget.component.inputpanel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.view.View.OnTouchListener
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -115,6 +116,8 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
         binding.send.setOnClickListener {
             mExtensionViewModel?.onSendClick()
         }
+
+        initInputStyle(mInputStyle)
     }
 
     private var mLastTouchY = 0f
@@ -195,7 +198,15 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
                     val editText = mExtensionViewModel?.editText
                     if (editText?.text != null && editText.text.isEmpty()) {
                         binding.sendRoot.visibility = GONE
-                        binding.add.visibility = VISIBLE
+                        if (mInputStyle == InputStyle.All
+                            || mInputStyle == InputStyle.Voice_Add
+                            || mInputStyle == InputStyle.Emoji_Add
+                            || mInputStyle == InputStyle.Add
+                        ) {
+                            binding.add.visibility = VISIBLE
+                        } else {
+                            binding.add.visibility = GONE
+                        }
                     }
                 }
             }
@@ -209,7 +220,15 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
         override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (s.isNullOrEmpty()) {
                 binding.sendRoot.visibility = GONE
-                binding.add.visibility = VISIBLE
+                if (mInputStyle == InputStyle.All
+                    || mInputStyle == InputStyle.Voice_Add
+                    || mInputStyle == InputStyle.Emoji_Add
+                    || mInputStyle == InputStyle.Add
+                ) {
+                    binding.add.visibility = VISIBLE
+                } else {
+                    binding.add.visibility = GONE
+                }
             } else {
                 binding.add.visibility = GONE
                 binding.sendRoot.visibility = VISIBLE
@@ -224,6 +243,83 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
         when (mInputStyle) {
             InputStyle.All -> {
                 allInputStyleMode(mode)
+            }
+
+            InputStyle.Voice -> {
+                voiceStyleMode(mode)
+            }
+
+            InputStyle.Emoji -> {
+                emojiStyleMode(mode)
+            }
+
+            InputStyle.Add -> {
+                addStyleMode(mode)
+            }
+
+            InputStyle.Voice_Emoji -> {
+                voiceEmojiStyleMode(mode)
+            }
+
+            InputStyle.Voice_Add -> {
+                voiceAddStyleMode(mode)
+            }
+
+            InputStyle.Emoji_Add -> {
+                emojiAddStyleMode(mode)
+            }
+        }
+    }
+
+    private fun initInputStyle(style: InputStyle) {
+        when (style) {
+            InputStyle.All -> {
+                binding.voice.visibility = View.VISIBLE
+                binding.emoji.visibility = View.VISIBLE
+                binding.add.visibility = View.VISIBLE
+                binding.leftOffset.visibility = View.GONE
+            }
+
+            InputStyle.Voice -> {
+                binding.voice.visibility = View.VISIBLE
+                binding.emoji.visibility = View.GONE
+                binding.add.visibility = View.GONE
+                binding.leftOffset.visibility = View.GONE
+            }
+
+            InputStyle.Emoji -> {
+                binding.voice.visibility = View.GONE
+                binding.emoji.visibility = View.VISIBLE
+                binding.add.visibility = View.GONE
+                binding.leftOffset.visibility = View.VISIBLE
+            }
+
+            InputStyle.Voice_Emoji -> {
+                binding.voice.visibility = View.VISIBLE
+                binding.emoji.visibility = View.VISIBLE
+                binding.add.visibility = View.GONE
+                binding.leftOffset.visibility = View.GONE
+            }
+
+            InputStyle.Voice_Add -> {
+                binding.voice.visibility = View.VISIBLE
+                binding.add.visibility = View.VISIBLE
+                binding.emoji.visibility = View.GONE
+                binding.leftOffset.visibility = View.GONE
+            }
+
+            InputStyle.Emoji_Add -> {
+                binding.voice.visibility = View.GONE
+                binding.add.visibility = View.VISIBLE
+                binding.emoji.visibility = View.VISIBLE
+                binding.leftOffset.visibility = View.VISIBLE
+            }
+
+            InputStyle.Add -> {
+                binding.voice.visibility = View.GONE
+                binding.emoji.visibility = View.GONE
+                binding.add.visibility = View.VISIBLE
+                binding.leftOffset.visibility = View.VISIBLE
             }
         }
     }
@@ -288,7 +384,350 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
                 binding.voiceBtn.visibility = GONE
             }
 
-            ChatInputMode.NormalMode -> {
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView();
+            }
+        }
+    }
+
+    private fun voiceStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            ChatInputMode.VoiceInput -> {
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_keybroad
+                    )
+                )
+                binding.voiceBtn.visibility = VISIBLE
+                binding.edit.visibility = GONE
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+            }
+
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView();
+            }
+        }
+    }
+
+    private fun emojiStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            ChatInputMode.EmoticonMode -> {
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_keybroad
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+            }
+
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView();
+            }
+        }
+    }
+
+    private fun voiceEmojiStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            ChatInputMode.VoiceInput -> {
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_keybroad
+                    )
+                )
+                binding.voiceBtn.visibility = VISIBLE
+                binding.edit.visibility = GONE
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+            }
+
+            ChatInputMode.EmoticonMode -> {
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_keybroad
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+            }
+
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView();
+            }
+        }
+    }
+
+    private fun voiceAddStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput, ChatInputMode.PluginMode -> {
+                if (mode == ChatInputMode.TextInput) {
+                    mIsVoiceInputMode = false
+                }
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = GONE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+        }
+    }
+
+    private fun emojiAddStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput, ChatInputMode.PluginMode -> {
+                if (mode == ChatInputMode.TextInput) {
+                    mIsVoiceInputMode = false
+                }
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            ChatInputMode.EmoticonMode -> {
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_keybroad
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+            }
+
+            else -> {
+                mIsVoiceInputMode = false
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView();
+            }
+        }
+    }
+
+    private fun addStyleMode(mode: ChatInputMode) {
+        when (mode) {
+            ChatInputMode.TextInput, ChatInputMode.PluginMode -> {
+                if (mode == ChatInputMode.TextInput) {
+                    mIsVoiceInputMode = false
+                }
+                binding.voice.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_voice
+                    )
+                )
+                binding.emoji.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.kit_input_emoji
+                    )
+                )
+                binding.edit.visibility = VISIBLE
+                binding.voiceBtn.visibility = GONE
+                resetInputView()
+            }
+
+            else -> {
                 mIsVoiceInputMode = false
                 binding.voice.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -316,7 +755,15 @@ class ChatInputPanel : FrameLayout, ConversationUserUpdate {
     private fun resetInputView() {
         val text = binding.edit.text
         if (text.isNullOrEmpty()) {
-            binding.add.visibility = VISIBLE
+            if (mInputStyle == InputStyle.All
+                || mInputStyle == InputStyle.Voice_Add
+                || mInputStyle == InputStyle.Emoji_Add
+                || mInputStyle == InputStyle.Add
+            ) {
+                binding.add.visibility = VISIBLE
+            } else {
+                binding.add.visibility = GONE
+            }
             binding.sendRoot.visibility = GONE
         } else {
             binding.sendRoot.visibility = VISIBLE

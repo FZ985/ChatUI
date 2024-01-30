@@ -52,14 +52,14 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         if (uiMessage != null && uiMessage.getMessage() != null && listener != null) {
             Message message = uiMessage.getMessage();
             boolean isSender = uiMessage.getMessage().getMessageDirection().equals(Message.MessageDirection.SEND);
-//            holder.setVisible(R.id.rc_selected, uiMessage.isEdit());
-//            holder.setVisible(R.id.rc_v_edit, uiMessage.isEdit());
-//            if (uiMessage.isEdit()) {
-//                holder.setSelected(R.id.rc_selected, uiMessage.isSelected());
-//                holder.setOnClickListener(
-//                        R.id.rc_v_edit,
-//                        v -> listener.onViewClick(MessageClickType.EDIT_CLICK, uiMessage));
-//            }
+            holder.setVisible(R.id.base_edit_iv, uiMessage.isEdit());
+            holder.setVisible(R.id.base_edit, uiMessage.isEdit());
+            if (uiMessage.isEdit()) {
+                holder.setSelected(R.id.base_edit_iv, uiMessage.isSelected());
+                holder.setOnClickListener(
+                        R.id.base_edit,
+                        v -> listener.onViewClick(v, MessageClickType.EDIT_CLICK, uiMessage));
+            }
             initTime(holder, position, list, message);
             initContent(holder, isSender, uiMessage, position, listener, list);
             initStatus(holder, uiMessage, position, listener, message, isSender, list);
@@ -123,6 +123,13 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
     //初始化内容
     private void initContent(final ViewHolder holder, boolean isSender, final UiMessage uiMessage, final int position,
                              final IViewProviderListener<UiMessage> listener, final List<UiMessage> list) {
+        if (mConfig.showContentBubble) {
+            holder.setBackgroundRes(
+                    R.id.base_content,
+                    isSender ? R.drawable.kit_bg_bubble_right : R.drawable.kit_bg_bubble_left);
+        } else {
+            holder.getView(R.id.base_content).setBackground(null);
+        }
         holder.setPadding(R.id.base_content, 0, 0, 0, 0);
         LinearLayout layout = holder.getView(R.id.base_layout);
         if (mConfig.centerInHorizontal) {

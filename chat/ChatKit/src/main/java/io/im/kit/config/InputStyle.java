@@ -7,9 +7,22 @@ package io.im.kit.config;
  */
 public enum InputStyle {
 
-    All(0);
+    All(0),
 
-    private int type;
+    Add(1),
+
+    Voice(2),
+
+    Emoji(3),
+
+    Voice_Emoji(4),
+
+    Voice_Add(5),
+
+    Emoji_Add(6);
+
+
+    private final int type;
 
     InputStyle(int type) {
         this.type = type;
@@ -17,9 +30,7 @@ public enum InputStyle {
 
     public static InputStyle setType(int type) {
         InputStyle[] var1 = values();
-        int var2 = var1.length;
-        for (int var3 = 0; var3 < var2; ++var3) {
-            InputStyle c = var1[var3];
+        for (InputStyle c : var1) {
             if (type == c.getType()) {
                 return c;
             }

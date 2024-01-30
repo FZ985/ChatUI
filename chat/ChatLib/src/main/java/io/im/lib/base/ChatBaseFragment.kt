@@ -1,5 +1,7 @@
 package io.im.lib.base
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 
@@ -10,6 +12,13 @@ import androidx.fragment.app.Fragment
  */
 open class ChatBaseFragment : Fragment() {
 
+
+    protected lateinit var mActivity: AppCompatActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mActivity = context as AppCompatActivity
+    }
 
     fun onBackPressed(): Boolean {
         return false

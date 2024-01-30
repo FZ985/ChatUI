@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="immersion_navigation_bar_view" type="id" />
+    <item name="immersion_status_bar_view" type="id" />
+    <item name="immersion_fits_layout_overlap" type="id" />
+    <item name="action_bar_container" type="id" />
+
+
+    <item name="voice" type="id" />
+    <item name="voice_btn" type="id" />
+    <item name="edit" type="id" />
+    <item name="emoji" type="id" />
+    <item name="add" type="id" />
+    <item name="send_root" type="id" />
+    <item name="send" type="id" />
+
+
+</resources>

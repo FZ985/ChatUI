@@ -10,4 +10,9 @@
     <color name="kit_voice_pressed">#FFE0E2E3</color>
 
     <color name="kit_red_E0493E">#E0493E</color>
+
+    <color name="kit_bubble_left_color">@color/chat_skin_bg_leve2</color>
+    <color name="kit_bubble_left_stroke_color">@color/chat_theme99</color>
+    <color name="kit_bubble_right_color">@color/chat_theme</color>
+    <color name="kit_bubble_right_stroke_color">@color/chat_theme</color>
 </resources>

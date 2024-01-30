@@ -13,19 +13,25 @@
         android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingTop="@dimen/chat_dp7"
+        android:paddingEnd="@dimen/chat_dp12"
         android:paddingBottom="@dimen/chat_dp7"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/voice"
+            android:id="@id/voice"
             android:layout_width="@dimen/chat_dp40"
             android:layout_height="@dimen/chat_dp40"
             android:layout_marginLeft="@dimen/chat_dp5"
             android:paddingLeft="@dimen/chat_dp2"
             android:paddingRight="@dimen/chat_dp2"
             android:src="@drawable/kit_input_voice" />
+
+        <View
+            android:id="@+id/left_offset"
+            android:layout_width="@dimen/chat_dp8"
+            android:layout_height="@dimen/chat_dp5" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -36,7 +42,7 @@
             android:focusableInTouchMode="true">
 
             <TextView
-                android:id="@+id/voice_btn"
+                android:id="@id/voice_btn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/chat_dp40"
                 android:background="@drawable/kit_voice_btn1"
@@ -47,7 +53,7 @@
                 android:visibility="gone" />
 
             <io.im.kit.widget.text.ChatEditText
-                android:id="@+id/edit"
+                android:id="@id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/kit_input_edit"
@@ -62,7 +68,7 @@
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/emoji"
+            android:id="@id/emoji"
             android:layout_width="@dimen/chat_dp40"
             android:layout_height="@dimen/chat_dp40"
             android:paddingLeft="@dimen/chat_dp2"
@@ -70,26 +76,24 @@
             android:src="@drawable/kit_input_emoji" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/add"
+            android:id="@id/add"
             android:layout_width="@dimen/chat_dp40"
             android:layout_height="@dimen/chat_dp40"
-            android:layout_marginRight="@dimen/chat_dp8"
             android:paddingLeft="@dimen/chat_dp2"
             android:paddingRight="@dimen/chat_dp2"
             android:src="@drawable/kit_input_add"
             android:visibility="visible" />
 
         <FrameLayout
-            android:id="@+id/send_root"
+            android:id="@id/send_root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_dp5"
-            android:paddingRight="@dimen/chat_dp12"
-            android:paddingBottom="@dimen/chat_dp2"
+            android:layout_marginBottom="@dimen/chat_dp3"
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/send"
+                android:id="@id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/chat_dp36"
                 android:layout_gravity="bottom"

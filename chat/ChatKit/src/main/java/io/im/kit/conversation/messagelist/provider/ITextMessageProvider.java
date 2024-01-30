@@ -6,6 +6,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -31,7 +32,9 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
 
     @Override
     protected void bindContentViewHolder(ViewHolder parentHolder, ViewHolder contentHolder, TextMessage msgContent, UiMessage uiMessage, boolean isSender, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
+        TextView msg_text = contentHolder.getView(R.id.msg_text);
 
+        msg_text.setText(msgContent.getContent());
     }
 
     @Override
