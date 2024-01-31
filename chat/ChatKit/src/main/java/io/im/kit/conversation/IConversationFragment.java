@@ -18,17 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.im.kit.R;
 import io.im.kit.callback.ConversationUserCall;
 import io.im.kit.conversation.extension.ConversationHelper;
 import io.im.kit.databinding.KitFragmentConversationBinding;
 import io.im.kit.model.UiMessage;
+import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.FixedLinearLayoutManager;
 import io.im.kit.widget.adapter.IViewProviderListener;
-import io.im.kit.widget.switchpanel.PanelSwitchHelper;
-import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
-import io.im.kit.widget.switchpanel.interfaces.listener.OnPanelChangeListener;
-import io.im.kit.widget.switchpanel.view.panel.IPanelView;
 import io.im.lib.base.ChatBaseFragment;
 import io.im.lib.message.TextMessage;
 import io.im.lib.message.UnKnowMessage;
@@ -36,8 +32,6 @@ import io.im.lib.model.ConversationType;
 import io.im.lib.model.Message;
 import io.im.lib.model.MessageContent;
 import io.im.lib.model.UserInfo;
-import io.im.lib.utils.ChatLibUtil;
-import io.im.lib.utils.JLog;
 
 /**
  * author : JFZ
@@ -55,8 +49,6 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
     private FixedLinearLayoutManager layoutManager;
     private ConversationType conversationType = ConversationType.PRIVATE;
     private UserInfo userInfo;
-
-    private PanelSwitchHelper mHelper;
 
     private final ConversationHelper helper = new ConversationHelper();
 
@@ -98,8 +90,9 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
                 return gd.onTouchEvent(e);
             }
         });
-
-
+        userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(RouteUtil.User);
+        conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(RouteUtil.ConversationType, ConversationType.PRIVATE.getValue()));
+        helper.bindConversation(mActivity, this);
         test();
     }
 
@@ -121,109 +114,29 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
     @Override
     public void onResume() {
         super.onResume();
-        if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(this)
-                    .setWindowInsetsRootView(binding.getRoot())
-                    //可选
-                    .addKeyboardStateListener((visible, height) -> JLog.e(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
-                    //可选
-                    .addEditTextFocusChangeListener((view, hasFocus) -> {
-                        JLog.e(TAG, "输入框是否获得焦点 : " + hasFocus);
-                        if (hasFocus) {
-//                            scrollToBottom();
-                        }
-                    })
-                    //可选
-                    .addViewClickListener(view -> {
-//                        switch (view.getId()){
-//                            case R.id.edit_text:
-//                            case R.id.add_btn:
-//                            case R.id.emotion_btn:{
-//                                scrollToBottom();
-//                            }
-//                        }
-                        JLog.e(TAG, "点击了View : " + view);
-                    })
-                    //可选
-                    .addPanelChangeListener(new OnPanelChangeListener() {
-
-                        @Override
-                        public void onKeyboard() {
-                            JLog.e(TAG, "唤起系统输入法");
-//                            mBinding.emotionBtn.setSelected(false);
-                        }
-
-                        @Override
-                        public void onNone() {
-                            JLog.e(TAG, "隐藏所有面板");
-//                            mBinding.emotionBtn.setSelected(false);
-                        }
-
-                        @Override
-                        public void onPanel(IPanelView view) {
-                            JLog.e(TAG, "唤起面板 : " + view);
-//                            if(view instanceof PanelView){
-//                                boolean isEmotion = ((PanelView) view).getId() == R.id.panel_emotion;
-//                                mBinding.emotionBtn.setSelected(isEmotion);
-//                                if (isEmotion) {
-//                                    mBinding.panelSwitchLayout.focusAndShowSelection();
-//                                }
-//                            }
-                        }
-
-                        @Override
-                        public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-//                            if(panelView instanceof PanelView){
-//                                switch (((PanelView)panelView).getId()) {
-//                                    case R.id.panel_emotion: {
-//                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-//                                        int viewPagerSize = height - DisplayUtils.dip2px(getContext(), 30f);
-//                                        pagerView.buildEmotionViews(
-//                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-//                                                mBinding.editText,
-//                                                Emotions.getEmotions(), width, viewPagerSize);
-//                                        break;
-//                                    }
-//                                    case R.id.panel_addition: {
-//                                        //auto center,nothing to do
-//                                        break;
-//                                    }
-//                                }
-//                            }
-                        }
-                    })
-                    .addPanelHeightMeasurer(new PanelHeightMeasurer() {
-                        @Override
-                        public boolean synchronizeKeyboardHeight() {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean forceUseTargetPanelDefaultHeight() {
-                            return true;
-                        }
-
-                        @Override
-                        public int getTargetPanelDefaultHeight() {
-                            return ChatLibUtil.dip2px(mActivity, 380);
-                        }
-
-                        @Override
-                        public int getPanelTriggerId() {
-                            return R.id.emoji;
-                        }
-                    })
-                    .logTrack(true)             //output log
-                    .build();
-        }
-        binding.recycler.setPanelSwitchHelper(mHelper);
+        helper.onResume();
     }
 
     @Override
     public void onPause() {
+        helper.onPause();
         super.onPause();
-        binding.switchLayout.recycle();
-        mHelper = null;
+    }
+
+    @Override
+    public void onStop() {
+        helper.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        helper.onDestroy();
+        super.onDestroyView();
+    }
+
+    public void scrollToBottom() {
+        binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private void test() {
@@ -257,13 +170,12 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
     }
 
     private void closeExpand() {
-        mHelper.hookSystemBackByPanelSwitcher();
+        helper.closeExpand();
     }
 
     @Override
     public void updateUser(UserInfo user) {
         this.userInfo = user;
-        helper.updateConversationUserCall(this);
     }
 
     @Override
@@ -271,8 +183,11 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         return userInfo;
     }
 
-
     public ConversationType getConversationType() {
         return conversationType;
+    }
+
+    public KitFragmentConversationBinding getBinding() {
+        return binding;
     }
 }

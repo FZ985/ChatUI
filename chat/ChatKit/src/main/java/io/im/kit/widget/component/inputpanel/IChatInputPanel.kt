@@ -1,14 +1,18 @@
 package io.im.kit.widget.component.inputpanel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnFocusChangeListener
+import android.view.View.OnTouchListener
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import io.im.kit.R
 import io.im.kit.config.ChatInputMode
@@ -30,12 +34,15 @@ class IChatInputPanel : FrameLayout {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
 
+    @SuppressLint("ClickableViewAccessibility")
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attributeSet,
         defStyleAttr
     ) {
         binding = KitComponentInputPanelBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.edit.addTextChangedListener(mEditTextWatcher)
+        binding.voiceBtn.setOnTouchListener(mOnVoiceBtnTouchListener)
     }
 
     fun setInputStyle(style: InputStyle) {
@@ -92,36 +99,28 @@ class IChatInputPanel : FrameLayout {
         }
     }
 
-    private val mOnEditTextFocusChangeListener =
-        OnFocusChangeListener { _, hasFocus ->
-//            if (hasFocus) {
-//                if (mExtensionViewModel != null
-//                    && mExtensionViewModel?.inputModeLiveData != null
-//                ) {
-//                    mExtensionViewModel?.inputModeLiveData?.postValue(ChatInputMode.TextInput)
-//                }
-//                if (!TextUtils.isEmpty(binding.edit.text)) {
-//                    binding.sendRoot.visibility = VISIBLE
-//                    binding.add.visibility = GONE
-//                }
-//            } else {
-//                if (mExtensionViewModel != null) {
-//                    val editText = mExtensionViewModel?.editText
-//                    if (editText?.text != null && editText.text.isEmpty()) {
-//                        binding.sendRoot.visibility = GONE
-//                        if (mInputStyle == InputStyle.All
-//                            || mInputStyle == InputStyle.Voice_Add
-//                            || mInputStyle == InputStyle.Emoji_Add
-//                            || mInputStyle == InputStyle.Add
-//                        ) {
-//                            binding.add.visibility = VISIBLE
-//                        } else {
-//                            binding.add.visibility = GONE
-//                        }
-//                    }
-//                }
-//            }
+    fun onEditTextFocus(hasFocus: Boolean) {
+        if (hasFocus) {
+            if (!TextUtils.isEmpty(binding.edit.text)) {
+                binding.sendRoot.visibility = VISIBLE
+                binding.add.visibility = GONE
+            }
+        } else {
+            val editText = getEditText()
+            if (editText.text != null && editText.text.isEmpty()) {
+                binding.sendRoot.visibility = GONE
+                if (mInputStyle == InputStyle.All
+                    || mInputStyle == InputStyle.Voice_Add
+                    || mInputStyle == InputStyle.Emoji_Add
+                    || mInputStyle == InputStyle.Add
+                ) {
+                    binding.add.visibility = VISIBLE
+                } else {
+                    binding.add.visibility = GONE
+                }
+            }
         }
+    }
 
 
     private val mEditTextWatcher = object : TextWatcher {
@@ -151,7 +150,7 @@ class IChatInputPanel : FrameLayout {
         }
     }
 
-    private fun updateInputMode(mode: ChatInputMode) {
+    fun updateInputMode(mode: ChatInputMode) {
         when (mInputStyle) {
             InputStyle.All -> {
                 allInputStyleMode(mode)
@@ -184,6 +183,14 @@ class IChatInputPanel : FrameLayout {
     }
 
     private var mIsVoiceInputMode = false // 语音和键盘切换按钮的当前显示状态是否为键盘模式
+
+    fun isVoiceInputMode(): Boolean {
+        return mIsVoiceInputMode
+    }
+
+    fun setIsVoiceInputMode(valueBool: Boolean) {
+        mIsVoiceInputMode = valueBool
+    }
 
     private fun allInputStyleMode(mode: ChatInputMode) {
         when (mode) {
@@ -627,5 +634,66 @@ class IChatInputPanel : FrameLayout {
             binding.sendRoot.visibility = VISIBLE
             binding.add.visibility = GONE
         }
+    }
+
+    private var mLastTouchY = 0f
+    private var mUpDirection = false
+
+    @SuppressLint("ClickableViewAccessibility")
+    private val mOnVoiceBtnTouchListener = OnTouchListener { v, event ->
+        val mOffsetLimit = 70 * v.context.resources.displayMetrics.density
+        //需要拦截请求权限
+        if (event.action == MotionEvent.ACTION_DOWN) {
+//                if (AudioPlayManager.getInstance().isPlaying()) {
+//                    AudioPlayManager.getInstance().stopPlay()
+//                }
+            // 判断正在视频通话和语音通话中不能进行语音消息发送
+            // do -------
+//                AudioRecordManager.getInstance()
+//                    .startRecord(v.getRootView(), mConversationType, mTargetId)
+            mLastTouchY = event.y
+            mUpDirection = false
+            val textView = v as TextView
+            textView.setText(R.string.kit_voice_t2)
+            textView.background = ContextCompat.getDrawable(
+                v.getContext(),
+                R.drawable.kit_voice_btn2
+            )
+        } else if (event.action == MotionEvent.ACTION_MOVE) {
+            if (mLastTouchY - event.y > mOffsetLimit && !mUpDirection) {
+//                    AudioRecordManager.getInstance().willCancelRecord()
+                mUpDirection = true
+                val textView = v as TextView
+                textView.setText(R.string.kit_voice_t1)
+                textView.background = ContextCompat.getDrawable(
+                    v.getContext(),
+                    R.drawable.kit_voice_btn1
+                )
+            } else if (event.y - mLastTouchY > -mOffsetLimit && mUpDirection) {
+//                    AudioRecordManager.getInstance().continueRecord()
+                mUpDirection = false
+                val textView = v as TextView
+                textView.background = ContextCompat.getDrawable(
+                    v.getContext(),
+                    R.drawable.kit_voice_btn2
+                )
+                textView.setText(R.string.kit_voice_t2)
+            }
+        } else if (event.action == MotionEvent.ACTION_UP
+            || event.action == MotionEvent.ACTION_CANCEL
+        ) {
+//                AudioRecordManager.getInstance().stopRecord()
+            val textView = v as TextView
+            textView.setText(R.string.kit_voice_t1)
+            textView.background = ContextCompat.getDrawable(
+                v.getContext(),
+                R.drawable.kit_voice_btn1
+            )
+        }
+        true
+    }
+
+    fun getBinding(): KitComponentInputPanelBinding {
+        return binding
     }
 }

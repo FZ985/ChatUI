@@ -11,7 +11,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import io.im.kit.config.ChatInputMode;
-import io.im.kit.conversation.ConversationFragment;
+import io.im.kit.conversation.IConversationFragment;
 import io.im.lib.utils.JLog;
 
 /**
@@ -32,12 +32,12 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         super(application);
     }
 
-    void setAttachChat(ConversationFragment fragment, EditText editText) {
+    void setAttachChat(IConversationFragment fragment, EditText editText) {
         this.editText = editText;
     }
 
     public void onSendClick() {
-
+        JLog.e("======onSendClick");
     }
 
     // 收起面板，ChatExtension 仅显示 InputPanel。
