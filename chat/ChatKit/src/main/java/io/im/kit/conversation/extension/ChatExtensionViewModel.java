@@ -32,7 +32,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         super(application);
     }
 
-    void setAttachChat(IConversationFragment fragment, EditText editText) {
+    public void setAttachChat(IConversationFragment fragment, EditText editText) {
         this.editText = editText;
     }
 
@@ -40,7 +40,6 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         JLog.e("======onSendClick");
     }
 
-    // 收起面板，ChatExtension 仅显示 InputPanel。
     public void collapseExtensionBoard() {
         if (mExtensionBoardState.getValue() != null
                 && mExtensionBoardState.getValue().equals(false)) {

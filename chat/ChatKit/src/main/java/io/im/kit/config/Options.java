@@ -28,4 +28,16 @@ public final class Options {
     public void setImageLoader(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
     }
+
+
+    //字体大小设置
+    private FontSize fontSize = FontSize.None;
+
+    public FontSize getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(FontSize fontSize) {
+        this.fontSize = fontSize;
+    }
 }

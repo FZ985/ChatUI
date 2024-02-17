@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
 import io.im.kit.R;
+import io.im.kit.helper.OptionsHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.kit.widget.adapter.ViewHolder;
@@ -35,6 +37,11 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
         TextView msg_text = contentHolder.getView(R.id.msg_text);
 
         msg_text.setText(msgContent.getContent());
+        msg_text.setTextColor(isSender ?
+                ContextCompat.getColor(contentHolder.getContext(), io.im.lib.R.color.chat_white_90)
+                : ContextCompat.getColor(contentHolder.getContext(), io.im.lib.R.color.chat_skin_Text));
+
+        OptionsHelper.updateTextSize(msg_text, 15);
     }
 
     @Override

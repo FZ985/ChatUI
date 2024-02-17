@@ -159,12 +159,11 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
         return (mEmptyView != null || mEmptyId != 0) && getRealItemCount() == 0;
     }
 
-    public void addHeaderView(View view) {
-        mHeaderViews.put(mHeaderViews.size() + BASE_ITEM_TYPE_HEADER, view);
-    }
 
-    public void addFootView(View view) {
-        mFootViews.put(mFootViews.size() + BASE_ITEM_TYPE_FOOTER, view);
+    public int addHeaderView(View view) {
+        int viewType = mHeaderViews.size() + BASE_ITEM_TYPE_HEADER;
+        mHeaderViews.put(viewType, view);
+        return viewType;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -173,6 +172,12 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
             mHeaderViews.remove(viewType);
             notifyDataSetChanged();
         }
+    }
+
+    public int addFootView(View view) {
+        int viewType = mFootViews.size() + BASE_ITEM_TYPE_FOOTER;
+        mFootViews.put(viewType, view);
+        return viewType;
     }
 
     @SuppressLint("NotifyDataSetChanged")

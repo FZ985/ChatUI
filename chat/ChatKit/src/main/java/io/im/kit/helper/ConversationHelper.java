@@ -1,4 +1,4 @@
-package io.im.kit.conversation.extension;
+package io.im.kit.helper;
 
 import android.content.Context;
 import android.view.View;
@@ -10,6 +10,7 @@ import io.im.kit.R;
 import io.im.kit.config.ChatInputMode;
 import io.im.kit.config.InputStyle;
 import io.im.kit.conversation.IConversationFragment;
+import io.im.kit.conversation.extension.ChatExtensionViewModel;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
 import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener;
@@ -124,6 +125,11 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
 
     public void closeExpand() {
         mHelper.hookSystemBackByPanelSwitcher();
+    }
+
+    
+    public boolean onBackPressed(){
+        return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
     }
 
     private void log(String m) {

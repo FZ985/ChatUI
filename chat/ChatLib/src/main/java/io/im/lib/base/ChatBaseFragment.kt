@@ -20,7 +20,7 @@ open class ChatBaseFragment : Fragment() {
         mActivity = context as AppCompatActivity
     }
 
-    fun onBackPressed(): Boolean {
+    open fun onBackPressed(): Boolean {
         return false
     }
 }

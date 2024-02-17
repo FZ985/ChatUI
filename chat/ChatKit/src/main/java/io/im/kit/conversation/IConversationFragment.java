@@ -1,5 +1,6 @@
 package io.im.kit.conversation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -18,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.im.kit.callback.ConversationUserCall;
-import io.im.kit.conversation.extension.ConversationHelper;
+import io.im.kit.conversation.extension.ConversationExtCall;
+import io.im.kit.helper.ConversationHelper;
 import io.im.kit.databinding.KitFragmentConversationBinding;
 import io.im.kit.model.UiMessage;
 import io.im.kit.utils.RouteUtil;
@@ -38,15 +40,13 @@ import io.im.lib.model.UserInfo;
  * date : 2024/1/30 13:02
  * description :
  */
-public class IConversationFragment extends ChatBaseFragment implements ConversationUserCall, SwipeRefreshLayout.OnRefreshListener,
-        IViewProviderListener<UiMessage> {
+public class IConversationFragment extends ChatBaseFragment implements ConversationExtCall, SwipeRefreshLayout.OnRefreshListener, IViewProviderListener<UiMessage> {
 
     private final String TAG = "IConversationFragment";
     private KitFragmentConversationBinding binding;
 
     private final ConversationListAdapter adapter = new ConversationListAdapter(this);
 
-    private FixedLinearLayoutManager layoutManager;
     private ConversationType conversationType = ConversationType.PRIVATE;
     private UserInfo userInfo;
 
@@ -64,7 +64,7 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         super.onViewCreated(view, savedInstanceState);
         binding.refresh.setColorSchemeResources(io.im.lib.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
-        layoutManager = new FixedLinearLayoutManager(mActivity);
+        FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);
         layoutManager.setStackFromEnd(true);
         binding.recycler.setLayoutManager(layoutManager);
         SimpleItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -143,8 +143,8 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         List<UiMessage> list = new ArrayList<>();
         list.add(new UiMessage(getSendMsg(TextMessage.obtain("123"))));
         list.add(new UiMessage(getSendMsg(TextMessage.obtain("123"))));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(TextMessage.obtain("234"))));
         list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
         list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
         list.add(new UiMessage(getSendMsg(TextMessage.obtain("123123123123123")).setReadStatus(Message.ReadStatus.READ)));
@@ -153,7 +153,6 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         list.add(new UiMessage(new Message(new UnKnowMessage())));
         adapter.setDataCollection(list);
     }
-
 
     private Message getSendMsg(MessageContent content) {
         Message msg = new Message(content);
@@ -164,7 +163,7 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
 
     private Message getReceiveMsg(MessageContent content) {
         Message msg = new Message(content);
-        msg.setMessageDirection(Message.MessageDirection.SEND);
+        msg.setMessageDirection(Message.MessageDirection.RECEIVE);
         msg.setMessageTime(System.currentTimeMillis() - (new Random().nextInt(100) + 10) * 60 * 1000);
         return msg;
     }
@@ -183,11 +182,47 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         return userInfo;
     }
 
+    @Override
     public ConversationType getConversationType() {
         return conversationType;
     }
 
     public KitFragmentConversationBinding getBinding() {
         return binding;
+    }
+
+    @Override
+    public int addHeadView(@NonNull View view) {
+        return adapter.addHeaderView(view);
+    }
+
+    @Override
+    public int addFootView(@NonNull View view) {
+        return adapter.addFootView(view);
+    }
+
+    @Override
+    public void removeHeadView(int viewType) {
+        adapter.removeHeaderView(viewType);
+    }
+
+    @Override
+    public void removeFootView(int viewType) {
+        adapter.removeFooterView(viewType);
+    }
+
+    @Override
+    public AppCompatActivity getConversationActivity() {
+        return mActivity;
+    }
+
+    @Override
+    public Intent getConversationIntent() {
+        return mActivity.getIntent();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return helper.onBackPressed();
     }
 }
