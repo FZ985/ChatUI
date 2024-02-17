@@ -11,9 +11,9 @@ public enum FontSize {
 
     Small(0.85f),
 
-    Large(1.5f),
+    Large(1.4f),
 
-    MaxLarge(2f);
+    MaxLarge(1.8f);
 
     private final float type;
 
