@@ -1,5 +1,7 @@
 package io.im.kit.config;
 
+import androidx.lifecycle.MutableLiveData;
+
 import io.im.kit.callback.ImageLoader;
 
 /**
@@ -32,6 +34,7 @@ public final class Options {
 
     //字体大小设置
     private FontSize fontSize = FontSize.None;
+    private final MutableLiveData<FontSize> fontSizeLiveData = new MutableLiveData<>();
 
     public FontSize getFontSize() {
         return fontSize;
@@ -39,5 +42,10 @@ public final class Options {
 
     public void setFontSize(FontSize fontSize) {
         this.fontSize = fontSize;
+        this.fontSizeLiveData.setValue(fontSize);
+    }
+
+    public MutableLiveData<FontSize> getFontSizeLiveData() {
+        return fontSizeLiveData;
     }
 }

@@ -1,4 +1,4 @@
-package io.im.kit.widget.component.plugins;
+package io.im.kit.conversation.extension.component.plugins;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -44,4 +44,8 @@ public class MessageItemProviderConfig {
      * 是否需要展示气泡
      */
     public boolean showContentBubble = true;
+    /**
+     * 气泡渐变
+     */
+    public boolean showContentBubbleGradient = true;
 }

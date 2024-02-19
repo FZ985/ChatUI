@@ -10,10 +10,12 @@ import java.util.List;
 
 import io.im.kit.conversation.messagelist.provider.ConversationMessageProvider;
 import io.im.kit.conversation.messagelist.provider.ConversationSummaryProvider;
+import io.im.kit.conversation.messagelist.provider.IImageMessageProvider;
 import io.im.kit.conversation.messagelist.provider.ITextMessageProvider;
 import io.im.kit.conversation.messagelist.provider.IUnKnowMessageProvider;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.ProviderManager;
+import io.im.lib.message.ImageMessage;
 import io.im.lib.message.TextMessage;
 import io.im.lib.message.UnKnowMessage;
 import io.im.lib.model.MessageContent;
@@ -39,6 +41,7 @@ public class ConversationConfig {
     private void initMessageProvider() {
         mMessageListProvider.setDefaultProvider(defaultMessageProvider);
         addMessageProvider(MessageType.TEXT, new ITextMessageProvider(), TextMessage.class);
+        addMessageProvider(MessageType.IMAGE, new IImageMessageProvider(), ImageMessage.class);
     }
 
     public ProviderManager<UiMessage> getConversationProvider() {

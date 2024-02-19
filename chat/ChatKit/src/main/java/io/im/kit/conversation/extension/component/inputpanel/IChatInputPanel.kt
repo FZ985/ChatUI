@@ -1,4 +1,4 @@
-package io.im.kit.widget.component.inputpanel
+package io.im.kit.conversation.extension.component.inputpanel
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,12 +18,13 @@ import io.im.kit.R
 import io.im.kit.config.ChatInputMode
 import io.im.kit.config.InputStyle
 import io.im.kit.databinding.KitComponentInputPanelBinding
+import io.im.kit.helper.OptionsHelper
 
 
 /**
  *  author : JFZ
  *  date : 2024/1/30 13:56
- *  description :
+ *  description : 输入框、表情、语音组件
  */
 class IChatInputPanel : FrameLayout {
 
@@ -43,6 +44,13 @@ class IChatInputPanel : FrameLayout {
         binding = KitComponentInputPanelBinding.inflate(LayoutInflater.from(context), this, true)
         binding.edit.addTextChangedListener(mEditTextWatcher)
         binding.voiceBtn.setOnTouchListener(mOnVoiceBtnTouchListener)
+        updateTextSize()
+    }
+
+    fun updateTextSize(){
+        OptionsHelper.updateTextSize(binding.edit, 15)
+        OptionsHelper.updateTextSize(binding.send, 15)
+        OptionsHelper.updateTextSize(binding.voiceBtn, 15)
     }
 
     fun setInputStyle(style: InputStyle) {

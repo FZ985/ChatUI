@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import io.im.kit.IMCenter;
 import io.im.kit.R;
+import io.im.kit.helper.OptionsHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.utils.DateUtil;
 import io.im.kit.widget.adapter.IViewProviderListener;
@@ -44,11 +46,14 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 contentView.addView(contentViewHolder.itemView);
             }
         }
-        return new MessageViewHolder(rootView.getContext(), rootView, contentViewHolder);
+        return new MessageViewHolder(rootView.getContext(), rootView, contentViewHolder, mConfig);
     }
 
     @Override
     public void bindViewHolder(ViewHolder holder, UiMessage uiMessage, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
+        if (holder instanceof MessageViewHolder) {
+            ((MessageViewHolder) holder).setUiMessage(uiMessage);
+        }
         if (uiMessage != null && uiMessage.getMessage() != null && listener != null) {
             Message message = uiMessage.getMessage();
             boolean isSender = uiMessage.getMessage().getMessageDirection().equals(Message.MessageDirection.SEND);
@@ -96,9 +101,11 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
     //初始化时间
     private void initTime(ViewHolder holder, int position, List<UiMessage> data, Message message) {
+        TextView base_time = holder.getView(R.id.base_time);
         if (mConfig.showTime) {
             String time = DateUtil.getConversationFormatDate(message.getMessageTime(), holder.getContext());
-            holder.setText(R.id.base_time, time);
+            base_time.setText(time);
+            OptionsHelper.updateTextSize(base_time, 13);
             try {
                 UiMessage pre = data.get(position - 1);
                 if (pre.getMessage() != null
@@ -107,18 +114,17 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                         message.getMessageTime(),
                         pre.getMessage().getMessageTime(),
                         180)) {
-                    holder.setVisible(R.id.base_time, true);
+                    base_time.setVisibility(View.VISIBLE);
                 } else {
-                    holder.setVisible(R.id.base_time, false);
+                    base_time.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
-                holder.setVisible(R.id.base_time, false);
+                base_time.setVisibility(View.GONE);
             }
         } else {
-            holder.setVisible(R.id.base_time, false);
+            base_time.setVisibility(View.GONE);
         }
     }
-
 
     //初始化内容
     private void initContent(final ViewHolder holder, boolean isSender, final UiMessage uiMessage, final int position,
@@ -126,7 +132,8 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         if (mConfig.showContentBubble) {
             holder.setBackgroundRes(
                     R.id.base_content,
-                    isSender ? R.drawable.kit_bg_bubble_right : R.drawable.kit_bg_bubble_left);
+                    isSender ? R.drawable.kit_bg_bubble_right
+                            : R.drawable.kit_bg_bubble_left);
         } else {
             holder.getView(R.id.base_content).setBackground(null);
         }
@@ -348,16 +355,32 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         JLog.e(getClass().getSimpleName(), m);
     }
 
-    private static class MessageViewHolder extends ViewHolder {
+    public static class MessageViewHolder extends ViewHolder {
         private final ViewHolder mMessageContentViewHolder;
 
-        public MessageViewHolder(Context context, View itemView, ViewHolder messageViewHolder) {
+        private UiMessage uiMessage;
+        private MessageItemProviderConfig mConfig;
+
+        public MessageViewHolder(Context context, View itemView, ViewHolder messageViewHolder, MessageItemProviderConfig mConfig) {
             super(context, itemView);
             mMessageContentViewHolder = messageViewHolder;
+            this.mConfig = mConfig;
         }
 
         public ViewHolder getMessageContentViewHolder() {
             return mMessageContentViewHolder;
+        }
+
+        public UiMessage getUiMessage() {
+            return uiMessage;
+        }
+
+        public void setUiMessage(UiMessage uiMessage) {
+            this.uiMessage = uiMessage;
+        }
+
+        public MessageItemProviderConfig getConfig() {
+            return mConfig;
         }
     }
 }

@@ -95,8 +95,9 @@
             <TextView
                 android:id="@id/send"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/chat_dp36"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:minHeight="@dimen/chat_dp36"
                 android:background="@drawable/kit_chat_send"
                 android:clickable="true"
                 android:gravity="center"

@@ -13,12 +13,14 @@ public interface MessageType {
 
     int IMAGE = 102;//图片消息
 
-    int VIDEO = 103;//视频消息
+    int GIF = 103;//图片gif消息
 
-    int VOICE = 104;//语音消息
+    int VIDEO = 104;//视频消息
 
-    int LOCATION = 105;//位置消息
+    int VOICE = 105;//语音消息
 
-    int FILE = 106;//文件消息
+    int LOCATION = 106;//位置消息
+
+    int FILE = 107;//文件消息
 
 }

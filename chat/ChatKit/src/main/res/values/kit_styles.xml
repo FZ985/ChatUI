@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Kit_Shape_DP5">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/chat_dp5</item>
+    </style>
+
+</resources>

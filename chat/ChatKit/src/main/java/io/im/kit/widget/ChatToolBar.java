@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import io.im.kit.R;
+import io.im.kit.helper.OptionsHelper;
 import io.im.lib.callback.ChatFun;
 
 
@@ -56,6 +57,11 @@ public class ChatToolBar extends Toolbar {
     public void setTitleName(String name) {
         if (title != null) {
             title.setText(name);
+            updateTitleSize();
         }
+    }
+
+    public void updateTitleSize() {
+        OptionsHelper.updateTextSize(title, 16);
     }
 }

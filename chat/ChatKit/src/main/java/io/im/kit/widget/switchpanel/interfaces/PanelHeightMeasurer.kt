@@ -29,19 +29,19 @@ open class PanelHeightMeasurerBuilder : PanelHeightMeasurer {
         forceUseTargetPanelDefaultHeight?.invoke() ?: false
 
 
-    fun getTargetPanelDefaultHeight(getPanelDefaultHeight: GetTargetPanelDefaultHeight) {
+    open fun getTargetPanelDefaultHeight(getPanelDefaultHeight: GetTargetPanelDefaultHeight) {
         this.getPanelDefaultHeight = getPanelDefaultHeight
     }
 
-    fun getPanelTriggerId(getPanelId: GetPanelId) {
+    open fun getPanelTriggerId(getPanelId: GetPanelId) {
         this.getPanelId = getPanelId
     }
 
-    fun synchronizeKeyboardHeight(synchronizeKeyboardHeight: SynchronizeKeyboardHeight) {
+    open fun synchronizeKeyboardHeight(synchronizeKeyboardHeight: SynchronizeKeyboardHeight) {
         this.synchronizeKeyboardHeight = synchronizeKeyboardHeight
     }
 
-    fun forceUseTargetPanelDefaultHeight(forceUseTargetPanelDefaultHeight: ForceUseTargetPanelDefaultHeight) {
+    open fun forceUseTargetPanelDefaultHeight(forceUseTargetPanelDefaultHeight: ForceUseTargetPanelDefaultHeight) {
         this.forceUseTargetPanelDefaultHeight = forceUseTargetPanelDefaultHeight
     }
 

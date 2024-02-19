@@ -13,8 +13,10 @@ import io.im.kit.conversation.IConversationFragment;
 import io.im.kit.conversation.extension.ChatExtensionViewModel;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
+import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
 import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener;
 import io.im.lib.callback.ChatLifecycle;
+import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.JLog;
 
 /**
@@ -65,6 +67,27 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                             scrollToBottom();
                         }
                         mFragment.getBinding().inputPanel.onEditTextFocus(hasFocus);
+                    })
+                    .addPanelHeightMeasurer(new PanelHeightMeasurer() {
+                        @Override
+                        public boolean synchronizeKeyboardHeight() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean forceUseTargetPanelDefaultHeight() {
+                            return true;
+                        }
+
+                        @Override
+                        public int getTargetPanelDefaultHeight() {
+                            return ChatLibUtil.dip2px(mFragment.getConversationActivity(), 380);
+                        }
+
+                        @Override
+                        public int getPanelTriggerId() {
+                            return R.id.emoji;
+                        }
                     })
                     .addViewClickListener(ConversationHelper.this)
                     .build();
@@ -127,8 +150,8 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         mHelper.hookSystemBackByPanelSwitcher();
     }
 
-    
-    public boolean onBackPressed(){
+
+    public boolean onBackPressed() {
         return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
     }
 

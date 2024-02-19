@@ -11,9 +11,9 @@ public enum FontSize {
 
     Small(0.85f),
 
-    Large(1.4f),
+    Large(1.3f),
 
-    MaxLarge(1.8f);
+    Largest(1.6f);
 
     private final float type;
 
@@ -23,5 +23,15 @@ public enum FontSize {
 
     public float getType() {
         return type;
+    }
+
+    public static FontSize setType(float type) {
+        FontSize[] var1 = values();
+        for (FontSize c : var1) {
+            if (type == c.getType()) {
+                return c;
+            }
+        }
+        return None;
     }
 }

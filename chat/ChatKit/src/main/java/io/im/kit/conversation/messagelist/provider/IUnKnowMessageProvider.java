@@ -6,10 +6,12 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import io.im.kit.R;
+import io.im.kit.helper.OptionsHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.kit.widget.adapter.ViewHolder;
@@ -39,7 +41,8 @@ public class IUnKnowMessageProvider implements ConversationMessageProvider<UnKno
 
     @Override
     public void bindViewHolder(ViewHolder holder, UiMessage uiMessage, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
-
+        TextView un_know_tv = holder.getView(R.id.un_know_tv);
+        OptionsHelper.updateTextSize(un_know_tv, 13);
     }
 
     @Override

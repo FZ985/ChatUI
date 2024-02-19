@@ -33,7 +33,7 @@
                     android:scrollbars="none" />
             </io.im.kit.widget.ChatSwipeRefreshLayout>
 
-            <io.im.kit.widget.component.inputpanel.IChatInputPanel
+            <io.im.kit.conversation.extension.component.inputpanel.IChatInputPanel
                 android:id="@+id/input_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

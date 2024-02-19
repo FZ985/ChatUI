@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.databinding.KitActivityConversationBinding;
 import io.im.kit.utils.RouteUtil;
@@ -42,6 +43,12 @@ public class IConversationActivity extends ChatBaseActivity {
         ImmersionBar.with(this)
                 .navigationBarColor(R.color.chat_conversation_bottom_panel)
                 .init();
+
+        IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(this, fontSize -> {
+            if (!isFinishing() && fontSize != null) {
+                binding.conversationToolbar.updateTitleSize();
+            }
+        });
     }
 
     @Override

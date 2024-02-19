@@ -12,5 +12,6 @@
     <color name="kit_bubble_left_color">@color/chat_skin_bg_leve2</color>
     <color name="kit_bubble_left_stroke_color">@color/chat_skin_bg_leve2</color>
     <color name="kit_bubble_right_color">@color/chat_theme30</color>
+    <color name="kit_bubble_right_color2">@color/chat_theme50</color>
     <color name="kit_bubble_right_stroke_color">@color/chat_theme30</color>
 </resources>

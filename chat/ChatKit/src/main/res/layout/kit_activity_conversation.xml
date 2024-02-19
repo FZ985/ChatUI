@@ -13,7 +13,7 @@
     <io.im.kit.widget.ChatToolBar
         android:id="@+id/conversation_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chat_dp55"
+        android:layout_height="@dimen/chat_dp56"
         android:layout_below="@id/status_view"
         android:background="@color/chat_conversation_toolbar" />
 

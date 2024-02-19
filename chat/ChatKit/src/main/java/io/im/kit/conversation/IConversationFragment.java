@@ -1,5 +1,6 @@
 package io.im.kit.conversation;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -16,23 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import io.im.kit.IMCenter;
+import io.im.kit.IMTest;
 import io.im.kit.conversation.extension.ConversationExtCall;
-import io.im.kit.helper.ConversationHelper;
 import io.im.kit.databinding.KitFragmentConversationBinding;
+import io.im.kit.helper.ConversationHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.FixedLinearLayoutManager;
 import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.lib.base.ChatBaseFragment;
-import io.im.lib.message.TextMessage;
-import io.im.lib.message.UnKnowMessage;
 import io.im.lib.model.ConversationType;
-import io.im.lib.model.Message;
-import io.im.lib.model.MessageContent;
 import io.im.lib.model.UserInfo;
 
 /**
@@ -71,6 +66,7 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         itemAnimator.setSupportsChangeAnimations(false);
         binding.recycler.setItemAnimator(itemAnimator);
         binding.recycler.setAdapter(adapter);
+
         GestureDetector gd = new GestureDetector(mActivity, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
@@ -93,7 +89,18 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(RouteUtil.User);
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(RouteUtil.ConversationType, ConversationType.PRIVATE.getValue()));
         helper.bindConversation(mActivity, this);
+        liveDataListener();
         test();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void liveDataListener() {
+        IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(getViewLifecycleOwner(), fontSize -> {
+            if (!isDetached() && fontSize != null) {
+                binding.inputPanel.updateTextSize();
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -140,32 +147,7 @@ public class IConversationFragment extends ChatBaseFragment implements Conversat
     }
 
     private void test() {
-        List<UiMessage> list = new ArrayList<>();
-        list.add(new UiMessage(getSendMsg(TextMessage.obtain("123"))));
-        list.add(new UiMessage(getSendMsg(TextMessage.obtain("123"))));
-        list.add(new UiMessage(getSendMsg(TextMessage.obtain("234"))));
-        list.add(new UiMessage(getSendMsg(TextMessage.obtain("234"))));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234"))));
-        list.add(new UiMessage(getSendMsg(TextMessage.obtain("123123123123123")).setReadStatus(Message.ReadStatus.READ)));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("223423423423423423434234234234234234234234234234234234234234234234234234234234234234234234"))));
-        list.add(new UiMessage(getReceiveMsg(TextMessage.obtain("234234234234234234234234234234234234234234234234234234"))));
-        list.add(new UiMessage(new Message(new UnKnowMessage())));
-        adapter.setDataCollection(list);
-    }
-
-    private Message getSendMsg(MessageContent content) {
-        Message msg = new Message(content);
-        msg.setMessageDirection(Message.MessageDirection.SEND);
-        msg.setMessageTime(System.currentTimeMillis() - (new Random().nextInt(100) + 10) * 60 * 1000);
-        return msg;
-    }
-
-    private Message getReceiveMsg(MessageContent content) {
-        Message msg = new Message(content);
-        msg.setMessageDirection(Message.MessageDirection.RECEIVE);
-        msg.setMessageTime(System.currentTimeMillis() - (new Random().nextInt(100) + 10) * 60 * 1000);
-        return msg;
+        adapter.setDataCollection(IMTest.message());
     }
 
     private void closeExpand() {

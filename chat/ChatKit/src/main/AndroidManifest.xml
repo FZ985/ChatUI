@@ -6,5 +6,7 @@
             android:name=".conversation.IConversationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity android:name=".activity.TestActivity"/>
     </application>
 </manifest>

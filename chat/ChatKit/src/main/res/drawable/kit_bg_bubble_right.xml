@@ -7,9 +7,5 @@
         android:topLeftRadius="@dimen/chat_dp15"
         android:topRightRadius="@dimen/chat_dp0" />
 
-    <stroke
-        android:width="@dimen/chat_dp0_9"
-        android:color="@color/kit_bubble_right_stroke_color" />
-
     <solid android:color="@color/kit_bubble_right_color" />
 </shape>

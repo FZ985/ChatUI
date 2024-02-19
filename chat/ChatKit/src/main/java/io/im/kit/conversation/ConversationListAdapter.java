@@ -1,18 +1,29 @@
 package io.im.kit.conversation;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.im.kit.IMCenter;
+import io.im.kit.R;
+import io.im.kit.conversation.messagelist.provider.BaseMessageItemProvider;
 import io.im.kit.model.UiMessage;
+import io.im.kit.utils.AnimatedColor;
+import io.im.kit.utils.KtExtKt;
 import io.im.kit.widget.adapter.BaseAdapter;
 import io.im.kit.widget.adapter.IViewProviderListener;
+import io.im.lib.model.Message;
 
 /**
  * author : JFZ
@@ -22,6 +33,51 @@ import io.im.kit.widget.adapter.IViewProviderListener;
 public class ConversationListAdapter extends BaseAdapter<UiMessage> {
 
     MessageDiffCallBack mDiffCallback = new MessageDiffCallBack();
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        if (recyclerView != null) {
+            AnimatedColor animatedColor = new AnimatedColor(ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color),
+                    ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color2));
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    updateItemBg();
+                }
+
+                private void updateItemBg() {
+                    int count = recyclerView.getChildCount();
+                    for (int i = 0; i < count; i++) {
+                        RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                        if (holder instanceof BaseMessageItemProvider.MessageViewHolder) {
+                            BaseMessageItemProvider.MessageViewHolder messageViewHolder = (BaseMessageItemProvider.MessageViewHolder) holder;
+                            UiMessage message = messageViewHolder.getUiMessage();
+                            if (message != null
+                                    && messageViewHolder.getConfig().showContentBubble
+                                    && messageViewHolder.getConfig().showContentBubbleGradient
+                                    && message.getMessage().getMessageDirection() == Message.MessageDirection.SEND) {
+                                View bgView = messageViewHolder.getView(R.id.base_content);
+                                if (bgView != null) {
+                                    bgView.post(() -> {
+                                        int color = animatedColor.with(getFloatRange(holder.itemView));
+                                        LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.kit_bg_bubble_gradient_right);
+                                        GradientDrawable gradientDrawable = (GradientDrawable) drawable.findDrawableByLayerId(R.id.bubble_gradient_right);
+                                        gradientDrawable.setColor(color);
+                                        bgView.setBackground(drawable);
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                private float getFloatRange(View view) {
+                    return 1f - (KtExtKt.absY(view) / (float) recyclerView.getResources().getDisplayMetrics().heightPixels);
+                }
+            });
+        }
+    }
 
     public ConversationListAdapter(IViewProviderListener<UiMessage> listener) {
         super(listener, IMCenter.getInstance().getOptions().getConversationConfig().getConversationProvider());
