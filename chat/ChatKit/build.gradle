@@ -44,6 +44,8 @@ dependencies {
     implementation AndroidLiveData
     implementation AndroidLifecycleRuntime
 
+    implementation AndroidEmoji2
+
     implementation Glide
 
     implementation project(':chat:ChatLib')

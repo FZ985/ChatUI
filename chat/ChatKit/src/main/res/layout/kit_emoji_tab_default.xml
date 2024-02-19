@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_conversation_bottom_panel"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/yl_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="8" />
+
+    <FrameLayout
+        android:id="@+id/yl_emoji_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/chat_conversation_bottom_panel"
+        android:paddingTop="@dimen/chat_dp15">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/chat_dp15"
+            android:paddingTop="@dimen/chat_dp12"
+            android:paddingRight="@dimen/chat_dp15"
+            android:paddingBottom="@dimen/chat_dp15">
+
+            <ImageView
+                android:id="@+id/yl_emoji_del"
+                android:layout_width="@dimen/chat_dp50"
+                android:layout_height="@dimen/chat_dp40"
+                android:src="@drawable/kit_bg_emoji_delete" />
+        </FrameLayout>
+    </FrameLayout>
+</RelativeLayout>

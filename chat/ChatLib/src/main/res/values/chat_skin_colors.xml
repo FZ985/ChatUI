@@ -18,7 +18,7 @@
     <color name="chat_skin_Text">@color/chat_color_1A1A1A</color>
 
     <!--    线的颜色 -->
-    <color name="chat_skin_line">@color/chat_color_F2F2F2</color>
+    <color name="chat_skin_line">@color/chat_Grey_300</color>
 
     <color name="chat_skin_status_bar">@color/chat_theme</color>
     <color name="chat_skin_navigation_bar">@color/chat_white</color>

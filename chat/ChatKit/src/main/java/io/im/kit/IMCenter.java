@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import io.im.kit.config.Options;
+import io.im.kit.conversation.extension.component.emoticon.ChatAndroidEmoji;
 import io.im.lib.utils.JLog;
 import io.im.lib.utils.SystemUtil;
 import io.im.lib.utils.language.ChatConfigurationManager;
@@ -40,6 +41,7 @@ public class IMCenter {
             return;
         }
         ChatConfigurationManager.init(application);
+        ChatAndroidEmoji.init(application);
     }
 
     public Options getOptions() {

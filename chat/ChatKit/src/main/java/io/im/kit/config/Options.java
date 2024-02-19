@@ -48,4 +48,10 @@ public final class Options {
     public MutableLiveData<FontSize> getFontSizeLiveData() {
         return fontSizeLiveData;
     }
+
+
+    //聊天表情面板配置
+    public ChatEmojiConfig getEmojiConfig() {
+        return Chat.getEmojiConfig();
+    }
 }

@@ -1,6 +1,6 @@
 ext {
     appNamespace = "io.im.app"
-    appApplicationId = "io.im.app"
+    appApplicationId = "io.im.app.chat"
     appCompileSdk = 34
     appMinSdk = 23
     appTargetSdk = 34

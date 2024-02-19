@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:width="@dimen/chat_dp36"
+        android:height="@dimen/chat_dp36">
+        <shape>
+            <corners android:radius="@dimen/chat_dp6" />
+            <solid android:color="@color/chat_transparent" />
+        </shape>
+    </item>
+    <item
+        android:width="@dimen/chat_dp22"
+        android:height="@dimen/chat_dp22"
+        android:drawable="@drawable/kit_ic_emoji"
+        android:gravity="center" />
+</layer-list>

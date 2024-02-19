@@ -11,6 +11,7 @@ import io.im.kit.config.ChatInputMode;
 import io.im.kit.config.InputStyle;
 import io.im.kit.conversation.IConversationFragment;
 import io.im.kit.conversation.extension.ChatExtensionViewModel;
+import io.im.kit.conversation.extension.component.emoticon.ChatEmoticonBoard;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
 import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
@@ -46,6 +47,9 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         mExtensionViewModel.setAttachChat(fragment, fragment.getBinding().inputPanel.getEditText());
         fragment.getBinding().inputPanel.getBinding().send.setOnClickListener(this::onClickBefore);
         fragment.getBinding().inputPanel.getBinding().voice.setOnClickListener(this::onClickBefore);
+
+        ChatEmoticonBoard emoticonBoard = fragment.getBinding().panelEmotion.findViewById(R.id.emoji_board);
+        emoticonBoard.initEmoji(fragment);
     }
 
     @Override
