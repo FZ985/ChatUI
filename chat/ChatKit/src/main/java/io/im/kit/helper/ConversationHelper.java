@@ -126,7 +126,7 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                     .addViewClickListener(ConversationHelper.this)
                     .build();
         }
-        mFragment.getBinding().recycler.setPanelSwitchHelper(mHelper);
+        mFragment.getBinding().recycler.setTouchCall(this::closeExpand);
     }
 
     private void scrollToBottom() {
@@ -195,13 +195,14 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         }
     }
 
-    public void closeExpand() {
-        mHelper.hookSystemBackByPanelSwitcher();
+    public boolean closeExpand() {
+        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.NormalMode);
+        return mHelper.hookSystemBackByPanelSwitcher();
     }
 
 
     public boolean onBackPressed() {
-        return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
+        return mHelper != null && closeExpand();
     }
 
     private void log(String m) {

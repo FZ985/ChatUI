@@ -7,15 +7,15 @@ import android.view.MotionEvent;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.im.kit.widget.switchpanel.PanelSwitchHelper;
+import io.im.lib.callback.ChatFun;
 
 
 public class AutoHidePanelRecyclerView extends RecyclerView {
 
-    PanelSwitchHelper panelSwitchHelper;
+    ChatFun.Fun touchCall;
 
-    public void setPanelSwitchHelper(PanelSwitchHelper panelSwitchHelper) {
-        this.panelSwitchHelper = panelSwitchHelper;
+    public void setTouchCall(ChatFun.Fun touchCall) {
+        this.touchCall = touchCall;
     }
 
     public AutoHidePanelRecyclerView(Context context) {
@@ -34,8 +34,8 @@ public class AutoHidePanelRecyclerView extends RecyclerView {
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e != null && e.getAction() != MotionEvent.ACTION_CANCEL) {
-            if (panelSwitchHelper != null) {
-                panelSwitchHelper.hookSystemBackByPanelSwitcher();
+            if (touchCall != null) {
+                touchCall.apply();
             }
         }
         return super.onTouchEvent(e);
