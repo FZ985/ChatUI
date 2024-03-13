@@ -15,7 +15,10 @@ import io.im.kit.conversation.extension.component.emoticon.ChatEmoticonBoard;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
 import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
+import io.im.kit.widget.switchpanel.interfaces.listener.OnPanelChangeListener;
 import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener;
+import io.im.kit.widget.switchpanel.view.panel.IPanelView;
+import io.im.kit.widget.switchpanel.view.panel.PanelView;
 import io.im.lib.callback.ChatLifecycle;
 import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.JLog;
@@ -48,8 +51,6 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         fragment.getBinding().inputPanel.getBinding().send.setOnClickListener(this::onClickBefore);
         fragment.getBinding().inputPanel.getBinding().voice.setOnClickListener(this::onClickBefore);
 
-        ChatEmoticonBoard emoticonBoard = fragment.getBinding().panelEmotion.findViewById(R.id.emoji_board);
-        emoticonBoard.initEmoji(fragment);
     }
 
     @Override
@@ -60,7 +61,9 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(mFragment)
                     .setWindowInsetsRootView(mFragment.getBinding().getRoot())
-                    .addKeyboardStateListener((visible, height) -> log("系统键盘是否可见 : " + visible + " 高度为：" + height))
+                    .addKeyboardStateListener((visible, height) -> {
+                        log("系统键盘是否可见 : " + visible + " 高度为：" + height);
+                    })
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         log("输入框是否获得焦点 : " + hasFocus);
                         if (hasFocus) {
@@ -93,6 +96,33 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                             return R.id.emoji;
                         }
                     })
+                    .addPanelChangeListener(new OnPanelChangeListener() {
+                        @Override
+                        public void onKeyboard() {
+
+                        }
+
+                        @Override
+                        public void onNone() {
+
+                        }
+
+                        @Override
+                        public void onPanel(@Nullable IPanelView panel) {
+
+                        }
+
+                        @Override
+                        public void onPanelSizeChange(@Nullable IPanelView panel, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if (panel instanceof PanelView) {
+                                PanelView panelView = (PanelView) panel;
+                                if (panelView.getId() == R.id.panel_emotion) {
+                                    ChatEmoticonBoard emoticonBoard = mFragment.getBinding().panelEmotion.findViewById(R.id.emoji_board);
+                                    emoticonBoard.initEmoji(mFragment);
+                                }
+                            }
+                        }
+                    })
                     .addViewClickListener(ConversationHelper.this)
                     .build();
         }
@@ -110,32 +140,47 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         if (view != null && mFragment != null) {
             int id = view.getId();
             if (id == R.id.voice) {
+                //点击 语音按钮
                 if (mFragment.getBinding().inputPanel.isVoiceInputMode()) {
                     mFragment.getBinding().inputPanel.setIsVoiceInputMode(false);
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
                     // 切换到文本输入模式后需要弹出软键盘
-                    view.postDelayed(() -> mFragment.getBinding().inputPanel.getEditText().requestFocus(), 150);
+                    view.postDelayed(() -> {
+                        mFragment.getBinding().inputPanel.getEditText().requestFocus();
+                        mExtensionViewModel.setSoftInputKeyBoard(true, true);
+                    }, 150);
                 } else {
                     closeExpand();
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.VoiceInput);
                     mFragment.getBinding().inputPanel.setIsVoiceInputMode(true);
+                    mExtensionViewModel.setSoftInputKeyBoard(false, true);
                 }
+            } else if (id == R.id.edit) {
+                //点击 输入框
+                mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
             } else if (id == R.id.emoji) {
+                //点击 表情按钮
                 if (mExtensionViewModel.getInputModeLiveData().getValue() != null
                         && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.EmoticonMode) {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, true);
                 } else {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
+                    mExtensionViewModel.setSoftInputKeyBoard(false, false);
                 }
             } else if (id == R.id.add) {
+                //点击 添加插件
                 if (mExtensionViewModel.getInputModeLiveData().getValue() != null
                         && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.PluginMode
                 ) {
                     mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.TextInput);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, true);
                 } else {
                     mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.PluginMode);
+                    mExtensionViewModel.setSoftInputKeyBoard(false, false);
                 }
             } else if (id == R.id.send) {
+                //点击 发送按钮
                 mExtensionViewModel.onSendClick();
             }
             log("点击了View : " + view);

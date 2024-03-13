@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.im.kit.widget.immbar.StatusBarView
+    <io.im.kit.widget.systemui.StatusBarView
         android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

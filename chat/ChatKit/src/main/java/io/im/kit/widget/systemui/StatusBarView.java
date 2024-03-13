@@ -1,4 +1,4 @@
-package io.im.kit.widget.immbar;
+package io.im.kit.widget.systemui;
 
 import android.content.Context;
 import android.content.res.Resources;

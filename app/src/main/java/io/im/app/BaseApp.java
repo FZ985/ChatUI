@@ -1,8 +1,13 @@
 package io.im.app;
 
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.multidex.MultiDexApplication;
 
 import io.im.kit.IMCenter;
+import io.im.kit.config.ChatEmojiConfig;
+import io.im.kit.config.Options;
 
 /**
  * author : JFZ
@@ -17,6 +22,14 @@ public class BaseApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         app = this;
-        IMCenter.init(this);
+        Options options = new Options();
+        options.getEmojiConfig().setShowAddButton(true);
+        options.getEmojiConfig().setAddButtonClickListener(new ChatEmojiConfig.AddButtonClickListener() {
+            @Override
+            public void onAddClick(View view, ChatEmojiConfig.RefreshEmojiCall refreshEmoji) {
+                Toast.makeText(BaseApp.this, "添加表情", Toast.LENGTH_SHORT).show();
+            }
+        });
+        IMCenter.init(this, options);
     }
 }

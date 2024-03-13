@@ -9,10 +9,9 @@ import android.util.Log;
  */
 
 public class JLog {
-    private static final String TAG = "##DOG##";
+    private static final String TAG = "##IM_DOG##";
     private static final String SUFFIX = ".java";
     public static boolean DEBUG = true;
-    private static int LOG_MAX_LENGTH = 800;
 
     public static void i(String value) {
         if (DEBUG) {
@@ -22,19 +21,7 @@ public class JLog {
 
     public static void i(String tag, String value) {
         if (DEBUG) {
-            int strLength = value.length();
-            int start = 0;
-            int end = LOG_MAX_LENGTH;
-            for (int i = 0; i < 100; i++) {
-                if (strLength > end) {
-                    Log.i(tag + i, value.substring(start, end));
-                    start = end;
-                    end = end + LOG_MAX_LENGTH;
-                } else {
-                    Log.i(tag + i, value.substring(start, strLength));
-                    break;
-                }
-            }
+            Log.i(tag, value);
         }
     }
 
@@ -51,19 +38,7 @@ public class JLog {
     public static void e(String tag, String value) {
         if (DEBUG) {
             String result = logDetail();
-            int strLength = (result + value).length();
-            int start = 0;
-            int end = LOG_MAX_LENGTH;
-            for (int i = 0; i < 100; i++) {
-                if (strLength > end) {
-                    Log.e(tag + i, (result + value).substring(start, end));
-                    start = end;
-                    end = end + LOG_MAX_LENGTH;
-                } else {
-                    Log.e(tag + i, (result + value).substring(start, strLength));
-                    break;
-                }
-            }
+            Log.e(tag, result + value);
         }
     }
 

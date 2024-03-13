@@ -12,7 +12,9 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,10 +24,10 @@ import java.util.List;
 
 import io.im.kit.IMCenter;
 import io.im.kit.R;
+import io.im.kit.config.ChatEmojiConfig;
 import io.im.kit.conversation.IConversationFragment;
 import io.im.kit.conversation.extension.ChatExtensionViewModel;
 import io.im.kit.databinding.KitPanelEmojiBoardBinding;
-import io.im.kit.widget.FixedLinearLayoutManager;
 import io.im.kit.widget.adapter.ViewHolder;
 import io.im.lib.base.ChatPageAdapter;
 import io.im.lib.callback.ChatFun;
@@ -48,6 +50,8 @@ public class ChatEmoticonBoard extends LinearLayout {
 
     private ChatExtensionViewModel mExtensionViewModel;
 
+    private IConversationFragment mFragment;
+
     public ChatEmoticonBoard(Context context) {
         this(context, null);
     }
@@ -58,50 +62,81 @@ public class ChatEmoticonBoard extends LinearLayout {
 
     public ChatEmoticonBoard(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = KitPanelEmojiBoardBinding.inflate(LayoutInflater.from(context), this, true);
-        binding.emojiTab.setLayoutManager(new FixedLinearLayoutManager(context, FixedLinearLayoutManager.HORIZONTAL, false));
+        binding = KitPanelEmojiBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        binding.emojiTab.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     public void initEmoji(IConversationFragment fragment) {
         if (fragment == null) return;
+        this.mFragment = fragment;
         if (emojiTabs.size() > 0) {
             return;
         }
-        mExtensionViewModel = new ViewModelProvider(fragment).get(ChatExtensionViewModel.class);
-        emojiTabs = ChatNull.compatList(IMCenter.getInstance().getOptions().getEmojiConfig().getEmojiTabs());
+        if (mExtensionViewModel == null) {
+            mExtensionViewModel = new ViewModelProvider(fragment).get(ChatExtensionViewModel.class);
+        }
+        initContent();
+    }
+
+    private void initContent() {
+        ChatEmojiConfig emojiConfig = IMCenter.getInstance().getOptions().getEmojiConfig();
+        boolean showTabItem = emojiConfig.isShowTabItem();
+        if (showTabItem) {
+            binding.emojiTab.setVisibility(VISIBLE);
+            binding.emojiLine.setVisibility(VISIBLE);
+        } else {
+            binding.emojiTab.setVisibility(GONE);
+            binding.emojiLine.setVisibility(GONE);
+        }
+        boolean showAddButton = emojiConfig.isShowAddButton();
+        if (showAddButton) {
+            binding.kitEmojiAddButton.setVisibility(VISIBLE);
+            binding.kitEmojiAddButton.setOnClickListener(v -> {
+                emojiConfig.getAddButtonClickListener().onAddClick(v, () -> initContent());
+            });
+        } else {
+            binding.kitEmojiAddButton.setVisibility(GONE);
+        }
+        emojiTabs = ChatNull.compatList(emojiConfig.getEmojiTabs());
         tabAdapter = new EmojiTabAdapter(emojiTabs);
         binding.emojiTab.setAdapter(tabAdapter);
         tabAdapter.setItemClickListener((v, position) -> {
             binding.emojiVp.setCurrentItem(position);
             tabAdapter.selectIndex(position);
         });
-        binding.emojiVp.setOffscreenPageLimit(emojiTabs.size());
         binding.emojiVp.setAdapter(new EmojiContentAdapter(emojiTabs));
         binding.emojiVp.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                super.onPageSelected(position);
                 tabAdapter.selectIndex(position);
             }
         });
+
         if (emojiTabs != null && emojiTabs.size() > 0) {
             for (ChatEmoticonTab tab : emojiTabs) {
                 if (tab.getEditInfo() != null) {
-                    tab.getEditInfo().observe(fragment, s -> {
-                        if (fragment.isDetached()) return;
-                        if (mExtensionViewModel == null) return;
-                        if (mExtensionViewModel.getEditText() == null) return;
-                        if (s.equals(ChatEmojiTab.DELETE)) {
-                            mExtensionViewModel.getEditText().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                        } else {
-                            int start = mExtensionViewModel.getEditText().getSelectionStart();
-                            mExtensionViewModel.getEditText().getText().insert(start, s);
-                        }
-                    });
+                    tab.getEditInfo().removeObserver(mObs);
+                    tab.getEditInfo().observe(mFragment, mObs);
                 }
             }
         }
     }
+
+
+    private final Observer<String> mObs = new Observer<String>() {
+        @Override
+        public void onChanged(String s) {
+            if (mFragment.isDetached()) return;
+            if (mExtensionViewModel == null) return;
+            if (mExtensionViewModel.getEditText() == null) return;
+            if (s.equals(ChatEmojiTab.DELETE)) {
+                mExtensionViewModel.getEditText().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            } else {
+                int start = mExtensionViewModel.getEditText().getSelectionStart();
+                mExtensionViewModel.getEditText().getText().insert(start, s);
+            }
+        }
+    };
 
     private class EmojiContentAdapter extends ChatPageAdapter<ChatEmoticonTab> {
         public EmojiContentAdapter(List<ChatEmoticonTab> data) {
@@ -113,13 +148,13 @@ public class ChatEmoticonBoard extends LinearLayout {
             if (map.containsKey(position) && map.get(position) != null) {
                 return map.get(position);
             }
-            View view = item.onCreateTabPager(context, parent);
+            View view = item.onCreateTabPager(context);
             map.put(position, view);
             return view;
         }
     }
 
-    private static class EmojiTabAdapter extends RecyclerView.Adapter<ViewHolder> {
+    public static class EmojiTabAdapter extends RecyclerView.Adapter<ViewHolder> {
         List<ChatEmoticonTab> emojiTabs;
         private int index = 0;
 

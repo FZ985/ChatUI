@@ -6,12 +6,12 @@
         android:height="@dimen/chat_dp36">
         <shape>
             <corners android:radius="@dimen/chat_dp6" />
-            <solid android:color="@color/kit_emoji_tab_select_color" />
+            <solid android:color="@color/chat_transparent" />
         </shape>
     </item>
     <item
-        android:width="@dimen/chat_dp22"
-        android:height="@dimen/chat_dp22"
-        android:drawable="@drawable/kit_ic_emoji"
+        android:width="@dimen/chat_dp35"
+        android:height="@dimen/chat_dp35"
+        android:drawable="@drawable/kit_emoji_add_button"
         android:gravity="center" />
 </layer-list>

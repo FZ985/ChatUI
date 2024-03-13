@@ -47,7 +47,7 @@ public class ChatEmojiTab implements ChatEmoticonTab {
     }
 
     @Override
-    public View onCreateTabPager(Context context, ViewGroup parent) {
+    public View onCreateTabPager(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.kit_emoji_tab_default, null, false);
         RecyclerView yl_recycler = view.findViewById(R.id.yl_recycler);
         ImageView yl_emoji_del = view.findViewById(R.id.yl_emoji_del);
@@ -128,4 +128,5 @@ public class ChatEmojiTab implements ChatEmoticonTab {
     public LiveData<String> getEditInfo() {
         return mEmojiLiveData;
     }
+
 }

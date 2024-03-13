@@ -6,10 +6,10 @@
     android:orientation="vertical">
 
     <io.im.kit.widget.switchpanel.view.PanelSwitchLayout
+        android:id="@+id/switch_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/switch_layout"
         android:orientation="vertical"
         app:android11KeyboardFeature="true">
 

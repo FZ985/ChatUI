@@ -16,4 +16,8 @@
     <color name="kit_bubble_right_color">@color/chat_theme</color>
     <color name="kit_bubble_right_color2">@color/chat_theme60</color>
     <color name="kit_bubble_right_stroke_color">@color/chat_theme</color>
+
+    <color name="kit_emoji_tab_select_color">@color/chat_skin_bg_leve2</color>
+    <color name="kit_emoji_tab_add_color">@color/chat_black</color>
+
 </resources>

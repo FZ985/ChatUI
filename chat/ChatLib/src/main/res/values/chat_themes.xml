@@ -12,6 +12,23 @@
         <item name="android:windowBackground">@color/chat_skin_window</item>
         <item name="android:statusBarColor">@color/chat_skin_status_bar</item>
         <item name="android:navigationBarColor">@color/chat_skin_navigation_bar</item>
+        <item name="materialAlertDialogTheme">@style/_materialAlertDialogTheme</item>
     </style>
+
+    <!-- M3 alert 主题设置 start   -->
+    <style name="_materialAlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/_alertDialogTheme</item>
+        <!--      <item name="android:background">@color/core_skin_bg_leve2</item>-->
+    </style>
+
+    <style name="_alertDialogTheme" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/_alertDialogShapeAppearance</item>
+    </style>
+
+    <style name="_alertDialogShapeAppearance" parent="">
+        <item name="cornerFamily">?attr/shapeCornerFamily</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+    <!-- M3 alert 主题设置 end   -->
 
 </resources>

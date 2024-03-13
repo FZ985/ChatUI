@@ -18,9 +18,14 @@ public class ChatEmojiConfig {
 
     private AddButtonClickListener addButtonClickListener;
 
+    private boolean showTabItem = true;//是否展示 表情 item 列表
+
+    private boolean showAddButton = true;//是否展示 添加按钮
+
     private final List<ChatEmoticonTab> emojiTabs = new ArrayList<>();
 
     public ChatEmojiConfig() {
+        emojiTabs.add(new ChatEmojiTab());
         emojiTabs.add(new ChatEmojiTab());
     }
 
@@ -40,8 +45,28 @@ public class ChatEmojiConfig {
         this.addButtonClickListener = addButtonClickListener;
     }
 
+    public boolean isShowTabItem() {
+        return showTabItem;
+    }
+
+    public void setShowTabItem(boolean showTabItem) {
+        this.showTabItem = showTabItem;
+    }
+
+    public boolean isShowAddButton() {
+        return showAddButton && addButtonClickListener != null;
+    }
+
+    public void setShowAddButton(boolean showAddButton) {
+        this.showAddButton = showAddButton;
+    }
+
     public interface AddButtonClickListener {
-        void onAddClick(View view);
+        void onAddClick(View view, RefreshEmojiCall refreshEmoji);
+    }
+
+    public interface RefreshEmojiCall {
+        void refreshUI();
     }
 
 }

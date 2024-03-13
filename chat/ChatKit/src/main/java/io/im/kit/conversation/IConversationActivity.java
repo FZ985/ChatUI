@@ -1,5 +1,6 @@
 package io.im.kit.conversation;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -11,7 +12,7 @@ import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.databinding.KitActivityConversationBinding;
 import io.im.kit.utils.RouteUtil;
-import io.im.kit.widget.immbar.ImmersionBar;
+import io.im.kit.widget.systemui.StatusBarHelper;
 import io.im.lib.base.ChatBaseActivity;
 import io.im.lib.base.ChatBaseFragment;
 import io.im.lib.base.ChatFragmentPageAdapter;
@@ -40,10 +41,7 @@ public class IConversationActivity extends ChatBaseActivity {
             binding.conversationToolbar.setTitleName(user.getUserName());
         }
         binding.conversationToolbar.setLeftOnclick(v -> onBackPressed());
-        ImmersionBar.with(this)
-                .navigationBarColor(R.color.chat_conversation_bottom_panel)
-                .init();
-
+        StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
         IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(this, fontSize -> {
             if (!isFinishing() && fontSize != null) {
                 binding.conversationToolbar.updateTitleSize();

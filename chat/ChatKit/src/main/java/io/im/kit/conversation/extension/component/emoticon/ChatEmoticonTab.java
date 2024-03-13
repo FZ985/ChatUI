@@ -3,7 +3,6 @@ package io.im.kit.conversation.extension.component.emoticon;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.lifecycle.LiveData;
 
@@ -28,7 +27,8 @@ public interface ChatEmoticonTab {
     /**
      * 创建表情面板，不能为空
      */
-    View onCreateTabPager(Context context, ViewGroup parent);
+    View onCreateTabPager(Context context);
+
 
     /**
      * 返回 tab 页对应输入框的更新信息

@@ -1,4 +1,4 @@
-package io.im.kit.activity;
+package io.im.kit.ui.activity;
 
 import android.os.Bundle;
 
