@@ -20,7 +20,7 @@ public class ChatEmojiConfig {
 
     private boolean showTabItem = true;//是否展示 表情 item 列表
 
-    private boolean showAddButton = true;//是否展示 添加按钮
+    private boolean showAddButton = false;//是否展示 添加按钮
 
     private final List<ChatEmoticonTab> emojiTabs = new ArrayList<>();
 

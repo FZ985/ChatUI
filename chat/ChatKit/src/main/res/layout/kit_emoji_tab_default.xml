@@ -20,14 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/chat_conversation_bottom_panel"
+        android:background="@drawable/kit_ic_layer"
         android:paddingTop="@dimen/chat_dp15">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/chat_dp15"
-            android:paddingTop="@dimen/chat_dp12"
+            android:paddingLeft="@dimen/chat_dp25"
+            android:paddingTop="@dimen/chat_dp15"
             android:paddingRight="@dimen/chat_dp15"
             android:paddingBottom="@dimen/chat_dp15">
 
@@ -36,6 +36,7 @@
                 android:layout_width="@dimen/chat_dp50"
                 android:layout_height="@dimen/chat_dp40"
                 android:src="@drawable/kit_bg_emoji_delete" />
+
         </FrameLayout>
     </FrameLayout>
 </RelativeLayout>
