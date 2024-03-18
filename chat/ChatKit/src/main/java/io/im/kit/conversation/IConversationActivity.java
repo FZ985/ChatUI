@@ -1,8 +1,10 @@
 package io.im.kit.conversation;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class IConversationActivity extends ChatBaseActivity {
 
     private ChatFragmentPageAdapter adapter;
 
+    private int uiMode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,18 @@ public class IConversationActivity extends ChatBaseActivity {
                 binding.conversationToolbar.updateTitleSize();
             }
         });
+        uiMode = getResources().getConfiguration().uiMode;
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int newUiMode = newConfig.uiMode;
+        if (newUiMode != uiMode) {
+            StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+            uiMode = newUiMode;
+            recreate();
+        }
     }
 
     @Override

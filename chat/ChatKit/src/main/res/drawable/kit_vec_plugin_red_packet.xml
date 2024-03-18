@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="@color/kit_ripple_plugin_icon"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M853.3,338.9V853.3a85.3,85.3 0,0 1,-85.3 85.3H256a85.3,85.3 0,0 1,-85.3 -85.3V339a510.2,510.2 0,0 0,257.2 123.5,85.3 85.3,0 0,0 168.2,0 510.2,510.2 0,0 0,257.3 -123.5zM768,85.3a85.3,85.3 0,0 1,85.3 85.3l0,108.8a468.4,468.4 0,0 1,-260.8 140.3,85.4 85.4,0 0,0 -161.1,0 468.4,468.4 0,0 1,-260.8 -140.3L170.7,170.7a85.3,85.3 0,0 1,85.3 -85.3h512z" />
+</vector>

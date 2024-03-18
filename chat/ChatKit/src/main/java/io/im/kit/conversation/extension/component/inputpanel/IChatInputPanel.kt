@@ -15,8 +15,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import io.im.kit.R
-import io.im.kit.config.ChatInputMode
-import io.im.kit.config.InputStyle
+import io.im.kit.config.enums.ChatInputMode
+import io.im.kit.config.enums.InputStyle
 import io.im.kit.databinding.KitComponentInputPanelBinding
 import io.im.kit.helper.OptionsHelper
 

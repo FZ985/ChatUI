@@ -58,7 +58,7 @@ public class ChatAndroidEmoji {
         }
         replaceEmojiMap = new HashMap<>();
 
-        replaceEmojiMap.put(0x2601, "☁️");
+//        replaceEmojiMap.put(0x2601, "☁️");
 
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         density = dm.density;

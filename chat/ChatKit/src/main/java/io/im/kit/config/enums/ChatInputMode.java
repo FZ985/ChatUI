@@ -1,4 +1,4 @@
-package io.im.kit.config;
+package io.im.kit.config.enums;
 
 public enum ChatInputMode {
 

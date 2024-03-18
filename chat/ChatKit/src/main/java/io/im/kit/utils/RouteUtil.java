@@ -23,7 +23,7 @@ public class RouteUtil {
     public static void goPrivateChat(Context context, UserInfo user) {
         go(context, new Intent(context, IConversationActivity.class)
                 .putExtra(User, user)
-                .putExtra(InputStyle, io.im.kit.config.InputStyle.All.getType())
+                .putExtra(InputStyle, io.im.kit.config.enums.InputStyle.All.getType())
                 .putExtra(ConversationType, io.im.lib.model.ConversationType.PRIVATE.getValue()));
     }
 

@@ -31,12 +31,21 @@ class PanelContainer : FrameLayout, ViewAssertion {
         private set
 
     @JvmOverloads
-    constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context!!, attrs, defStyleAttr) {
+    constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(
+        context!!,
+        attrs,
+        defStyleAttr
+    ) {
         initView(attrs, defStyleAttr, 0)
     }
 
     @TargetApi(21)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context!!, attrs, defStyleAttr, defStyleRes) {
+    constructor(
+        context: Context?,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context!!, attrs, defStyleAttr, defStyleRes) {
         initView(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -55,7 +64,7 @@ class PanelContainer : FrameLayout, ViewAssertion {
         panelSparseArray = SparseArray()
         for (i in 0 until childCount) {
             val panel = getChildAt(i) as? IPanelView
-                    ?: throw RuntimeException("PanelContainer -- PanelContainer's child should be IPanelView")
+                ?: throw RuntimeException("PanelContainer -- PanelContainer's child should be IPanelView")
             panelSparseArray.put(panel.getBindingTriggerViewId(), panel)
             (panel as View).visibility = View.GONE
         }
@@ -71,6 +80,14 @@ class PanelContainer : FrameLayout, ViewAssertion {
 
     fun showPanel(panelId: Int, size: Pair<Int, Int>): Pair<Int, Int> {
         val panel = panelSparseArray[panelId]
+//        for (i in 0 until panelSparseArray.size()) {
+//            val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
+//            if (panelView is View) {
+//                if (panelView != panel) {
+//                    panelView.visibility = View.GONE
+//                }
+//            }
+//        }
         for (i in 0 until panelSparseArray.size()) {
             val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
             if (panelView is View) {

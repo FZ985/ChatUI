@@ -3,15 +3,19 @@ package io.im.kit.conversation.extension;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import io.im.kit.config.ChatInputMode;
+import io.im.kit.config.enums.ChatInputMode;
 import io.im.kit.conversation.IConversationFragment;
+import io.im.kit.conversation.extension.component.emoticon.ChatAndroidEmoji;
 import io.im.lib.utils.JLog;
 
 /**
@@ -28,12 +32,48 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
     @SuppressLint("StaticFieldLeak")
     private EditText editText;
 
+    private final TextWatcher mTextWatcher = new TextWatcher() {
+        private int start;
+        private int count;
+        private boolean isProcess;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (isProcess) {
+                return;
+            }
+            this.start = start;
+            this.count = count;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (isProcess) {
+                return;
+            }
+            int selectionStart = editText.getSelectionStart();
+            if (ChatAndroidEmoji.isEmoji(s.subSequence(start, start + count).toString())) {
+                isProcess = true;
+                String resultStr = ChatAndroidEmoji.replaceEmojiWithText(s.toString());
+                editText.setText(ChatAndroidEmoji.ensure(resultStr), TextView.BufferType.SPANNABLE);
+                editText.setSelection(Math.min(editText.getText().length(), Math.max(0, selectionStart)));
+                isProcess = false;
+            }
+        }
+    };
+
     public ChatExtensionViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void setAttachChat(IConversationFragment fragment, EditText editText) {
         this.editText = editText;
+        this.editText.addTextChangedListener(mTextWatcher);
     }
 
     public void onSendClick() {
@@ -77,6 +117,8 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 if (clearFocus) {
                     editText.clearFocus();
+                } else {
+                    editText.requestFocus();
                 }
             }
             isSoftInputShow = isShow;

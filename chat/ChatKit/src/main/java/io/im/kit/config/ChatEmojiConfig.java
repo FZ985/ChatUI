@@ -26,7 +26,6 @@ public class ChatEmojiConfig {
 
     public ChatEmojiConfig() {
         emojiTabs.add(new ChatEmojiTab());
-        emojiTabs.add(new ChatEmojiTab());
     }
 
     public List<ChatEmoticonTab> getEmojiTabs() {

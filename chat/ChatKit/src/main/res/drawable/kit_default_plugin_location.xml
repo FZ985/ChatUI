@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:width="@dimen/chat_dp54"
+        android:height="@dimen/chat_dp54">
+
+        <ripple android:color="@color/kit_ripple_plugin_click">
+            <item>
+                <shape>
+                    <solid android:color="@color/kit_ripple_plugin_icon_bg" />
+                    <corners android:radius="@dimen/chat_dp15" />
+                </shape>
+            </item>
+        </ripple>
+
+    </item>
+    <item
+        android:width="@dimen/chat_dp28"
+        android:height="@dimen/chat_dp28"
+        android:drawable="@drawable/kit_vec_plugin_location"
+        android:gravity="center" />
+</layer-list>

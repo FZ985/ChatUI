@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import io.im.kit.IMCenter;
-import io.im.kit.config.FontSize;
+import io.im.kit.config.enums.FontSize;
 import io.im.kit.databinding.ZTestBinding;
 import io.im.lib.base.ChatBaseActivity;
 

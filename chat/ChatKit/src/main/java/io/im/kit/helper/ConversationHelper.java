@@ -7,11 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.im.kit.R;
-import io.im.kit.config.ChatInputMode;
-import io.im.kit.config.InputStyle;
+import io.im.kit.config.enums.ChatInputMode;
+import io.im.kit.config.enums.InputStyle;
 import io.im.kit.conversation.IConversationFragment;
 import io.im.kit.conversation.extension.ChatExtensionViewModel;
 import io.im.kit.conversation.extension.component.emoticon.ChatEmoticonBoard;
+import io.im.kit.conversation.extension.component.plugins.ChatPluginBoard;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
 import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
@@ -50,7 +51,6 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
         mExtensionViewModel.setAttachChat(fragment, fragment.getBinding().inputPanel.getEditText());
         fragment.getBinding().inputPanel.getBinding().send.setOnClickListener(this::onClickBefore);
         fragment.getBinding().inputPanel.getBinding().voice.setOnClickListener(this::onClickBefore);
-
     }
 
     @Override
@@ -119,6 +119,9 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                                 if (panelView.getId() == R.id.panel_emotion) {
                                     ChatEmoticonBoard emoticonBoard = mFragment.getBinding().panelEmotion.findViewById(R.id.emoji_board);
                                     emoticonBoard.initEmoji(mFragment);
+                                } else if (panelView.getId() == R.id.panel_addition) {
+                                    ChatPluginBoard pluginBoard = mFragment.getBinding().panelAddition.findViewById(R.id.plugin_board);
+                                    pluginBoard.initPlugin(mFragment);
                                 }
                             }
                         }
@@ -163,7 +166,7 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                 if (mExtensionViewModel.getInputModeLiveData().getValue() != null
                         && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.EmoticonMode) {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                    mExtensionViewModel.setSoftInputKeyBoard(true, true);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 } else {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
                     mExtensionViewModel.setSoftInputKeyBoard(false, false);
@@ -174,10 +177,10 @@ public final class ConversationHelper implements ChatLifecycle, OnViewClickListe
                         && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.PluginMode
                 ) {
                     mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.TextInput);
-                    mExtensionViewModel.setSoftInputKeyBoard(true, true);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 } else {
                     mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.PluginMode);
-                    mExtensionViewModel.setSoftInputKeyBoard(false, false);
+                    mExtensionViewModel.setSoftInputKeyBoard(false, true);
                 }
             } else if (id == R.id.send) {
                 //点击 发送按钮

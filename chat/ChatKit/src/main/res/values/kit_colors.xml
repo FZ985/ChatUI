@@ -20,4 +20,10 @@
     <color name="kit_emoji_tab_select_color">@color/chat_skin_bg_leve2</color>
     <color name="kit_emoji_tab_add_color">@color/chat_black</color>
 
+    <color name="kit_plugin_item_text">#464545</color>
+
+    <color name="kit_ripple_plugin_icon_bg">@color/chat_skin_bg_leve2</color>
+    <color name="kit_ripple_plugin_icon">@color/chat_black</color>
+    <color name="kit_ripple_plugin_click">@color/chat_Grey_400</color>
+
 </resources>

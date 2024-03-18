@@ -40,7 +40,7 @@ import io.im.lib.utils.ChatNull;
  */
 public class ChatEmoticonBoard extends LinearLayout {
 
-    private KitPanelEmojiBoardBinding binding;
+    private final KitPanelEmojiBoardBinding binding;
 
     private List<ChatEmoticonTab> emojiTabs = new ArrayList<>();
 
@@ -91,9 +91,7 @@ public class ChatEmoticonBoard extends LinearLayout {
         boolean showAddButton = emojiConfig.isShowAddButton();
         if (showAddButton) {
             binding.kitEmojiAddButton.setVisibility(VISIBLE);
-            binding.kitEmojiAddButton.setOnClickListener(v -> {
-                emojiConfig.getAddButtonClickListener().onAddClick(v, () -> initContent());
-            });
+            binding.kitEmojiAddButton.setOnClickListener(v -> emojiConfig.getAddButtonClickListener().onAddClick(v, this::initContent));
         } else {
             binding.kitEmojiAddButton.setVisibility(GONE);
         }

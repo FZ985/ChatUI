@@ -2,7 +2,7 @@
 <resources>
     <color name="chat_conversation_toolbar">@color/chat_color_222222</color>
     <color name="chat_conversation_toolbar_title">@color/chat_color_858585</color>
-    <color name="chat_conversation_bottom_panel">@color/chat_color_222222</color>
+    <color name="chat_conversation_bottom_panel">#212121</color>
 
     <color name="kit_input_icon">@color/chat_color_858585</color>
     <color name="kit_input_text">@color/chat_color_999999</color>
@@ -17,4 +17,10 @@
 
     <color name="kit_emoji_tab_select_color">@color/chat_color_333333</color>
     <color name="kit_emoji_tab_add_color">@color/chat_color_858585</color>
+
+    <color name="kit_plugin_item_text">@color/chat_color_858585</color>
+
+    <color name="kit_ripple_plugin_icon_bg">#292929</color>
+    <color name="kit_ripple_plugin_icon">@color/chat_white_80</color>
+    <color name="kit_ripple_plugin_click">@color/chat_white_20</color>
 </resources>
