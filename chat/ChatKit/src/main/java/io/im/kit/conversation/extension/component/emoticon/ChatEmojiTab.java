@@ -1,6 +1,7 @@
 package io.im.kit.conversation.extension.component.emoticon;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.im.kit.R;
+import io.im.kit.databinding.KitEmojiTabDefaultBinding;
 import io.im.kit.widget.adapter.ViewHolder;
 import io.im.lib.callback.ChatFun;
 import io.im.lib.utils.ChatLibUtil;
@@ -34,7 +36,21 @@ public class ChatEmojiTab implements ChatEmoticonTab {
 
     private final int spanCount = 9;
 
+    private KitEmojiTabDefaultBinding binding;
+
+    private GridLayoutManager layoutManager;
+
     private final MutableLiveData<String> mEmojiLiveData = new MutableLiveData<>();
+
+    private final View.OnLayoutChangeListener changeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> onScrollEvent();
+
+
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            onScrollEvent();
+        }
+    };
 
     @Override
     public Drawable onTabSelectDrawable(Context context) {
@@ -48,15 +64,21 @@ public class ChatEmojiTab implements ChatEmoticonTab {
 
     @Override
     public View onCreateTabPager(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.kit_emoji_tab_default, null, false);
-        RecyclerView yl_recycler = view.findViewById(R.id.yl_recycler);
-        ImageView yl_emoji_del = view.findViewById(R.id.yl_emoji_del);
+        binding = KitEmojiTabDefaultBinding.inflate(LayoutInflater.from(context), null, false);
 
-        yl_emoji_del.setOnClickListener(v -> mEmojiLiveData.setValue(DELETE));
+        binding.ylEmojiDel.setOnClickListener(v -> mEmojiLiveData.setValue(DELETE));
 
-        yl_recycler.setLayoutManager(new GridLayoutManager(context, spanCount));
+        layoutManager = new GridLayoutManager(context, spanCount);
+        binding.ylRecycler.setLayoutManager(layoutManager);
+
+        binding.ylRecycler.removeOnLayoutChangeListener(changeListener);
+        binding.ylRecycler.addOnLayoutChangeListener(changeListener);
+
+        binding.ylRecycler.removeOnScrollListener(scrollListener);
+        binding.ylRecycler.addOnScrollListener(scrollListener);
+
         EmojiListAdapter adapter = new EmojiListAdapter(spanCount);
-        yl_recycler.setAdapter(adapter);
+        binding.ylRecycler.setAdapter(adapter);
         adapter.setOnItemClickListener(index -> {
             try {
                 int code = ChatAndroidEmoji.getEmojiCode(index);
@@ -70,7 +92,41 @@ public class ChatEmojiTab implements ChatEmoticonTab {
                 JLog.e("====emoji item click err:" + e.getMessage());
             }
         });
-        return view;
+
+        binding.ylRecycler.post(() -> layoutManager.scrollToPositionWithOffset(0, 0));
+        return binding.getRoot();
+    }
+
+    private void onScrollEvent() {
+        if (binding != null && layoutManager != null) {
+            int first = layoutManager.findFirstVisibleItemPosition();
+            int last = layoutManager.findLastVisibleItemPosition();
+            if (binding.ylEmojiRoot.getVisibility() != View.VISIBLE) {
+                return;
+            }
+            Rect controllAreaRect = new Rect();
+            binding.ylEmojiRoot.getGlobalVisibleRect(controllAreaRect);
+            for (int i = last; i >= first; i--) {
+                View view = layoutManager.findViewByPosition(i);
+                if (view == null) {
+                    continue;
+                }
+                ImageView imageView = view.findViewById(R.id.yl_image);
+                if (imageView == null) {
+                    continue;
+                }
+                Rect childRect = new Rect();
+                imageView.getGlobalVisibleRect(childRect);
+                if (controllAreaRect.contains(childRect) || Rect.intersects(controllAreaRect, childRect)) {
+                    Rect tempRect = new Rect(controllAreaRect);
+                    tempRect.intersect(childRect);
+                    double alpha = (Math.sqrt(tempRect.width()) + Math.sqrt(tempRect.height())) / (Math.sqrt(childRect.height()) + Math.sqrt(childRect.width()));
+                    imageView.setAlpha(1 - (float) alpha);
+                } else {
+                    imageView.setAlpha(1.0f);
+                }
+            }
+        }
     }
 
     private static class EmojiListAdapter extends RecyclerView.Adapter<ViewHolder> {
