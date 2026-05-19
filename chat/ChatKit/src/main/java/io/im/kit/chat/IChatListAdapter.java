@@ -80,7 +80,7 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
     }
 
     public IChatListAdapter(IViewProviderListener<UiMessage> listener) {
-        super(listener, IMCenter.getInstance().getOptions().getConversationConfig().getConversationProvider());
+        super(listener, IMCenter.getInstance().getOptions().getChatConfig().getConversationProvider());
     }
 
     @SuppressLint("NotifyDataSetChanged")

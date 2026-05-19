@@ -13,8 +13,8 @@ import io.im.kit.config.enums.FontSize;
 public final class Options {
 
     //会话消息配置
-    public ConversationConfig getConversationConfig() {
-        return Chat.getConversationConfig();
+    public ChatConfig getChatConfig() {
+        return Chat.getChatConfig();
     }
 
 
@@ -37,17 +37,19 @@ public final class Options {
     //字体大小设置
     private FontSize fontSize = FontSize.None;
     private final MutableLiveData<FontSize> fontSizeLiveData = new MutableLiveData<>();
+
     public FontSize getFontSize() {
         return fontSize;
     }
+
     public void setFontSize(FontSize fontSize) {
         this.fontSize = fontSize;
         this.fontSizeLiveData.setValue(fontSize);
     }
+
     public MutableLiveData<FontSize> getFontSizeLiveData() {
         return fontSizeLiveData;
     }
-
 
 
     //聊天表情面板配置

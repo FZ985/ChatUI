@@ -8,10 +8,10 @@ package io.im.kit.config;
 public final class Chat {
 
     //会话配置
-    private static final ConversationConfig conversationConfig = new ConversationConfig();
+    private static final ChatConfig chatConfig = new ChatConfig();
 
-    public static ConversationConfig getConversationConfig() {
-        return conversationConfig;
+    public static ChatConfig getChatConfig() {
+        return chatConfig;
     }
 
 

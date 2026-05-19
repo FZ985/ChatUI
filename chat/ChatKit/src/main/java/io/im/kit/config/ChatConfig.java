@@ -26,7 +26,7 @@ import io.im.lib.utils.JLog;
  * date : 2024/1/27 11:15
  * description :
  */
-public class ConversationConfig {
+public class ChatConfig {
 
     private final ProviderManager<UiMessage> mMessageListProvider = new ProviderManager<>();
     private final ConversationMessageProvider defaultMessageProvider = new IUnKnowMessageProvider();
@@ -34,7 +34,7 @@ public class ConversationConfig {
 
     private final HashMap<Integer, MessageContent> msgMaps = new HashMap<>();
 
-    public ConversationConfig() {
+    public ChatConfig() {
         initMessageProvider();
     }
 
