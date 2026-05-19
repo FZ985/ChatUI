@@ -5,8 +5,6 @@ import androidx.annotation.Keep;
 import java.io.Serializable;
 import java.util.Random;
 
-import io.im.lib.utils.ChatNull;
-
 /**
  * author : JFZ
  * date : 2024/1/27 10:54
@@ -19,20 +17,11 @@ public class Message implements Serializable {
 
     private long messageTime;
 
-    private String fromId;
+    private UserInfo fromUser;
 
-    private String fromAvatar;
-
-    private String fromName;
-
-    private String toId;
-
-    private String toAvatar;
-
-    private String toName;
+    private UserInfo toUser;
 
     private MessageContent messageContent;
-
 
     private MessageDirection messageDirection;//消息方向， 左边、右边
 
@@ -81,52 +70,26 @@ public class Message implements Serializable {
         this.messageDirection = messageDirection;
     }
 
-    public String getFromId() {
-        return ChatNull.compatValue(fromId);
+    public UserInfo getFromUser() {
+        if (fromUser == null) {
+            fromUser = new UserInfo();
+        }
+        return fromUser;
     }
 
-    public void setFromId(String fromId) {
-        this.fromId = fromId;
+    public void setFromUser(UserInfo fromUser) {
+        this.fromUser = fromUser;
     }
 
-    public String getFromAvatar() {
-        return ChatNull.compatValue(fromAvatar);
+    public UserInfo getToUser() {
+        if (toUser == null) {
+            toUser = new UserInfo();
+        }
+        return toUser;
     }
 
-    public void setFromAvatar(String fromAvatar) {
-        this.fromAvatar = fromAvatar;
-    }
-
-    public String getFromName() {
-        return ChatNull.compatValue(fromName);
-    }
-
-    public void setFromName(String fromName) {
-        this.fromName = fromName;
-    }
-
-    public String getToId() {
-        return ChatNull.compatValue(toId);
-    }
-
-    public void setToId(String toId) {
-        this.toId = toId;
-    }
-
-    public String getToAvatar() {
-        return ChatNull.compatValue(toAvatar);
-    }
-
-    public void setToAvatar(String toAvatar) {
-        this.toAvatar = toAvatar;
-    }
-
-    public String getToName() {
-        return ChatNull.compatValue(toName,"用户");
-    }
-
-    public void setToName(String toName) {
-        this.toName = toName;
+    public void setToUser(UserInfo toUser) {
+        this.toUser = toUser;
     }
 
     public ConversationType getConversationType() {

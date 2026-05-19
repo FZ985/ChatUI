@@ -18,6 +18,10 @@ public class UserInfo implements Serializable {
     private String userName;
     private String userAvatar;
 
+    public UserInfo() {
+    }
+
+
     public UserInfo(String userId, String userName, String userAvatar) {
         this.userId = userId;
         this.userName = userName;

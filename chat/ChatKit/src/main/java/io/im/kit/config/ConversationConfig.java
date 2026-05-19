@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.im.kit.conversation.messagelist.provider.ConversationMessageProvider;
-import io.im.kit.conversation.messagelist.provider.ConversationSummaryProvider;
-import io.im.kit.conversation.messagelist.provider.IImageMessageProvider;
-import io.im.kit.conversation.messagelist.provider.ITextMessageProvider;
-import io.im.kit.conversation.messagelist.provider.IUnKnowMessageProvider;
+import io.im.kit.chat.messagelist.provider.ConversationMessageProvider;
+import io.im.kit.chat.messagelist.provider.ConversationSummaryProvider;
+import io.im.kit.chat.messagelist.provider.IImageMessageProvider;
+import io.im.kit.chat.messagelist.provider.ITextMessageProvider;
+import io.im.kit.chat.messagelist.provider.IUnKnowMessageProvider;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.ProviderManager;
 import io.im.lib.message.ImageMessage;

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import io.im.kit.conversation.IConversationActivity;
+import io.im.kit.chat.IChatActivity;
 import io.im.lib.model.UserInfo;
 
 /**
@@ -21,7 +21,7 @@ public class RouteUtil {
     public static final String InputStyle = "input_style";
 
     public static void goPrivateChat(Context context, UserInfo user) {
-        go(context, new Intent(context, IConversationActivity.class)
+        go(context, new Intent(context, IChatActivity.class)
                 .putExtra(User, user)
                 .putExtra(InputStyle, io.im.kit.config.enums.InputStyle.All.getType())
                 .putExtra(ConversationType, io.im.lib.model.ConversationType.PRIVATE.getValue()));

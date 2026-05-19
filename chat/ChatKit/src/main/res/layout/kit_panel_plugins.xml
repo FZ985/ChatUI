@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/chat_conversation_bottom_panel">
 
-    <io.im.kit.conversation.extension.component.plugins.ChatPluginBoard
+    <io.im.kit.chat.extension.component.plugins.ChatPluginBoard
         android:id="@+id/plugin_board"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

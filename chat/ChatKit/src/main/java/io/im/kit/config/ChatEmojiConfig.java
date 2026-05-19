@@ -5,8 +5,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.kit.conversation.extension.component.emoticon.ChatEmojiTab;
-import io.im.kit.conversation.extension.component.emoticon.ChatEmoticonTab;
+import io.im.kit.chat.extension.component.emoticon.ChatEmojiTab;
+import io.im.kit.chat.extension.component.emoticon.ChatEmoticonTab;
 
 
 /**

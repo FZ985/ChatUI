@@ -22,7 +22,7 @@ public class DefaultImageLoader implements ImageLoader {
     @Override
     public void loadConversationAvatar(Context context, ImageView view, Message message, boolean isSender) {
         Glide.with(context)
-                .load(isSender ? message.getFromAvatar() : message.getToAvatar())
+                .load(isSender ? message.getFromUser().getUserAvatar() : message.getToUser().getUserAvatar())
                 .placeholder(R.mipmap.kit_ic_default_avatar)
                 .error(R.mipmap.kit_ic_default_avatar)
                 .transition(DrawableTransitionOptions.withCrossFade())

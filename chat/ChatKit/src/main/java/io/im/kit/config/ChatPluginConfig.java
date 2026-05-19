@@ -3,18 +3,18 @@ package io.im.kit.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.kit.conversation.extension.component.plugins.ChatPluginModule;
-import io.im.kit.conversation.extension.component.plugins.impl.CameraPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.CardPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.CollectPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.FilePlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.ImagePlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.LocationPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.MusicPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.RedPacketPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.TransferPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.VideoCallPlugin;
-import io.im.kit.conversation.extension.component.plugins.impl.VoiceInputPlugin;
+import io.im.kit.chat.extension.component.plugins.ChatPluginModule;
+import io.im.kit.chat.extension.component.plugins.impl.CameraPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.CardPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.CollectPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.FilePlugin;
+import io.im.kit.chat.extension.component.plugins.impl.ImagePlugin;
+import io.im.kit.chat.extension.component.plugins.impl.LocationPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.MusicPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.RedPacketPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.TransferPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.VideoCallPlugin;
+import io.im.kit.chat.extension.component.plugins.impl.VoiceInputPlugin;
 import io.im.lib.model.UserInfo;
 
 /**
