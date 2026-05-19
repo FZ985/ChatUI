@@ -11,12 +11,16 @@ import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.*
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.im.kit.R
 import io.im.kit.widget.switchpanel.Constants
-import java.util.*
+import java.util.Locale
 
 
 object DisplayUtil {
@@ -131,7 +135,7 @@ object DisplayUtil {
     fun getNavigationBarHeight(context: Context, window: Window): Int {
         val deviceNavigationHeight = getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
         val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
-        if (manufacturer.toLowerCase(Locale.ROOT).contains("samsung")) {
+        if (manufacturer.lowercase(Locale.ROOT).contains("samsung")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
                 window.decorView.rootWindowInsets?.let {
@@ -227,7 +231,7 @@ object DisplayUtil {
             }
         }
         val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
-        val isSamsung = manufacturer.toLowerCase().contains("samsung")
+        val isSamsung = manufacturer.lowercase().contains("samsung")
         if((viewGroup == null || !isVisible) && isSamsung){
             isVisible = hasNavBar(context)
         }

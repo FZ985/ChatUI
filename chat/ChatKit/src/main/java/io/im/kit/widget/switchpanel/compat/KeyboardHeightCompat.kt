@@ -23,7 +23,7 @@ object KeyboardHeightCompat {
     fun hasPhysicsKeyboard(): Boolean {
         val rom = RomUtils.getRomInfo()
         if (rom.name == "blackberry") {
-            return rom.model?.toLowerCase(Locale.ROOT)?.contains("bbf100") ?: false
+            return rom.model?.lowercase(Locale.ROOT)?.contains("bbf100") ?: false
         }
         return false
     }

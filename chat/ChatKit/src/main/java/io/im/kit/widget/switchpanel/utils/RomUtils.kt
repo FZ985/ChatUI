@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
-import java.io.*
-import java.util.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStreamReader
+import java.util.Properties
 
 /**
  * 判断设备rom型号
@@ -305,7 +309,7 @@ object RomUtils {
         try {
             val manufacturer = Build.MANUFACTURER
             if (!TextUtils.isEmpty(manufacturer)) {
-                return manufacturer.toLowerCase()
+                return manufacturer.lowercase()
             }
         } catch (ignore: Throwable) {
         }
@@ -322,7 +326,7 @@ object RomUtils {
         try {
             val brand = Build.BRAND
             if (!TextUtils.isEmpty(brand)) {
-                return brand.toLowerCase()
+                return brand.lowercase()
             }
         } catch (ignore: Throwable) {
         }
@@ -339,7 +343,7 @@ object RomUtils {
             try {
                 val display = Build.DISPLAY
                 if (!TextUtils.isEmpty(display)) {
-                    ret = display.toLowerCase()
+                    ret = display.lowercase()
                 }
             } catch (ignore: Throwable) { /**/
             }
