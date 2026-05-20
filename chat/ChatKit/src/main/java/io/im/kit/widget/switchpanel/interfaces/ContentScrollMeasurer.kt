@@ -1,7 +1,7 @@
 package io.im.kit.widget.switchpanel.interfaces
 
 /**
- * 当内容允许滑动时，即[io.im.kit.widget.switchpanel.view.PanelSwitchLayout.isContentScrollOutsizeEnable] 返回true,则默认内容区域会向上 layout 一个面板距离
+ * 当内容允许滑动时，即[com.effective.android.panel.view.PanelSwitchLayout.isContentScrollOutsizeEnable] 返回true,则默认内容区域会向上 layout 一个面板距离
  * 默认 getScrollDistance 为软键盘/面板的距离
  * Created by yummyLau on 2020-07-08
  * Email: yummyl.lau@gmail.com

@@ -3,7 +3,7 @@ package io.im.kit.widget.switchpanel.interfaces.listener
 import android.view.View
 
 /**
- * preventing listeners that [io.im.kit.widget.switchpanel.PanelSwitchHelper] set these to view from being overwritten
+ * preventing listeners that [com.effective.android.panel.PanelSwitchHelper] set these to view from being overwritten
  * Created by yummyLau on 18-7-07
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

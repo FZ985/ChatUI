@@ -25,7 +25,7 @@ import io.im.lib.utils.JLog;
  */
 public final class ChatExtensionViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> mExtensionBoardState = new MutableLiveData<>();
-    private final MutableLiveData<ChatInputMode> mInputModeLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ChatInputMode> mInputModeLiveData = new MutableLiveData<>(ChatInputMode.NormalMode);
 
     private boolean isSoftInputShow;
 
@@ -112,9 +112,11 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         if (imm != null) {
             if (isShow) {
                 editText.requestFocus();
+                editText.setShowSoftInputOnFocus(true);
                 imm.showSoftInput(editText, 0);
             } else {
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                editText.setShowSoftInputOnFocus(false);
                 if (clearFocus) {
                     editText.clearFocus();
                 } else {
@@ -128,6 +130,11 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         }
     }
 
+    public void clearFocus() {
+        if (editText == null) return;
+        editText.requestFocus();
+        editText.setShowSoftInputOnFocus(false);
+    }
 
     public EditText getEditText() {
         return editText;

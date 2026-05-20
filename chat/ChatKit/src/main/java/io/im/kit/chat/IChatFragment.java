@@ -60,7 +60,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         binding.refresh.setColorSchemeResources(io.im.lib.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
         FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);
-        layoutManager.setStackFromEnd(true);
+//        layoutManager.setStackFromEnd(true);
         binding.recycler.setLayoutManager(layoutManager);
         SimpleItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setSupportsChangeAnimations(false);
@@ -91,6 +91,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         helper.bindConversation(mActivity, this);
         liveDataListener();
         test();
+        scrollToBottom();
     }
 
     @SuppressLint("NotifyDataSetChanged")

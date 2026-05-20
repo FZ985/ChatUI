@@ -1,7 +1,7 @@
 package io.im.kit.widget.switchpanel.compat
 
 import io.im.kit.widget.switchpanel.utils.RomUtils
-import java.util.Locale
+import java.util.*
 
 /**
  * author : linzheng

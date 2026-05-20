@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -188,7 +189,18 @@ object DisplayUtil {
     @JvmStatic
     @TargetApi(14)
     fun isNavigationBarShow(context: Context, window: Window): Boolean {
-        return isNavBarVisible(context, window)
+        // 添加 WindowInsets 判断是否含有导航栏
+        return isNavBarVisibleByInsets(window) || isNavBarVisible(context, window)
+    }
+
+
+    private fun isNavBarVisibleByInsets(window: Window): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val insets = window.decorView.rootWindowInsets ?: return false
+            return insets.isVisible(WindowInsets.Type.navigationBars())
+        } else {
+            return false
+        }
     }
 
     /**

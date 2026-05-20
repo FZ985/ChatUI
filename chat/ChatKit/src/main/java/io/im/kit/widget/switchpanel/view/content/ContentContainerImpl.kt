@@ -6,10 +6,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.GONE
-import android.view.View.OnClickListener
-import android.view.View.OnFocusChangeListener
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.EditorInfo
@@ -21,7 +18,8 @@ import io.im.kit.widget.switchpanel.interfaces.ViewAssertion
 import io.im.kit.widget.switchpanel.log.LogTracker
 import io.im.kit.widget.switchpanel.utils.PanelUtil
 import io.im.kit.widget.switchpanel.view.PanelSwitchLayout
-import java.util.WeakHashMap
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * 内容区域代理
@@ -30,7 +28,8 @@ import java.util.WeakHashMap
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
+class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer,
+    ViewAssertion {
 
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
     private val context = mViewGroup.context

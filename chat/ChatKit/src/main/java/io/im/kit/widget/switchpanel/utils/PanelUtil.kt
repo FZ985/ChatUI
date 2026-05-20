@@ -5,8 +5,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import io.im.kit.widget.switchpanel.Constants
 import io.im.kit.widget.switchpanel.log.LogTracker
-import io.im.kit.widget.switchpanel.utils.DisplayUtil.dip2px
 import io.im.kit.widget.switchpanel.utils.DisplayUtil.isPortrait
+import io.im.lib.utils.ChatLibUtil.dip2px
 
 /**
  * panel helper

@@ -1,4 +1,5 @@
 package io.im.kit.widget.switchpanel.interfaces.listener
+
 import io.im.kit.widget.switchpanel.view.panel.IPanelView
 
 /**

@@ -4,8 +4,13 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.SystemBarStyle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +19,6 @@ import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.databinding.KitActivityChatBinding;
 import io.im.kit.utils.RouteUtil;
-import io.im.kit.widget.systemui.StatusBarHelper;
 import io.im.lib.base.ChatBaseActivity;
 import io.im.lib.base.ChatBaseFragment;
 import io.im.lib.base.ChatFragmentPageAdapter;
@@ -45,12 +49,25 @@ public class IChatActivity extends ChatBaseActivity {
             binding.conversationToolbar.setTitleName(user.getUserName());
         }
         binding.conversationToolbar.setLeftOnclick(v -> onBackPressed());
-        StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+
+//        StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+
+        SystemBarStyle statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT);
+        SystemBarStyle navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT);
+        EdgeToEdge.enable(this, statusBarStyle, navigationBarStyle);
+
         IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(this, fontSize -> {
             if (!isFinishing() && fontSize != null) {
                 binding.conversationToolbar.updateTitleSize();
             }
         });
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         uiMode = getResources().getConfiguration().uiMode;
     }
 
@@ -59,7 +76,7 @@ public class IChatActivity extends ChatBaseActivity {
         super.onConfigurationChanged(newConfig);
         int newUiMode = newConfig.uiMode;
         if (newUiMode != uiMode) {
-            StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+//            StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
             uiMode = newUiMode;
             recreate();
         }

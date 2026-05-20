@@ -65,7 +65,6 @@ public class ChatEmojiTab implements ChatEmoticonTab {
     @Override
     public View onCreateTabPager(Context context) {
         binding = KitEmojiTabDefaultBinding.inflate(LayoutInflater.from(context), null, false);
-
         binding.ylEmojiDel.setOnClickListener(v -> mEmojiLiveData.setValue(DELETE));
 
         layoutManager = new GridLayoutManager(context, spanCount);

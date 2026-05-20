@@ -3,6 +3,7 @@ package io.im.kit.widget.switchpanel.device
 import android.content.Context
 import android.content.res.Configuration
 import android.view.Window
+import android.view.WindowInsets
 import io.im.kit.widget.switchpanel.utils.DisplayUtil
 
 /**

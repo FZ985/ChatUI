@@ -16,7 +16,8 @@ import io.im.kit.widget.switchpanel.view.panel.IPanelView
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelChangeListener, OnViewClickListener {
+object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelChangeListener,
+    OnViewClickListener {
 
     private val TAG = LogTracker::class.java.simpleName
 

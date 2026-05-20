@@ -10,11 +10,11 @@ import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Pair
-import android.view.*
-import android.view.View.OnClickListener
-import android.view.View.OnFocusChangeListener
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.Window
+import android.view.WindowManager
 import android.widget.LinearLayout
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,7 +34,6 @@ import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener
 import io.im.kit.widget.switchpanel.log.LogFormatter
 import io.im.kit.widget.switchpanel.log.LogTracker
 import io.im.kit.widget.switchpanel.utils.DisplayUtil
-import io.im.kit.widget.switchpanel.utils.DisplayUtil.getLocationOnScreen
 import io.im.kit.widget.switchpanel.utils.DisplayUtil.getScreenHeightWithoutSystemUI
 import io.im.kit.widget.switchpanel.utils.DisplayUtil.getScreenRealHeight
 import io.im.kit.widget.switchpanel.utils.DisplayUtil.isPortrait
@@ -78,6 +77,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
 
+    @Deprecated("")
     private var windowInsetsRootView: View? =
         null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
@@ -149,6 +149,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         enableAndroid11KeyboardFeature =
             typedArray.getBoolean(R.styleable.PanelSwitchLayout_android11KeyboardFeature, true)
         typedArray.recycle()
+        orientation = VERTICAL
+    }
+
+    fun setAndroid11KeyboardFeature(enable: Boolean) {
+        enableAndroid11KeyboardFeature = enable
     }
 
     internal fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor?) {
@@ -203,7 +208,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     TAG,
                     "setEditTextFocusChangeListener: hasFocus = $hasFocus , panelId = $panelId"
                 )
-                if (isKeyboardState()) {
+                // 当前处于输入面板状态或者默认状态时，EditView获得焦点后，尝试弹出键盘
+                if (isKeyboardState() || isResetState()) {
                     checkoutKeyboard()
                 }
             })
@@ -328,6 +334,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastContentHeight: Int? = null
     private var lastNavigationBarShow: Boolean? = null
     private var lastKeyboardHeight: Int = 0
+
+    // 缓存最后一次合法的（非负）localLocation[1]，用于修复 ADJUST_PAN 导致负值的问题
+    private var stableTopY: Int = -1
     private val minLimitOpenKeyboardHeight by lazy { KeyboardHeightCompat.getMinLimitHeight() }
     private var minLimitCloseKeyboardHeight: Int = 0
     private var keyboardAnimationFeature = false     // 是否使用Android 11键盘动画特性
@@ -346,11 +355,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             deviceRuntime?.let {
                 contentContainer.getInputActionImpl()
                     .updateFullScreenParams(it.isFullScreen, panelId, getCompatPanelHeight(panelId))
-                if (supportKeyboardFeature()) {
-                    keyboardChangedListener30Impl()
-                } else {
-                    keyboardChangedListener(window, it)
-                }
+                keyboardChangedListener(window, it)
                 hasAttachLister = true
             }
         }
@@ -495,14 +500,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     /**
-     * 是否支持Android 11 方案获取键盘高度
-     */
-    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.R)
-    private fun supportKeyboardFeature(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-    }
-
-    /**
      * 是否支持键盘过渡动画
      */
     private fun supportKeyboardAnimation(): Boolean {
@@ -547,7 +544,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 handleKeyboardStateChanged(keyboardH, realHeight, contentHeight)
                 LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
             }
-            ViewCompat.onApplyWindowInsets(view, insets)
+            insets
         }
     }
 
@@ -703,7 +700,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!this::window.isInitialized) {
             return
         }
-        if (keyboardAnimationFeature || supportKeyboardFeature()) {
+        if (keyboardAnimationFeature) {
             keyboardChangedListener30Impl()
         } else {
             globalLayoutListener?.let {
@@ -718,7 +715,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!this::window.isInitialized) {
             return
         }
-        if (keyboardAnimationFeature || supportKeyboardFeature()) {
+        if (keyboardAnimationFeature) {
             val rootView = windowInsetsRootView ?: window.decorView.rootView
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
         } else {
@@ -833,24 +830,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             val panelHeightMeasurer = panelHeightMeasurers[panelId]
             panelHeightMeasurer?.let {
                 //如果输入法还没有测量或者不同步输入法高度，则是有默认高度
-                if (!PanelUtil.hasMeasuredKeyboard(context)
-                    || !it.synchronizeKeyboardHeight()
-                    || it.forceUseTargetPanelDefaultHeight()
-                ) {
-                    val result = it.getTargetPanelDefaultHeight()
-                    LogTracker.log(
-                        "$TAG#onLayout",
-                        " getCompatPanelHeight by default panel  :$result"
-                    )
-                    return result
-                }
-            }
-        } else {
-            val panelHeightMeasurer = panelHeightMeasurers[panelId]
-            panelHeightMeasurer?.let {
-                //如果输入法还没有测量或者不同步输入法高度，则是有默认高度
-                if (it.forceUseTargetPanelDefaultHeight()
-                ) {
+                if (!PanelUtil.hasMeasuredKeyboard(context) || !it.synchronizeKeyboardHeight()) {
                     val result = it.getTargetPanelDefaultHeight()
                     LogTracker.log(
                         "$TAG#onLayout",
@@ -924,8 +904,20 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 )
             }
 
-            val localLocation = getLocationOnScreen(this)
-            allHeight -= localLocation[1]
+            val localLocation = DisplayUtil.getLocationOnScreen(this)
+            // 部分 OEM 设备（如 vivo Android 16）在设置 ADJUST_RESIZE 时，系统实际执行 ADJUST_PAN，
+            // 将 view 向上平移导致 getLocationOnScreen 返回负值，allHeight 会被虚胀。
+            // 修复：缓存最后一次合法的（非负）localLocation[1]，作为 ADJUST_PAN 时的回退值。
+            // 此方案兼容所有场景（普通、全屏、沉浸式、edge-to-edge）：
+            //   - 合法值（>=0）会被实时缓存并直接使用
+            //   - 非法值（<0，即 ADJUST_PAN 已发生）时回退到缓存的 pan 前坐标
+            val currentTopY = localLocation[1]
+            if (currentTopY >= 0) {
+                stableTopY = currentTopY
+            }
+            allHeight -= if (currentTopY < 0 && stableTopY >= 0) stableTopY else currentTopY.coerceAtLeast(
+                0
+            )
             var contentContainerTop = getContentContainerTop(compatPanelHeight)
             contentContainerTop += paddingTop
             val contentContainerHeight =
@@ -1201,6 +1193,29 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, y)
             }
             animation.start()
+        }
+        // 尝试对其键盘高度
+        val panelHeight = panelContainer.layoutParams.height
+        if (expectHeight > 0 && panelHeight != expectHeight) {
+            panelContainer.layoutParams.height = expectHeight
+        }
+    }
+
+    /**
+     * 更新面板状态
+     * @param expectHeight 期望高度
+     */
+    fun updatePanelStateDirect(expectHeight: Int) {
+        // 不支持键盘动画特性
+        if (!keyboardAnimationFeature) {
+            return
+        }
+        Log.d(TAG, "updatePanelStateDirect: $expectHeight")
+        val translationY = panelContainer.translationY
+        val targetY = -expectHeight.toFloat()
+        if (translationY != targetY) {
+            panelContainer.translationY = targetY
+            contentContainer.translationContainer(contentScrollMeasurers, expectHeight, targetY)
         }
         // 尝试对其键盘高度
         val panelHeight = panelContainer.layoutParams.height

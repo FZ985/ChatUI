@@ -3,18 +3,22 @@ package io.im.kit.helper;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import io.im.kit.R;
 import io.im.kit.chat.IChatFragment;
-import io.im.kit.config.enums.ChatInputMode;
-import io.im.kit.config.enums.InputStyle;
 import io.im.kit.chat.extension.ChatExtensionViewModel;
 import io.im.kit.chat.extension.component.emoticon.ChatEmoticonBoard;
 import io.im.kit.chat.extension.component.plugins.ChatPluginBoard;
+import io.im.kit.config.enums.ChatInputMode;
+import io.im.kit.config.enums.InputStyle;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
+import io.im.kit.widget.switchpanel.interfaces.ContentScrollMeasurer;
 import io.im.kit.widget.switchpanel.interfaces.PanelHeightMeasurer;
 import io.im.kit.widget.switchpanel.interfaces.listener.OnPanelChangeListener;
 import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener;
@@ -36,6 +40,8 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
 
     private IChatFragment mFragment;
 
+    private int listUnfilledHeight = 0;
+
     private Context mContext;
 
     private ChatExtensionViewModel mExtensionViewModel;
@@ -51,6 +57,21 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
         mExtensionViewModel.setAttachChat(fragment, fragment.getBinding().inputPanel.getEditText());
         fragment.getBinding().inputPanel.getBinding().send.setOnClickListener(this::onClickBefore);
         fragment.getBinding().inputPanel.getBinding().voice.setOnClickListener(this::onClickBefore);
+        fragment.getBinding().recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager != null && (layoutManager instanceof LinearLayoutManager)) {
+                    int position = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                    View lastChildView = layoutManager.findViewByPosition(position);
+                    if (lastChildView != null) {
+                        int bottom = lastChildView.getBottom();
+                        int listHeight = fragment.getBinding().recycler.getHeight() - fragment.getBinding().recycler.getPaddingBottom();
+                        listUnfilledHeight = listHeight - bottom;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -67,10 +88,6 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         log("输入框是否获得焦点 : " + hasFocus);
                         if (hasFocus) {
-                            if (mExtensionViewModel != null
-                                    && mExtensionViewModel.getInputModeLiveData() != null) {
-                                mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                            }
                             scrollToBottom();
                         }
                         mFragment.getBinding().inputPanel.onEditTextFocus(hasFocus);
@@ -82,13 +99,8 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                         }
 
                         @Override
-                        public boolean forceUseTargetPanelDefaultHeight() {
-                            return true;
-                        }
-
-                        @Override
                         public int getTargetPanelDefaultHeight() {
-                            return ChatLibUtil.dip2px(mFragment.getConversationActivity(), 380);
+                            return ChatLibUtil.dip2px(mFragment.getConversationActivity(), 370);
                         }
 
                         @Override
@@ -96,24 +108,33 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                             return R.id.emoji;
                         }
                     })
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
+                        @Override
+                        public int getScrollDistance(int defaultDistance) {
+                            return defaultDistance - listUnfilledHeight;
+                        }
+
+                        @Override
+                        public int getScrollViewId() {
+                            return mFragment.getBinding().recycler.getId();
+                        }
+                    })
                     .addPanelChangeListener(new OnPanelChangeListener() {
                         @Override
                         public void onKeyboard() {
-
                         }
 
                         @Override
                         public void onNone() {
-
                         }
 
                         @Override
                         public void onPanel(@Nullable IPanelView panel) {
-
                         }
 
                         @Override
                         public void onPanelSizeChange(@Nullable IPanelView panel, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if (panel == null) return;
                             if (panel instanceof PanelView) {
                                 PanelView panelView = (PanelView) panel;
                                 if (panelView.getId() == R.id.panel_emotion) {
@@ -163,10 +184,21 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                 mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
             } else if (id == R.id.emoji) {
                 //点击 表情按钮
-                if (mExtensionViewModel.getInputModeLiveData().getValue() != null
-                        && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.EmoticonMode) {
-                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
+                if (mExtensionViewModel.getInputModeLiveData().getValue() != null) {
+                    ChatInputMode value = mExtensionViewModel.getInputModeLiveData().getValue();
+                    if (value == ChatInputMode.EmoticonMode) {
+                        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+                        mExtensionViewModel.setSoftInputKeyBoard(true, false);
+                    } else {
+                        if (value == ChatInputMode.NormalMode) {
+                            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
+                            mExtensionViewModel.setSoftInputKeyBoard(false, true);
+                            view.postDelayed(() -> mExtensionViewModel.clearFocus(), 250);
+                        } else {
+                            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
+                            mExtensionViewModel.setSoftInputKeyBoard(false, false);
+                        }
+                    }
                 } else {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
                     mExtensionViewModel.setSoftInputKeyBoard(false, false);
@@ -176,10 +208,10 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                 if (mExtensionViewModel.getInputModeLiveData().getValue() != null
                         && mExtensionViewModel.getInputModeLiveData().getValue() == ChatInputMode.PluginMode
                 ) {
-                    mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.TextInput);
+                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
                     mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 } else {
-                    mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.PluginMode);
+                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.PluginMode);
                     mExtensionViewModel.setSoftInputKeyBoard(false, true);
                 }
             } else if (id == R.id.send) {
@@ -199,7 +231,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
     }
 
     public boolean closeExpand() {
-        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.NormalMode);
+        mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
         return mHelper.hookSystemBackByPanelSwitcher();
     }
 
