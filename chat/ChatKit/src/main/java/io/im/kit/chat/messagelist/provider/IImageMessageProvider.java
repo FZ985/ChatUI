@@ -66,7 +66,7 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
         if (localExit) {
             thumbUri = message.getLocalUri();
         } else {
-            thumbUri = ChatNull.compatValue(message.getUrl());
+            thumbUri = ChatNull.compat(message.getUrl());
         }
         int width = message.getWidth();
         int height = message.getHeight();

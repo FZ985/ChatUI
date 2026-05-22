@@ -12,6 +12,7 @@ import io.im.lib.message.TextMessage;
 import io.im.lib.message.UnKnowMessage;
 import io.im.lib.model.Message;
 import io.im.lib.model.MessageContent;
+import io.im.lib.model.UserInfo;
 
 /**
  * author : JFZ
@@ -19,6 +20,10 @@ import io.im.lib.model.MessageContent;
  * description :
  */
 public class IMTest {
+
+    public static UserInfo loginUser = new UserInfo("1", "会飞的牛肉干", "");
+
+    public static UserInfo toUser = new UserInfo("123", "哈哈哈", "");
 
     public static List<UiMessage> message() {
         List<UiMessage> list = new ArrayList<>();
@@ -36,18 +41,30 @@ public class IMTest {
         return list;
     }
 
+    public static UiMessage randomMessage() {
+        List<UiMessage> list = message();
+        Random random = new Random();
+        return list.get(random.nextInt(list.size()));
+    }
 
     private static Message getSendMsg(MessageContent content) {
         Message msg = new Message(content);
+        msg.setMessageId(msg.buildMessageId());
         msg.setMessageDirection(Message.MessageDirection.SEND);
+        msg.setSendStatus(Message.SentStatus.SEND_SUCCESS.getValue());
+        msg.setFromUser(loginUser.toMessageUser());
+        msg.setToUser(toUser.toMessageUser());
         msg.setMessageTime(System.currentTimeMillis() - (new Random().nextInt(100) + 10) * 60 * 1000);
         return msg;
     }
 
     private static Message getReceiveMsg(MessageContent content) {
         Message msg = new Message(content);
+        msg.setMessageId(msg.buildMessageId());
         msg.setMessageDirection(Message.MessageDirection.RECEIVE);
         msg.setMessageTime(System.currentTimeMillis() - (new Random().nextInt(100) + 10) * 60 * 1000);
+        msg.setFromUser(toUser.toMessageUser());
+        msg.setToUser(loginUser.toMessageUser());
         return msg;
     }
 }

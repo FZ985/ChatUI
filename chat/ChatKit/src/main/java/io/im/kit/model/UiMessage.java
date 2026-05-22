@@ -20,6 +20,7 @@ public class UiMessage extends UiBaseBean {
 
     private boolean isEdit = false;//是否为编辑
     private boolean isSelected = false;//是否选中
+    private int progress;//进度
 
     private @State.Value int state;
 
@@ -64,8 +65,8 @@ public class UiMessage extends UiBaseBean {
 
     public void setMessage(Message message) {
         this.message = message;
-        if (message.getSendStatus() != null) {
-            switch (message.getSendStatus()) {
+        if (message.getSendStatusEnum() != null) {
+            switch (message.getSendStatusEnum()) {
                 case SENDING:
                     state = State.PROGRESS;
                     break;
@@ -90,6 +91,16 @@ public class UiMessage extends UiBaseBean {
 
     public void setState(int state) {
         this.state = state;
+        change();
+    }
+
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
         change();
     }
 }

@@ -12,6 +12,13 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/../roomschemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -30,12 +37,21 @@ android {
 
     buildFeatures {
         viewBinding = true
+        aidl = true
     }
+
+
 }
 
 dependencies {
     implementation KtxCore
     implementation Appcompat
     implementation Material
+
     implementation Gson
+    implementation Okhttp
+    implementation Okio
+    implementation Room
+    annotationProcessor(RoomAnnotationProcessor)
+
 }

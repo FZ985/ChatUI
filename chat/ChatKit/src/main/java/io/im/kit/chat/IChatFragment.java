@@ -12,15 +12,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.List;
+
 import io.im.kit.IMCenter;
 import io.im.kit.IMTest;
 import io.im.kit.chat.extension.ChatExtCall;
+import io.im.kit.chat.extension.ChatMessageViewModel;
 import io.im.kit.databinding.KitFragmentChatBinding;
+import io.im.kit.event.PageEvent;
+import io.im.kit.event.actionevent.SendMessageEvent;
+import io.im.kit.event.uievent.RefreshEvent;
+import io.im.kit.event.uievent.ScrollToEndEvent;
 import io.im.kit.helper.IChatHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.utils.RouteUtil;
@@ -29,6 +38,7 @@ import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.lib.base.ChatBaseFragment;
 import io.im.lib.model.ConversationType;
 import io.im.lib.model.UserInfo;
+import io.im.lib.utils.ChatLibUtil;
 
 /**
  * author : JFZ
@@ -38,6 +48,7 @@ import io.im.lib.model.UserInfo;
 public class IChatFragment extends ChatBaseFragment implements ChatExtCall, SwipeRefreshLayout.OnRefreshListener, IViewProviderListener<UiMessage> {
 
     private final String TAG = "IChatFragment";
+    private String thisFragmentId = "";
     private KitFragmentChatBinding binding;
 
     private final IChatListAdapter adapter = new IChatListAdapter(this);
@@ -46,6 +57,24 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     private UserInfo userInfo;
 
     private final IChatHelper helper = new IChatHelper();
+
+    private ChatMessageViewModel messageViewModel;
+
+    private boolean onScrollStopRefreshList = false;
+
+    private Observer<List<UiMessage>> mListObserver = uiMessages -> refreshList(uiMessages);
+
+    private Observer<PageEvent> mPageObserver = new Observer<PageEvent>() {
+        @Override
+        public void onChanged(PageEvent pageEvent) {
+            if (isDetached()) return;
+            if (pageEvent instanceof ScrollToEndEvent) {
+                binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
+            } else if (pageEvent instanceof RefreshEvent) {
+                binding.refresh.setRefreshing(false);
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -57,6 +86,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        thisFragmentId = (System.currentTimeMillis() + ChatLibUtil.randomNumber(10, 999)) + "";
         binding.refresh.setColorSchemeResources(io.im.lib.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
         FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);
@@ -80,6 +110,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
                 return super.onSingleTapUp(e);
             }
         });
+
         binding.recycler.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
@@ -89,9 +120,21 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(RouteUtil.User);
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(RouteUtil.ConversationType, ConversationType.PRIVATE.getValue()));
         helper.bindConversation(mActivity, this);
+        messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
+        messageViewModel.bindConversation(this);
         liveDataListener();
-        test();
         scrollToBottom();
+        subscribeUi();
+    }
+
+    private void subscribeUi() {
+        messageViewModel.onSendMessage(new SendMessageEvent(SendMessageEvent.SUCCESS, IMTest.randomMessage().getMessage()));
+        binding.edit.setOnClickListener(v -> {
+            messageViewModel.setEdit(true);
+        });
+        binding.cancelEdit.setOnClickListener(v -> {
+            messageViewModel.setEdit(false);
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -102,6 +145,17 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
                 adapter.notifyDataSetChanged();
             }
         });
+        messageViewModel.getPageEventLiveData().observeForever(mPageObserver);
+        messageViewModel.getUiMessageLiveData().observeForever(mListObserver);
+    }
+
+    private void refreshList(List<UiMessage> data) {
+        binding.refresh.setRefreshing(false);
+        if (!binding.recycler.isComputingLayout() && binding.recycler.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+            adapter.setDataCollection(data);
+        } else {
+            onScrollStopRefreshList = true;
+        }
     }
 
     @Override
@@ -111,44 +165,53 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     @Override
     public void onViewClick(View view, int clickType, UiMessage data) {
-
+        messageViewModel.onViewClick(view, clickType, data);
     }
 
     @Override
     public boolean onViewLongClick(View view, int clickType, UiMessage data) {
-        return false;
+        return messageViewModel.onViewLongClick(view, clickType, data);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         helper.onResume();
+        messageViewModel.onResume();
     }
 
     @Override
     public void onPause() {
         helper.onPause();
+        messageViewModel.onPause();
         super.onPause();
     }
 
     @Override
     public void onStop() {
         helper.onStop();
+        messageViewModel.onStop();
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
         helper.onDestroy();
+        messageViewModel.onDestroy();
+        messageViewModel.getPageEventLiveData().removeObserver(mPageObserver);
+        messageViewModel.getUiMessageLiveData().removeObserver(mListObserver);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        helper.onActivityResult(requestCode, resultCode, data);
+        messageViewModel.onActivityResult(requestCode, resultCode, data);
     }
 
     public void scrollToBottom() {
         binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
-    }
-
-    private void test() {
-        adapter.setDataCollection(IMTest.message());
     }
 
     private void closeExpand() {

@@ -15,11 +15,17 @@ ext {
     AndroidLiveData = 'androidx.lifecycle:lifecycle-livedata:2.6.1'
     AndroidLifecycleRuntime = 'androidx.lifecycle:lifecycle-runtime:2.6.1'
 
-    Gson = 'com.google.code.gson:gson:2.10.1'
+    Gson = 'com.google.code.gson:gson:2.13.1'
+    Okhttp = 'com.squareup.okhttp3:okhttp:4.12.0'
+    Okio = 'com.squareup.okio:okio:3.15.0'
 
     Glide = 'com.github.bumptech.glide:glide:4.11.0'
     GlideProcessor = 'com.github.bumptech.glide:glide:4.11.0'
 
     AndroidEmoji2 = 'androidx.emoji2:emoji2:1.2.0'
+
+    //google room 数据库
+    Room = 'androidx.room:room-runtime:2.7.2'
+    RoomAnnotationProcessor = 'androidx.room:room-compiler:2.7.2'
 
 }

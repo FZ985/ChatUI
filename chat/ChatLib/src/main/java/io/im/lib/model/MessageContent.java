@@ -16,8 +16,12 @@ import io.im.lib.utils.ChatLibUtil;
  */
 @Keep
 public abstract class MessageContent implements Serializable {
+
     public int extType;
     public String ext;
+
+    public MessageContent() {
+    }
 
     public int getExtType() {
         return extType;

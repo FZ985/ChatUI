@@ -11,16 +11,16 @@ import java.util.List;
 public class ChatNull {
 
 
-    public static String compatValue(String value) {
+    public static String compat(String value) {
         if (value == null) {
             value = "";
         }
         return value;
     }
 
-    public static String compatValue(String value, String defaultVal) {
+    public static String compat(String value, String defaultVal) {
         if (value == null) {
-            value = compatValue(defaultVal);
+            value = compat(defaultVal);
         }
         return value;
     }

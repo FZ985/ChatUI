@@ -2,9 +2,6 @@ package io.im.app;
 
 import androidx.multidex.MultiDexApplication;
 
-import io.im.kit.IMCenter;
-import io.im.kit.config.Options;
-
 /**
  * author : JFZ
  * date : 2024/1/26 11:15
@@ -18,7 +15,6 @@ public class BaseApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         app = this;
-        Options options = new Options();
-        IMCenter.init(this, options);
+        ImDebug.init(this);
     }
 }

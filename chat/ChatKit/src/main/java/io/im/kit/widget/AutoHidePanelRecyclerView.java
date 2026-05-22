@@ -26,9 +26,17 @@ public class AutoHidePanelRecyclerView extends RecyclerView {
         this(context, attrs, 0);
     }
 
-
     public AutoHidePanelRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+            return super.dispatchTouchEvent(ev);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

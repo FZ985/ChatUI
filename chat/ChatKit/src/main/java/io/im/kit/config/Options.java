@@ -2,8 +2,13 @@ package io.im.kit.config;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.im.kit.callback.ImageLoader;
 import io.im.kit.config.enums.FontSize;
+import io.im.kit.listener.MessageEventListener;
+import io.im.kit.listener.MessageInterceptListener;
 
 /**
  * author : JFZ
@@ -12,13 +17,24 @@ import io.im.kit.config.enums.FontSize;
  */
 public final class Options {
 
+    private static final ConnectService connectService = new ConnectService();
+
+    public Options() {
+
+    }
+
+    //全局连接服务
+    public ConnectService getConnectService() {
+        return connectService;
+    }
+
     //会话消息配置
     public ChatConfig getChatConfig() {
         return Chat.getChatConfig();
     }
 
 
-    //图片加载
+    //图片加载---------------------------------------------------------------------------
     private final ImageLoader defaultLoader = new DefaultImageLoader();
     private ImageLoader imageLoader;
 
@@ -34,7 +50,7 @@ public final class Options {
     }
 
 
-    //字体大小设置
+    //字体大小设置---------------------------------------------------------------------------
     private FontSize fontSize = FontSize.None;
     private final MutableLiveData<FontSize> fontSizeLiveData = new MutableLiveData<>();
 
@@ -52,13 +68,44 @@ public final class Options {
     }
 
 
-    //聊天表情面板配置
+    //聊天表情面板配置---------------------------------------------------------------------
     public ChatEmojiConfig getEmojiConfig() {
         return Chat.getEmojiConfig();
     }
 
-    //聊天插件面板配置
+
+    //聊天插件面板配置---------------------------------------------------------------------
     public ChatPluginConfig getPluginConfig() {
         return Chat.getPluginConfig();
     }
+
+
+    //消息事件---------------------------------------------------------------------------
+    private final List<MessageEventListener> messageEventListeners = new ArrayList<>();
+
+    public void addMessageEventListener(MessageEventListener listener) {
+        messageEventListeners.add(listener);
+    }
+
+    public void removeMessageEventListener(MessageEventListener listener) {
+        messageEventListeners.remove(listener);
+    }
+
+    public List<MessageEventListener> getMessageEventListeners() {
+        return messageEventListeners;
+    }
+
+    //消息拦截器---------------------------------------------------------------------------
+    private MessageInterceptListener messageInterceptListener;
+
+    public MessageInterceptListener getMessageInterceptListener() {
+        return messageInterceptListener;
+    }
+
+    public void setMessageInterceptListener(MessageInterceptListener messageInterceptListener) {
+        this.messageInterceptListener = messageInterceptListener;
+    }
+
+
+    //消息事件---------------------------------------------------------------------------
 }

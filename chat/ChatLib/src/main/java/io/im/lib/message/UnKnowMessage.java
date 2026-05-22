@@ -19,7 +19,7 @@ public final class UnKnowMessage extends MessageContent {
     }
 
 
-    public static UnKnowMessage obtain(){
+    public static UnKnowMessage obtain() {
         return new UnKnowMessage();
     }
 }

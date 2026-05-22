@@ -18,7 +18,6 @@ import io.im.lib.utils.ChatNull;
 public final class TextMessage extends MessageContent implements Serializable {
 
     private String content;
-
     public static TextMessage obtain(String content) {
         TextMessage textMessage = new TextMessage();
         textMessage.setContent(content);
@@ -34,7 +33,7 @@ public final class TextMessage extends MessageContent implements Serializable {
     }
 
     public String getContent() {
-        return ChatNull.compatValue(content);
+        return ChatNull.compat(content);
     }
 
     public void setContent(String content) {

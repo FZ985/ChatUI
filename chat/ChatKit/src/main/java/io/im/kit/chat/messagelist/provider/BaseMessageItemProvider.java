@@ -241,7 +241,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         // 单聊已读状态
         if (mConfig.showReadState
                 && isSender
-                && message.getReadStatus() == Message.ReadStatus.UN_READ) {
+                && message.getReadStatusEnum() == Message.ReadStatus.UN_READ) {
             holder.setVisible(R.id.base_read_receipt, true);
         } else {
             holder.setVisible(R.id.base_read_receipt, false);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import io.im.kit.chat.messagelist.provider.ITextMessageProvider;
 import io.im.kit.chat.messagelist.provider.IUnKnowMessageProvider;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.ProviderManager;
+import io.im.lib.MessageType;
 import io.im.lib.message.ImageMessage;
 import io.im.lib.message.TextMessage;
 import io.im.lib.message.UnKnowMessage;
@@ -40,8 +42,8 @@ public class ChatConfig {
 
     private void initMessageProvider() {
         mMessageListProvider.setDefaultProvider(defaultMessageProvider);
-        addMessageProvider(MessageType.TEXT, new ITextMessageProvider(), TextMessage.class);
-        addMessageProvider(MessageType.IMAGE, new IImageMessageProvider(), ImageMessage.class);
+        addMessageProvider(MessageType.CHAT_TEXT, new ITextMessageProvider(), TextMessage.class);
+        addMessageProvider(MessageType.CHAT_IMAGE, new IImageMessageProvider(), ImageMessage.class);
     }
 
     public ProviderManager<UiMessage> getConversationProvider() {
@@ -55,7 +57,9 @@ public class ChatConfig {
         }
         try {
             if (messageClass != null) {
-                msgMaps.put(messageType, messageClass.newInstance());
+                Constructor<?> constructor = messageClass.getConstructor();
+                Object obj = constructor.newInstance();
+                msgMaps.put(messageType, (MessageContent) obj);
             }
         } catch (Exception e) {
             JLog.e("====存入消息体失败:" + e.getMessage());

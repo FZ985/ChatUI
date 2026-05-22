@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.im.app.databinding.ActivityMainBinding
+import io.im.kit.IMTest
 import io.im.kit.utils.RouteUtil
-import io.im.lib.model.UserInfo
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.goChat.setOnClickListener {
-            RouteUtil.goPrivateChat(this, UserInfo("123", "哈哈哈", ""))
+            RouteUtil.goPrivateChat(this, IMTest.toUser)
         }
 
     }
