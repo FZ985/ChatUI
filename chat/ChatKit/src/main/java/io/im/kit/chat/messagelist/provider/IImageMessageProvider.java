@@ -27,7 +27,7 @@ import io.im.kit.R;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.kit.widget.adapter.ViewHolder;
-import io.im.lib.message.ImageMessage;
+import io.im.lib.message.im.ImageMessage;
 import io.im.lib.model.MessageContent;
 import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.ChatNull;
@@ -53,7 +53,7 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
 
     @Override
     protected ViewHolder onCreateContentViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(parent.getContext(), LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_item_message_image, parent, false));
+        return new ViewHolder(parent.getContext(), LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_image, parent, false));
     }
 
     @Override

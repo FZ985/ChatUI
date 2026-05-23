@@ -23,11 +23,11 @@ import java.util.List;
 
 import io.im.kit.IMCenter;
 import io.im.kit.IMTest;
+import io.im.kit.MessageOperate;
 import io.im.kit.chat.extension.ChatExtCall;
 import io.im.kit.chat.extension.ChatMessageViewModel;
-import io.im.kit.databinding.KitFragmentChatBinding;
+import io.im.kit.databinding.ChatFragmentChatBinding;
 import io.im.kit.event.PageEvent;
-import io.im.kit.event.actionevent.SendMessageEvent;
 import io.im.kit.event.uievent.RefreshEvent;
 import io.im.kit.event.uievent.ScrollToEndEvent;
 import io.im.kit.helper.IChatHelper;
@@ -49,7 +49,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     private final String TAG = "IChatFragment";
     private String thisFragmentId = "";
-    private KitFragmentChatBinding binding;
+    private ChatFragmentChatBinding binding;
 
     private final IChatListAdapter adapter = new IChatListAdapter(this);
 
@@ -79,7 +79,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = KitFragmentChatBinding.inflate(inflater);
+        binding = ChatFragmentChatBinding.inflate(inflater);
         return binding.getRoot();
     }
 
@@ -128,12 +128,17 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     }
 
     private void subscribeUi() {
-        messageViewModel.onSendMessage(new SendMessageEvent(SendMessageEvent.SUCCESS, IMTest.randomMessage().getMessage()));
+        MessageOperate.sendMessage(IMTest.message().get(9).getMessage(),null);
+        MessageOperate.sendMessage(IMTest.message().get(1).getMessage(),null);
         binding.edit.setOnClickListener(v -> {
             messageViewModel.setEdit(true);
         });
         binding.cancelEdit.setOnClickListener(v -> {
             messageViewModel.setEdit(false);
+        });
+
+        binding.test.setOnLongClickListener(v->{
+            return true;
         });
     }
 
@@ -233,7 +238,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         return conversationType;
     }
 
-    public KitFragmentChatBinding getBinding() {
+    public ChatFragmentChatBinding getBinding() {
         return binding;
     }
 

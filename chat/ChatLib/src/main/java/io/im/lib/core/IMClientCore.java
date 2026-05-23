@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.im.lib.callback.ChatFun;
+import io.im.lib.core.socket.ErrorResult;
 import io.im.lib.core.socket.SocketCode;
 import io.im.lib.core.socket.WebSocketResult;
 import io.im.lib.listener.OnSocketMessageListener;
 import io.im.lib.model.Message;
-import io.im.lib.core.socket.ErrorResult;
 import io.im.lib.utils.ChatLibUtil;
 
 /**

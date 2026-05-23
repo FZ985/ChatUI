@@ -15,11 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 import io.im.kit.IMCenter;
+import io.im.kit.chat.messagelist.provider.MessageClickType;
 import io.im.kit.event.PageEvent;
-import io.im.kit.event.actionevent.OtherMessageEvent;
-import io.im.kit.event.actionevent.ReceiveMessageEvent;
-import io.im.kit.event.actionevent.SendMediaMessageEvent;
-import io.im.kit.event.actionevent.SendMessageEvent;
+import io.im.kit.event.actionevent.ChatMessageEvent;
 import io.im.kit.event.uievent.ScrollToEndEvent;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.model.UiMessage;
@@ -52,7 +50,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onSendMessage(SendMessageEvent event) {
+    public void onSendMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
             if (!Objects.equals(mCall.getUser().getUserId(), msg.getToUser().getUserId())) {
@@ -66,13 +64,13 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 uiMessage.setMessage(msg);
             }
             switch (event.getEvent()) {
-                case SendMessageEvent.ATTACH:
+                case ChatMessageEvent.ATTACH:
                     uiMessage.setState(State.PROGRESS);
                     break;
-                case SendMessageEvent.ERROR:
+                case ChatMessageEvent.ERROR:
                     uiMessage.setState(State.ERROR);
                     break;
-                case SendMessageEvent.SUCCESS:
+                case ChatMessageEvent.SUCCESS:
                     uiMessage.setState(State.SUCCESS);
                     break;
             }
@@ -85,7 +83,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onSendMediaMessage(SendMediaMessageEvent event) {
+    public void onSendMediaMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
             if (!Objects.equals(mCall.getUser().getUserId(), msg.getToUser().getUserId())) {
@@ -99,20 +97,20 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 uiMessage.setMessage(msg);
             }
             switch (event.getEvent()) {
-                case SendMediaMessageEvent.ATTACH:
+                case ChatMessageEvent.ATTACH:
                     break;
-                case SendMediaMessageEvent.PROGRESS:
+                case ChatMessageEvent.PROGRESS:
                     uiMessage.setState(State.PROGRESS);
                     uiMessage.setProgress(event.getProgress());
                     break;
-                case SendMediaMessageEvent.ERROR:
+                case ChatMessageEvent.ERROR:
                     uiMessage.setState(State.ERROR);
                     break;
-                case SendMediaMessageEvent.SUCCESS:
+                case ChatMessageEvent.SUCCESS:
                     uiMessage.setProgress(100);
                     uiMessage.setState(State.NORMAL);
                     break;
-                case SendMediaMessageEvent.CANCEL:
+                case ChatMessageEvent.CANCEL:
                     uiMessage.setState(State.CANCEL);
                     break;
             }
@@ -126,14 +124,14 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onSendOtherMessage(OtherMessageEvent event) {
+    public void onSendOtherMessage(ChatMessageEvent event) {
 
     }
 
     @Override
-    public void onReceiveMessage(ReceiveMessageEvent event) {
+    public void onReceiveMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
-        if (Objects.equals(mCall.getUser().getUserId(), msg.getToUser().getUserId())
+        if (Objects.equals(mCall.getUser().getUserId(), msg.getFromUser().getUserId())
                 && msg.getMessageId() > 0) {
             UiMessage uiMessage = findUIMessageById(msg.getMessageId());
             boolean isAdd = uiMessage == null;
@@ -152,7 +150,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onReceiveOtherMessage(OtherMessageEvent event) {
+    public void onReceiveOtherMessage(ChatMessageEvent event) {
 
     }
 
@@ -290,7 +288,12 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     public void onViewClick(View view, int clickType, UiMessage data) {
-        Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
+        if (clickType == MessageClickType.EDIT_CLICK) {
+            //编辑中
+            Toast.makeText(view.getContext(), "编辑中", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public boolean onViewLongClick(View view, int clickType, UiMessage data) {

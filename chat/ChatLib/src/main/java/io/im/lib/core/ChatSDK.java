@@ -15,6 +15,8 @@ import io.im.lib.core.socket.ConnectRequest;
 import io.im.lib.core.socket.ErrorResult;
 import io.im.lib.core.socket.SocketCode;
 import io.im.lib.database.DbManager;
+import io.im.lib.model.UserInfo;
+import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.ChatNetworkUtil;
 import io.im.lib.utils.JLog;
 
@@ -33,7 +35,7 @@ public class ChatSDK {
     private static boolean isBackground = false;
 
     public static boolean isInitialized() {
-        return mContext != null && !TextUtils.isEmpty(getConnectUser()) && isOnLine();
+        return mContext != null && !TextUtils.isEmpty(getConnectUser().getUserId()) && isOnLine();
     }
 
     public static Context getContext() {
@@ -103,26 +105,30 @@ public class ChatSDK {
     }
 
 
-    public static void connect(ConnectRequest request, String userInfo) {
-        setOnLineState(true);
-        saveConnectUser(userInfo);
+    public static void connect(ConnectRequest request) {
         CoreSingle.getInstance().connectWebsocket(request);
+    }
+
+    public static void login(UserInfo user) {
+        setOnLineState(true);
+        saveConnectUser(user);
     }
 
     public static DbManager getDbManager() {
         return dbManager;
     }
 
-    public static void saveConnectUser(String userInfo) {
+    public static void saveConnectUser(UserInfo userInfo) {
         if (userInfo != null) {
             SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
-            sp.edit().putString("user", userInfo).apply();
+            sp.edit().putString("user", ChatLibUtil.toJson(userInfo)).apply();
         }
     }
 
-    public static String getConnectUser() {
+    public static UserInfo getConnectUser() {
         SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
-        return sp.getString("user", "");
+        String json = sp.getString("user", "{}");
+        return ChatLibUtil.gson.fromJson(json, UserInfo.class);
     }
 
     public static boolean isOnLine() {

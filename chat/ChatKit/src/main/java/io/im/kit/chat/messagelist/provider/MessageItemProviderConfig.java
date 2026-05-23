@@ -47,5 +47,5 @@ public class MessageItemProviderConfig {
     /**
      * 气泡渐变
      */
-    public boolean showContentBubbleGradient = true;
+    public boolean showContentBubbleGradient = false;
 }

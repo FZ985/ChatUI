@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -13,9 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import io.im.kit.config.enums.ChatInputMode;
+import io.im.kit.MessageOperate;
+import io.im.kit.R;
 import io.im.kit.chat.IChatFragment;
 import io.im.kit.chat.extension.component.emoticon.ChatAndroidEmoji;
+import io.im.kit.config.enums.ChatInputMode;
+import io.im.lib.MessageType;
+import io.im.lib.message.im.TextMessage;
+import io.im.lib.model.Message;
+import io.im.lib.utils.ChatToast;
 import io.im.lib.utils.JLog;
 
 /**
@@ -29,9 +36,12 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
 
     private boolean isSoftInputShow;
 
+    private static final int MAX_MESSAGE_LENGTH_TO_SEND = 5500;
+
     @SuppressLint("StaticFieldLeak")
     private EditText editText;
 
+    private IChatFragment fragment;
     private final TextWatcher mTextWatcher = new TextWatcher() {
         private int start;
         private int count;
@@ -72,12 +82,9 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
     }
 
     public void setAttachChat(IChatFragment fragment, EditText editText) {
+        this.fragment = fragment;
         this.editText = editText;
         this.editText.addTextChangedListener(mTextWatcher);
-    }
-
-    public void onSendClick() {
-        JLog.e("======onSendClick");
     }
 
     public void collapseExtensionBoard() {
@@ -150,5 +157,29 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
 
     public MutableLiveData<ChatInputMode> getInputModeLiveData() {
         return mInputModeLiveData;
+    }
+
+    public void onSendClick() {
+        if (editText == null) return;
+        if (TextUtils.isEmpty(editText.getText())
+                || TextUtils.isEmpty(editText.getText().toString().trim())) {
+            JLog.e("can't send empty content.");
+            editText.setText("");
+            return;
+        }
+
+        String text = editText.getText().toString();
+        if (text.length() > MAX_MESSAGE_LENGTH_TO_SEND) {
+            ChatToast.toast(getApplication().getApplicationContext(),
+                    getApplication().getString(R.string.kit_message_too_long));
+            JLog.e("文本太长了。。。");
+            return;
+        }
+        editText.setText("");
+        TextMessage textMessage = TextMessage.obtain(text);
+        Message message = Message.obtain(fragment.getUser(), fragment.getConversationType(), MessageType.CHAT_TEXT, textMessage);
+        message.setSendStatus(Message.SentStatus.SENDING.getValue());
+        MessageOperate.sendMessage(message, null);
+
     }
 }

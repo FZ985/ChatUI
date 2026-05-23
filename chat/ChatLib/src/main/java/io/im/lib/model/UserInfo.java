@@ -2,10 +2,14 @@ package io.im.lib.model;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
@@ -77,5 +81,25 @@ public class UserInfo implements Serializable {
     public MessageUser toMessageUser() {
         String json = ChatLibUtil.toJson(this);
         return ChatLibUtil.gson.fromJson(json, MessageUser.class);
+    }
+
+
+    public static UserInfo fromJSONObject(@Nullable JSONObject obj) {
+        UserInfo user = new UserInfo();
+        if (obj != null) {
+            user.setUserId(obj.optString("userId"));
+            user.setUserName(obj.optString("userName"));
+            user.setUserAvatar(obj.optString("userAvatar"));
+            user.setUserType(obj.optInt("userType"));
+        }
+        return user;
+    }
+
+    public static UserInfo fromJson(String json) {
+        try {
+            return fromJSONObject(new JSONObject(json));
+        } catch (JSONException e) {
+            return new UserInfo();
+        }
     }
 }

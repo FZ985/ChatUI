@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import io.im.kit.R;
-import io.im.kit.callback.ImageLoader;
+import io.im.kit.listener.ImageLoader;
 import io.im.lib.model.Message;
 import io.im.lib.utils.ChatLibUtil;
 

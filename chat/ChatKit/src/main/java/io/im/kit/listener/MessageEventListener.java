@@ -1,25 +1,22 @@
 package io.im.kit.listener;
 
-import io.im.kit.event.actionevent.OtherMessageEvent;
-import io.im.kit.event.actionevent.ReceiveMessageEvent;
-import io.im.kit.event.actionevent.SendMediaMessageEvent;
-import io.im.kit.event.actionevent.SendMessageEvent;
+import io.im.kit.event.actionevent.ChatMessageEvent;
 
 public interface MessageEventListener {
 
     //发送消息回调
-    void onSendMessage(SendMessageEvent event);
+    void onSendMessage(ChatMessageEvent event);
 
     //发送媒体消息回调
-    void onSendMediaMessage(SendMediaMessageEvent event);
+    void onSendMediaMessage(ChatMessageEvent event);
 
     //发送的其他消息回调
-    void onSendOtherMessage(OtherMessageEvent event);
+    void onSendOtherMessage(ChatMessageEvent event);
 
     //接收消息回调
-    void onReceiveMessage(ReceiveMessageEvent event);
+    void onReceiveMessage(ChatMessageEvent event);
 
     //接收的其他消息回调
-    void onReceiveOtherMessage(OtherMessageEvent event);
+    void onReceiveOtherMessage(ChatMessageEvent event);
 
 }

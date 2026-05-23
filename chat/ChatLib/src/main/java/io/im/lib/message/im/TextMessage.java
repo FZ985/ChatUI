@@ -1,4 +1,4 @@
-package io.im.lib.message;
+package io.im.lib.message.im;
 
 import androidx.annotation.Keep;
 

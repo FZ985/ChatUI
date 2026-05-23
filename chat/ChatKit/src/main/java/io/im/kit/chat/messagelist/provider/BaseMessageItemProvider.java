@@ -38,7 +38,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_item_message_base, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_base, parent, false);
         FrameLayout contentView = rootView.findViewById(R.id.base_content);
         ViewHolder contentViewHolder = onCreateContentViewHolder(contentView, viewType);
         if (contentViewHolder != null) {
@@ -191,7 +191,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                     if (!result) {
                         return listener.onViewLongClick(v, MessageClickType.CONTENT_LONG_CLICK, uiMessage);
                     }
-                    return false;
+                    return true;
                 });
     }
 
@@ -239,10 +239,8 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             boolean isSender,
             List<UiMessage> list) {
         // 单聊已读状态
-        if (mConfig.showReadState
-                && isSender
-                && message.getReadStatusEnum() == Message.ReadStatus.UN_READ) {
-            holder.setVisible(R.id.base_read_receipt, true);
+        if (mConfig.showReadState && isSender) {
+            holder.setVisible(R.id.base_read_receipt, message.getReadStatusEnum() != Message.ReadStatus.UN_READ);
         } else {
             holder.setVisible(R.id.base_read_receipt, false);
         }

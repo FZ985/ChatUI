@@ -23,6 +23,13 @@
             android:text="取消编辑"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/chat_dp15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="5dp"
+            android:text="哈哈哈哈哈"
+            android:id="@+id/test"/>
     </LinearLayout>
 
     <io.im.kit.widget.switchpanel.view.PanelSwitchLayout
@@ -73,14 +80,14 @@
                 android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:panel_layout="@layout/kit_panel_emoji"
+                app:panel_layout="@layout/chat_panel_emoji"
                 app:panel_trigger="@id/emoji" />
 
             <io.im.kit.widget.switchpanel.view.panel.PanelView
                 android:id="@+id/panel_addition"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:panel_layout="@layout/kit_panel_plugins"
+                app:panel_layout="@layout/chat_panel_plugins"
                 app:panel_trigger="@id/add" />
         </io.im.kit.widget.switchpanel.view.panel.PanelContainer>
     </io.im.kit.widget.switchpanel.view.PanelSwitchLayout>

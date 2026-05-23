@@ -38,4 +38,6 @@
     <string name="plugin_card">名片</string>
     <string name="plugin_file">文件</string>
     <string name="plugin_music">音乐</string>
+
+    <string name="kit_message_too_long">你输入的文本过长，无法发送</string>
 </resources>

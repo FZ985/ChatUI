@@ -34,46 +34,22 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
 
     MessageDiffCallBack mDiffCallback = new MessageDiffCallBack();
 
+    private RecyclerView recyclerView;
+
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        if (recyclerView != null) {
-            AnimatedColor animatedColor = new AnimatedColor(ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color),
-                    ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color2));
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        this.recyclerView = recyclerView;
+        if (this.recyclerView != null) {
+            this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                     updateItemBg();
                 }
 
-                private void updateItemBg() {
-                    int count = recyclerView.getChildCount();
-                    for (int i = 0; i < count; i++) {
-                        RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
-                        if (holder instanceof BaseMessageItemProvider.MessageViewHolder) {
-                            BaseMessageItemProvider.MessageViewHolder messageViewHolder = (BaseMessageItemProvider.MessageViewHolder) holder;
-                            UiMessage message = messageViewHolder.getUiMessage();
-                            if (message != null
-                                    && messageViewHolder.getConfig().showContentBubble
-                                    && messageViewHolder.getConfig().showContentBubbleGradient
-                                    && message.getMessage().getMessageDirection() == Message.MessageDirection.SEND) {
-                                View bgView = messageViewHolder.getView(R.id.base_content);
-                                if (bgView != null) {
-                                    bgView.post(() -> {
-                                        int color = animatedColor.with(getFloatRange(holder.itemView));
-                                        LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.kit_bg_bubble_gradient_right);
-                                        GradientDrawable gradientDrawable = (GradientDrawable) drawable.findDrawableByLayerId(R.id.bubble_gradient_right);
-                                        gradientDrawable.setColor(color);
-                                        bgView.setBackground(drawable);
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                private float getFloatRange(View view) {
-                    return 1f - (KtExtKt.absY(view) / (float) recyclerView.getResources().getDisplayMetrics().heightPixels);
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    updateItemBg();
                 }
             });
         }
@@ -81,6 +57,40 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
 
     public IChatListAdapter(IViewProviderListener<UiMessage> listener) {
         super(listener, IMCenter.getInstance().getOptions().getChatConfig().getConversationProvider());
+    }
+
+    private void updateItemBg() {
+        if (recyclerView != null) {
+            AnimatedColor animatedColor = new AnimatedColor(ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color),
+                    ContextCompat.getColor(recyclerView.getContext(), R.color.kit_bubble_right_color2));
+            int count = recyclerView.getChildCount();
+            for (int i = 0; i < count; i++) {
+                RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                if (holder instanceof BaseMessageItemProvider.MessageViewHolder) {
+                    BaseMessageItemProvider.MessageViewHolder messageViewHolder = (BaseMessageItemProvider.MessageViewHolder) holder;
+                    UiMessage message = messageViewHolder.getUiMessage();
+                    if (message != null
+                            && messageViewHolder.getConfig().showContentBubble
+                            && messageViewHolder.getConfig().showContentBubbleGradient
+                            && message.getMessage().getMessageDirection() == Message.MessageDirection.SEND) {
+                        View bgView = messageViewHolder.getView(R.id.base_content);
+                        if (bgView != null) {
+                            bgView.post(() -> {
+                                int color = animatedColor.with(getFloatRange(holder.itemView));
+                                LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.kit_bg_bubble_gradient_right);
+                                GradientDrawable gradientDrawable = (GradientDrawable) drawable.findDrawableByLayerId(R.id.bubble_gradient_right);
+                                gradientDrawable.setColor(color);
+                                bgView.setBackground(drawable);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private float getFloatRange(View view) {
+        return 1f - (KtExtKt.absY(view) / (float) recyclerView.getResources().getDisplayMetrics().heightPixels);
     }
 
     @SuppressLint("NotifyDataSetChanged")

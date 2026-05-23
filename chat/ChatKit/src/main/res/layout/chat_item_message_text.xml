@@ -4,17 +4,20 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/msg_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="@dimen/chat_dp210"
-        android:padding="@dimen/chat_dp12"
+        android:paddingHorizontal="@dimen/chat_dp12"
+        android:paddingVertical="@dimen/chat_dp8"
         android:textColor="@color/chat_skin_Text"
+        android:textColorLink="@color/chat_link_blue"
         android:textIsSelectable="true"
         android:textSize="@dimen/chat_dp15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

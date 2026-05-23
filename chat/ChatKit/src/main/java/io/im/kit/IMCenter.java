@@ -14,6 +14,7 @@ import io.im.lib.core.socket.ConnectRequest;
 import io.im.lib.core.socket.ErrorResult;
 import io.im.lib.listener.OnSocketMessageListener;
 import io.im.lib.model.Message;
+import io.im.lib.model.UserInfo;
 import io.im.lib.utils.JLog;
 import io.im.lib.utils.SystemUtil;
 import io.im.lib.utils.language.ChatConfigurationManager;
@@ -70,9 +71,13 @@ public class IMCenter {
         ChatAndroidEmoji.init(application);
     }
 
-    public void connect(ConnectRequest request, String userInfo) {
+    public void connect(ConnectRequest request) {
         IMClientCore.getInstance().setOnSocketMessageListener(_innerMessageReceiveListener);
-        ChatSDK.connect(request, userInfo);
+        ChatSDK.connect(request);
+    }
+
+    public static void login(UserInfo user) {
+        ChatSDK.login(user);
     }
 
     public Options getOptions() {
@@ -80,6 +85,10 @@ public class IMCenter {
             return defaultOptions;
         }
         return options;
+    }
+
+    public static UserInfo getLoginUser() {
+        return ChatSDK.getConnectUser();
     }
 
     public static boolean isOnLine() {

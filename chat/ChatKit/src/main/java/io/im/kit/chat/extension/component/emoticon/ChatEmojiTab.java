@@ -16,8 +16,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Arrays;
+
 import io.im.kit.R;
-import io.im.kit.databinding.KitEmojiTabDefaultBinding;
+import io.im.kit.databinding.ChatEmojiTabDefaultBinding;
 import io.im.kit.widget.adapter.ViewHolder;
 import io.im.lib.callback.ChatFun;
 import io.im.lib.utils.ChatLibUtil;
@@ -36,7 +38,7 @@ public class ChatEmojiTab implements ChatEmoticonTab {
 
     private final int spanCount = 9;
 
-    private KitEmojiTabDefaultBinding binding;
+    private ChatEmojiTabDefaultBinding binding;
 
     private GridLayoutManager layoutManager;
 
@@ -64,7 +66,7 @@ public class ChatEmojiTab implements ChatEmoticonTab {
 
     @Override
     public View onCreateTabPager(Context context) {
-        binding = KitEmojiTabDefaultBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = ChatEmojiTabDefaultBinding.inflate(LayoutInflater.from(context), null, false);
         binding.ylEmojiDel.setOnClickListener(v -> mEmojiLiveData.setValue(DELETE));
 
         layoutManager = new GridLayoutManager(context, spanCount);
@@ -86,6 +88,7 @@ public class ChatEmojiTab implements ChatEmoticonTab {
                 for (int i = 1; i < chars.length; i++) {
                     key.append(chars[i]);
                 }
+                JLog.e("key:===:" + key.toString() + "," + Arrays.toString(chars) + "," + code + "," + Character.toString(chars[0]));
                 mEmojiLiveData.setValue(key.toString());
             } catch (Exception e) {
                 JLog.e("====emoji item click err:" + e.getMessage());
@@ -139,7 +142,7 @@ public class ChatEmojiTab implements ChatEmoticonTab {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_emoji_tab_default_item, null, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_emoji_tab_default_item, null, false);
             return new ViewHolder(parent.getContext(), view);
         }
 

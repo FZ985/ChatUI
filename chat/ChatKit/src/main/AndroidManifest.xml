@@ -8,6 +8,10 @@
             android:configChanges="uiMode"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
+        <activity android:name=".ui.web.IWebActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".ui.activity.TestActivity"/>
+
     </application>
 </manifest>

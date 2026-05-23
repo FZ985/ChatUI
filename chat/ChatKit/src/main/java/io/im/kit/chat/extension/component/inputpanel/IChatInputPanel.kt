@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import io.im.kit.R
 import io.im.kit.config.enums.ChatInputMode
 import io.im.kit.config.enums.InputStyle
-import io.im.kit.databinding.KitComponentInputPanelBinding
+import io.im.kit.databinding.ChatComponentInputPanelBinding
 import io.im.kit.helper.OptionsHelper
 
 
@@ -27,7 +27,7 @@ import io.im.kit.helper.OptionsHelper
  */
 class IChatInputPanel : FrameLayout {
 
-    private lateinit var binding: KitComponentInputPanelBinding
+    private lateinit var binding: ChatComponentInputPanelBinding
 
     private lateinit var mInputStyle: InputStyle
 
@@ -40,13 +40,13 @@ class IChatInputPanel : FrameLayout {
         attributeSet,
         defStyleAttr
     ) {
-        binding = KitComponentInputPanelBinding.inflate(LayoutInflater.from(context), this, true)
+        binding = ChatComponentInputPanelBinding.inflate(LayoutInflater.from(context), this, true)
         binding.edit.addTextChangedListener(mEditTextWatcher)
         binding.voiceBtn.setOnTouchListener(mOnVoiceBtnTouchListener)
         updateTextSize()
     }
 
-    fun updateTextSize(){
+    fun updateTextSize() {
         OptionsHelper.updateTextSize(binding.edit, 15)
         OptionsHelper.updateTextSize(binding.send, 15)
         OptionsHelper.updateTextSize(binding.voiceBtn, 15)
@@ -700,7 +700,7 @@ class IChatInputPanel : FrameLayout {
         true
     }
 
-    fun getBinding(): KitComponentInputPanelBinding {
+    fun getBinding(): ChatComponentInputPanelBinding {
         return binding
     }
 }

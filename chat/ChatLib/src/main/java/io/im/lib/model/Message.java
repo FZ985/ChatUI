@@ -15,7 +15,10 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+import io.im.lib.MessageType;
+import io.im.lib.core.ChatSDK;
 import io.im.lib.message.UnKnowMessage;
+import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.ChatNull;
 import io.im.lib.utils.JLog;
 
@@ -103,6 +106,25 @@ public class Message implements Serializable {
 
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
+        parseBody();
+    }
+
+    private void parseBody() {
+        if (messageContent == null) {
+            try {
+                JSONObject bodyObj = new JSONObject(getMessageBody());
+                MessageContent content;
+                if (MessageType.isAppType(getMessageType())) {
+                    content = MessageType.getAppMessageContent(getMessageType());
+                } else {
+                    content = MessageType.getMessageContent(getMessageType());
+                }
+                content.parseJsonToContent(bodyObj);
+                setMessageContent(content);
+            } catch (JSONException e) {
+                setMessageContent(new UnKnowMessage());
+            }
+        }
     }
 
     public MessageContent getMessageContent() {
@@ -114,6 +136,13 @@ public class Message implements Serializable {
     }
 
     public MessageDirection getMessageDirection() {
+        if (messageDirection == null) {
+            if (ChatSDK.getConnectUser().getUserId().equals(getFromUser().getUserId())) {
+                setMessageDirection(MessageDirection.SEND);
+            } else {
+                setMessageDirection(MessageDirection.RECEIVE);
+            }
+        }
         return messageDirection;
     }
 
@@ -187,7 +216,7 @@ public class Message implements Serializable {
         return SentStatus.setValue(getSendStatus());
     }
 
-    public Message setReadStatus(ReadStatus readStatus) {
+    public Message setReadStatusEnum(ReadStatus readStatus) {
         setReadStatus(readStatus.getValue());
         return this;
     }
@@ -248,7 +277,6 @@ public class Message implements Serializable {
         }
     }
 
-
     public enum ReadStatus {
         UN_READ(0),//未读
 
@@ -275,51 +303,74 @@ public class Message implements Serializable {
         }
     }
 
+    //发送消息创建的消息体
+    public static Message obtain(UserInfo toUser, ConversationType chatType, int messageType, MessageContent body) {
+        Message message = new Message();
+        message.setMessageId(message.buildMessageId());
+        message.setMessageTime(System.currentTimeMillis());
+        message.setFromUser(ChatSDK.getConnectUser().toMessageUser());
+        message.setToUser(toUser.toMessageUser());
+        message.setChatType(chatType.getValue());
+        message.setMessageType(messageType);
+        message.setMessageBody(body.toJson());
+        message.setReadStatus(ReadStatus.UN_READ.getValue());
+        message.setSendStatus(SentStatus.SENDING.getValue());
+        return message;
+    }
+
+
+    //消息方向反转
+    public Message flipMessage() {
+        MessageUser tempFrom = getFromUser();
+        setFromUser(getToUser());
+        setToUser(tempFrom);
+        return this;
+    }
 
     @NonNull
     public static Message parseMessageFromJson(String json) {
         if (!TextUtils.isEmpty(json)) {
             try {
+                Message message = new Message();
                 JSONObject obj = new JSONObject(json);
+
                 long messageId = obj.optLong("messageId");
-                String from = obj.optString("from");
-                String from_n = obj.optString("from_n");
-                String to = obj.optString("to");
-                String to_n = obj.optString("to_n");
-                String shopId = obj.optString("shopId");
-                String from_avatar = obj.optString("from_avatar");
-                String to_avatar = obj.optString("to_avatar");
-                String os = obj.optString("os", "");
-                int type = obj.optInt("type");
-                int chatType = obj.optInt("chatType");
-                int isRead = obj.optInt("isRead");
-                int userType = obj.optInt("userType");
-                int status = obj.optInt("status", SentStatus.SENDING.value);
-                long sendTime = obj.optLong("sendTime");
-                Object bodyObj = obj.opt("body");
-                JSONObject body = null;
-                if (bodyObj != null) {
-                    if (bodyObj instanceof String) {
-                        String bodyStr = bodyObj.toString();
-                        if (bodyStr.startsWith("{") && bodyStr.endsWith("}")) {
-                            body = new JSONObject(bodyStr);
-                        }
-                    } else if (bodyObj instanceof JSONObject) {
-                        body = obj.optJSONObject("body");
-                    }
-                }
-                String bodyJson = "{}";
-                if (body != null) {
-                    bodyJson = body.toString();
-                }
-                if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(to)) {
-                    return new Message(new UnKnowMessage());
-//                    return new Message(messageId, sendTime, from, from_n, to, to_n, type, userType, chatType, isRead, status, shopId, from_avatar, to_avatar, bodyJson, os).clone();
-                }
+                message.setMessageId(messageId);
+
+                long messageTime = obj.optLong("messageTime");
+                message.setMessageTime(messageTime);
+
+                JSONObject fromUserObj = obj.optJSONObject("fromUser");
+                message.setFromUser(MessageUser.fromJSONObject(fromUserObj));
+
+                JSONObject toUserObj = obj.optJSONObject("toUser");
+                message.setToUser(MessageUser.fromJSONObject(toUserObj));
+
+                message.setChatType(obj.optInt("chatType", ConversationType.PRIVATE.getValue()));
+
+                message.setMessageType(obj.optInt("messageType"));
+
+                message.setMessageBody(obj.optString("messageBody", "{}"));
+
+                message.setReadStatus(obj.optInt("readStatus", ReadStatus.UN_READ.getValue()));
+
+                message.setSendStatus(obj.optInt("sendStatus", SentStatus.SENDING.getValue()));
+
+                return message;
             } catch (JSONException e) {
                 JLog.e("解析消息失败:" + e.getMessage());
             }
         }
         return new Message(new UnKnowMessage());
+    }
+
+
+    public String toJson() {
+        return ChatLibUtil.toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return toJson();
     }
 }

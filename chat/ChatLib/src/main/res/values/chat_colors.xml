@@ -18,6 +18,8 @@
     <color name="chat_white">#FFFFFF</color>
     <color name="chat_black">#000000</color>
 
+    <color name="chat_link_blue">#007AFF</color>
+
     <color name="chat_white_10">#1Affffff</color>
     <color name="chat_white_20">#33ffffff</color>
     <color name="chat_white_30">#4Dffffff</color>

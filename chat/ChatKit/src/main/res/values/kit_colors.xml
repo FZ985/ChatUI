@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="chat_conversation_toolbar">@color/chat_theme</color>
-    <color name="chat_conversation_toolbar_title">@color/chat_white</color>
+    <color name="chat_conversation_toolbar">@color/chat_white</color>
+    <color name="chat_conversation_toolbar_title">@color/chat_black</color>
     <color name="chat_conversation_bottom_panel">@color/chat_color_F6F6F6</color>
 
     <color name="kit_input_icon">@color/chat_black</color>

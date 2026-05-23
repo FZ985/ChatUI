@@ -6,6 +6,7 @@ import android.content.Context;
 import android.provider.Settings;
 
 import io.im.kit.IMCenter;
+import io.im.kit.IMTest;
 import io.im.kit.config.Options;
 
 /**
@@ -28,13 +29,16 @@ public class ImDebug {
         Options options = new Options();
         IMCenter.init(application, options);
 
+
         //连接socket
 //        ConnectRequest request = ConnectRequest.get().url(wss);
 //        request.addParam("version", version);
 //        request.addParam("token", token);
 //        request.addParam("type", type);
 //        request.addParam("device", "android_" + getAndroidId(application));
-//        IMCenter.getInstance().connect(request, ChatLibUtil.toJson(loginUser));
+//        IMCenter.getInstance().connect(request);
+
+        IMCenter.login(IMTest.loginUser);
     }
 
 

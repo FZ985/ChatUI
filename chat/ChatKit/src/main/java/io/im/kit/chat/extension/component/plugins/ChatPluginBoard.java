@@ -22,7 +22,7 @@ import java.util.List;
 import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.chat.IChatFragment;
-import io.im.kit.databinding.KitPanelPluginBoardBinding;
+import io.im.kit.databinding.ChatPanelPluginBoardBinding;
 
 /**
  * author : JFZ
@@ -30,7 +30,7 @@ import io.im.kit.databinding.KitPanelPluginBoardBinding;
  * description :
  */
 public class ChatPluginBoard extends FrameLayout {
-    private final KitPanelPluginBoardBinding binding;
+    private final ChatPanelPluginBoardBinding binding;
 
     private static final int DEFAULT_SHOW_COLUMN = 4;
 
@@ -50,7 +50,7 @@ public class ChatPluginBoard extends FrameLayout {
 
     public ChatPluginBoard(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = KitPanelPluginBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        binding = ChatPanelPluginBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
     }
 
     public void initPlugin(IChatFragment fragment) {
@@ -85,7 +85,7 @@ public class ChatPluginBoard extends FrameLayout {
         @NonNull
         @Override
         public PluginPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_plugin_grid_view, parent, false);
+            View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_plugin_grid_view, parent, false);
             GridView gridView = root.findViewById(R.id.grid_view);
             return new PluginPagerViewHolder(root);
         }
@@ -145,7 +145,7 @@ public class ChatPluginBoard extends FrameLayout {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_plugin_item, null);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_plugin_item, null);
 
                 holder.imageView = convertView.findViewById(R.id.plugin_icon);
                 holder.textView = convertView.findViewById(R.id.plugin_title);

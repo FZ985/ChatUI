@@ -53,9 +53,18 @@ public abstract class MessageContent implements Serializable {
 
     public abstract MessageContent parseContent(JSONObject obj);
 
+    public String toJson() {
+        return ChatLibUtil.toJson(this);
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return ChatLibUtil.toJson(this);
+        return toJson();
+    }
+
+
+    public MessageContent copy() {
+        return ChatLibUtil.deepSerializableCopy(this);
     }
 }

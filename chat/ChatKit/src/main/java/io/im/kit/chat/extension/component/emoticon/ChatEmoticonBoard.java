@@ -24,10 +24,10 @@ import java.util.List;
 
 import io.im.kit.IMCenter;
 import io.im.kit.R;
-import io.im.kit.config.ChatEmojiConfig;
 import io.im.kit.chat.IChatFragment;
 import io.im.kit.chat.extension.ChatExtensionViewModel;
-import io.im.kit.databinding.KitPanelEmojiBoardBinding;
+import io.im.kit.config.ChatEmojiConfig;
+import io.im.kit.databinding.ChatPanelEmojiBoardBinding;
 import io.im.kit.widget.adapter.ViewHolder;
 import io.im.lib.base.ChatPageAdapter;
 import io.im.lib.callback.ChatFun;
@@ -40,7 +40,7 @@ import io.im.lib.utils.ChatNull;
  */
 public class ChatEmoticonBoard extends LinearLayout {
 
-    private final KitPanelEmojiBoardBinding binding;
+    private final ChatPanelEmojiBoardBinding binding;
 
     private List<ChatEmoticonTab> emojiTabs = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class ChatEmoticonBoard extends LinearLayout {
 
     public ChatEmoticonBoard(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = KitPanelEmojiBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        binding = ChatPanelEmojiBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
         binding.emojiTab.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
@@ -165,7 +165,7 @@ public class ChatEmoticonBoard extends LinearLayout {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_emoji_tab_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_emoji_tab_item, parent, false);
             return new ViewHolder(view.getContext(), view);
         }
 

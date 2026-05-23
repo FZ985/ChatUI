@@ -3,21 +3,62 @@ package io.im.kit;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
+import io.im.kit.event.actionevent.ChatMessageEvent;
+import io.im.kit.listener.MessageEventListener;
 import io.im.kit.manager.MessageManager;
+import io.im.lib.MessageType;
 import io.im.lib.callback.SendMessageCallback;
 import io.im.lib.model.Message;
 
 /**
  * by DAD FZ
  * 2026/5/22
- * desc：消息创建
+ * desc：消息操作
  **/
-public class MessageCreate {
+public class MessageOperate {
 
 
     //发送消息
-    public static void sendMessage(Message message,@Nullable SendMessageCallback callback) {
-        MessageManager.getInstance().sendMessage(message, callback);
+    public static void sendMessage(Message message, @Nullable SendMessageCallback callback) {
+        sendMessage(message, true, callback);
+    }
+
+    //发送消息
+    public static void sendMessage(Message message, boolean postEvent, @Nullable SendMessageCallback callback) {
+        if (postEvent) {
+            postSendEvent(new ChatMessageEvent(ChatMessageEvent.ATTACH, message));
+        }
+        MessageManager.getInstance().sendMessage(message, new SendMessageCallback() {
+            @Override
+            public void onSuccess(Message message) {
+                if (postEvent) {
+                    if (MessageType.isAppType(message.getMessageType())) {
+                        postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    } else {
+                        postSendEvent(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    }
+                }
+                if (callback != null) {
+                    callback.onSuccess(message);
+                }
+            }
+
+            @Override
+            public void onError(Message message, int errorCode) {
+                if (postEvent) {
+                    if (MessageType.isAppType(message.getMessageType())) {
+                        postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                    } else {
+                        postSendEvent(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                    }
+                }
+                if (callback != null) {
+                    callback.onError(message, errorCode);
+                }
+            }
+        });
     }
 
     //    //发送阅读消息
@@ -160,4 +201,75 @@ public class MessageCreate {
 //            }
 //        });
 //    }
+
+
+    //分发发送事件
+    public static void postSendEvent(ChatMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onSendMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    //分发发送媒体消息回调事件
+    public static void postSendMediaMessage(ChatMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onSendMediaMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    //分发发送的其他消息回调事件
+    public static void postSendOtherMessage(ChatMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onSendOtherMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    //分发接收消息回调事件
+    public static void postReceiveMessage(ChatMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onReceiveMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    //分发接收的其他消息回调事件
+    public static void postReceiveOtherMessage(ChatMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onReceiveOtherMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
 }

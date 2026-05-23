@@ -12,7 +12,7 @@ import io.im.kit.R;
 public class DefaultProvider implements IViewProvider {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_item_message_default, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_default, parent, false);
         return new ViewHolder(view.getContext(), view);
     }
 

@@ -4,17 +4,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
 import androidx.annotation.Keep;
+
+import org.json.JSONObject;
 
 import io.im.lib.core.aidl.CoreInterface;
 import io.im.lib.core.aidl.CoreResultBind;
 import io.im.lib.core.aidl.CoreResultInterface;
 import io.im.lib.core.service.CoreService;
 import io.im.lib.core.socket.ConnectRequest;
+import io.im.lib.core.socket.SocketCode;
 import io.im.lib.core.socket.WebSocketResult;
 import io.im.lib.model.Message;
 import io.im.lib.utils.ChatLibUtil;
@@ -132,15 +137,43 @@ public class CoreSingle {
         }
     }
 
+    private final Handler testHandler = new Handler(Looper.getMainLooper());
+
     public void sendMessage(Message message) {
-        if (bindState()) {
-            try {
-                getBind().toTypeAction(CoreConstant.SendMessage, ChatLibUtil.toJson(message), callback);
-            } catch (RemoteException e) {
-                JLog.e("连接 exception:" + e.getMessage());
-                connectWebsocket(request);
-            }
+//        if (bindState()) {
+//            try {
+//                getBind().toTypeAction(CoreConstant.SendMessage, ChatLibUtil.toJson(message), callback);
+//            } catch (RemoteException e) {
+//                JLog.e("连接 exception:" + e.getMessage());
+//                connectWebsocket(request);
+//            }
+//        }
+
+        //模拟发送成功
+        try {
+            String msgJson = message.toJson();
+            JSONObject jo = new JSONObject(msgJson);
+            jo.put("code", 200);
+            String data = new WebSocketResult(SocketCode.SOCKET_MESSAGE, jo.toString()).toJson();
+            callback.onResult(CoreConstant.SocketResponse, data);
+
+            testHandler.postDelayed(() -> {
+                try {
+                    Message flipMessage = message.flipMessage();
+                    flipMessage.setMessageId(flipMessage.buildMessageId());
+                    String receiveJson = flipMessage.toJson();
+                    JSONObject receiveObj = new JSONObject(receiveJson);
+                    receiveObj.put("code", 200);
+                    String receiveData = new WebSocketResult(SocketCode.SOCKET_MESSAGE, receiveObj.toString()).toJson();
+                    callback.onResult(CoreConstant.SocketResponse, receiveData);
+                } catch (Exception e) {
+                    //
+                }
+            }, 300);
+        } catch (Exception e) {
+            //
         }
+
     }
 
     public void closeSocket() {

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.im.kit.chat.messagelist.provider.ConversationMessageProvider;
@@ -17,11 +15,9 @@ import io.im.kit.chat.messagelist.provider.IUnKnowMessageProvider;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.ProviderManager;
 import io.im.lib.MessageType;
-import io.im.lib.message.ImageMessage;
-import io.im.lib.message.TextMessage;
-import io.im.lib.message.UnKnowMessage;
+import io.im.lib.message.im.ImageMessage;
+import io.im.lib.message.im.TextMessage;
 import io.im.lib.model.MessageContent;
-import io.im.lib.utils.JLog;
 
 /**
  * author : JFZ
@@ -34,7 +30,6 @@ public class ChatConfig {
     private final ConversationMessageProvider defaultMessageProvider = new IUnKnowMessageProvider();
     private final List<ConversationSummaryProvider> mConversationSummaryProviders = new ArrayList<>();
 
-    private final HashMap<Integer, MessageContent> msgMaps = new HashMap<>();
 
     public ChatConfig() {
         initMessageProvider();
@@ -55,25 +50,22 @@ public class ChatConfig {
             mMessageListProvider.addProvider(provider);
             mConversationSummaryProviders.add(provider);
         }
-        try {
-            if (messageClass != null) {
-                Constructor<?> constructor = messageClass.getConstructor();
-                Object obj = constructor.newInstance();
-                msgMaps.put(messageType, (MessageContent) obj);
-            }
-        } catch (Exception e) {
-            JLog.e("====存入消息体失败:" + e.getMessage());
-        }
+        MessageType.addChatType(messageType, messageClass);
     }
 
+    //获取聊天页面级
     public MessageContent getMessageContent(int messageType) {
-        if (msgMaps.containsKey(messageType)) {
-            MessageContent messageContent = msgMaps.get(messageType);
-            if (messageContent != null) {
-                return messageContent;
-            }
-        }
-        return UnKnowMessage.obtain();
+        return MessageType.getMessageContent(messageType);
+    }
+
+    //添加应用级别消息内容
+    public void addAppMessageContent(int messageType, Class<? extends MessageContent> messageClass) {
+        MessageType.addAppMessageType(messageType, messageClass);
+    }
+
+    //获取应用级消息内容
+    public MessageContent getAppMessageContent(int messageType) {
+        return MessageType.getAppMessageContent(messageType);
     }
 
 

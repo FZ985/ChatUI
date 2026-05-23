@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/chat_dp56"
     android:orientation="vertical"
-    tools:background="@color/chat_conversation_toolbar"
     tools:viewBindingIgnore="true">
 
     <RelativeLayout
@@ -28,8 +27,8 @@
             android:id="@+id/left"
             android:layout_width="@dimen/chat_dp56"
             android:layout_height="match_parent"
-            android:padding="@dimen/chat_dp14"
-            android:src="@drawable/chat_arrow_left_white" />
+            android:padding="@dimen/chat_dp15"
+            android:src="@drawable/chat_skin_arrow_left_black" />
     </RelativeLayout>
 
 </LinearLayout>

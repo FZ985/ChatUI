@@ -1,7 +1,11 @@
 package io.im.lib.model;
 
 import androidx.annotation.Keep;
+import androidx.annotation.Nullable;
 import androidx.room.Ignore;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
@@ -66,4 +70,24 @@ public class MessageUser implements Serializable {
         String json = ChatLibUtil.toJson(this);
         return ChatLibUtil.gson.fromJson(json, UserInfo.class);
     }
+
+    public static MessageUser fromJSONObject(@Nullable JSONObject obj) {
+        MessageUser user = new MessageUser();
+        if (obj != null) {
+            user.setUserId(obj.optString("userId"));
+            user.setUserName(obj.optString("userName"));
+            user.setUserAvatar(obj.optString("userAvatar"));
+            user.setUserType(obj.optInt("userType"));
+        }
+        return user;
+    }
+
+    public static MessageUser fromJson(String json) {
+        try {
+            return fromJSONObject(new JSONObject(json));
+        } catch (JSONException e) {
+            return new MessageUser();
+        }
+    }
+
 }

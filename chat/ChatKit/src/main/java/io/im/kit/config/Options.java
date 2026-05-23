@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.kit.callback.ImageLoader;
+import io.im.kit.listener.ImageLoader;
 import io.im.kit.config.enums.FontSize;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.listener.MessageInterceptListener;

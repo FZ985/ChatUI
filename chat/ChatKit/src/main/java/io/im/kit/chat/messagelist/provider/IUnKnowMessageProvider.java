@@ -47,7 +47,7 @@ public class IUnKnowMessageProvider implements ConversationMessageProvider<UnKno
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.kit_item_message_unknow, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_unknow, parent, false);
         return new ViewHolder(parent.getContext(), view);
     }
 

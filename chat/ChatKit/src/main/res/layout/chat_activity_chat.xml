@@ -8,12 +8,12 @@
         android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/chat_skin_status_bar" />
+        android:background="@color/chat_conversation_toolbar" />
 
     <io.im.kit.widget.ChatToolBar
         android:id="@+id/conversation_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chat_dp56"
+        android:layout_height="@dimen/kit_toolbar_height"
         android:layout_below="@id/status_view"
         android:background="@color/chat_conversation_toolbar" />
 
