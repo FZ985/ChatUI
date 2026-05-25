@@ -159,7 +159,8 @@ public class CoreSingle {
 
             testHandler.postDelayed(() -> {
                 try {
-                    Message flipMessage = message.flipMessage();
+                    Message flipMessage = message.flipFromTo();
+                    flipMessage.setReplyMessage("");
                     flipMessage.setMessageId(flipMessage.buildMessageId());
                     String receiveJson = flipMessage.toJson();
                     JSONObject receiveObj = new JSONObject(receiveJson);

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -51,7 +52,10 @@ public class Message implements Serializable {
     private int messageType;//消息类型
 
     @ColumnInfo(name = "messageBody")
-    private String messageBody;
+    private String messageBody;//消息内容
+
+    @ColumnInfo(name = "replyMessage")
+    private String replyMessage;//引用的消息，Message结构
 
     @ColumnInfo(name = "readStatus")
     private int readStatus;//阅读状态
@@ -67,6 +71,9 @@ public class Message implements Serializable {
 
     @Ignore
     private MessageContent messageContent;
+
+    @Ignore
+    private Message innerReplyMessage;//内部引用消息的对象转换
 
     public Message() {
     }
@@ -125,6 +132,22 @@ public class Message implements Serializable {
                 setMessageContent(new UnKnowMessage());
             }
         }
+    }
+
+    public String getReplyMessage() {
+        return ChatNull.compat(replyMessage);
+    }
+
+    public void setReplyMessage(String replyMessage) {
+        this.replyMessage = replyMessage;
+    }
+
+    @Nullable
+    public Message getInnerReplyMessage() {
+        if (innerReplyMessage == null && !TextUtils.isEmpty(getReplyMessage())) {
+            innerReplyMessage = Message.parseMessageFromJson(getReplyMessage());
+        }
+        return innerReplyMessage;
     }
 
     public MessageContent getMessageContent() {
@@ -320,10 +343,11 @@ public class Message implements Serializable {
 
 
     //消息方向反转
-    public Message flipMessage() {
+    public Message flipFromTo() {
         MessageUser tempFrom = getFromUser();
         setFromUser(getToUser());
         setToUser(tempFrom);
+        setMessageDirection(MessageDirection.RECEIVE);
         return this;
     }
 
@@ -355,6 +379,8 @@ public class Message implements Serializable {
                 message.setReadStatus(obj.optInt("readStatus", ReadStatus.UN_READ.getValue()));
 
                 message.setSendStatus(obj.optInt("sendStatus", SentStatus.SENDING.getValue()));
+
+                message.setReplyMessage(obj.optString("replyMessage", ""));
 
                 return message;
             } catch (JSONException e) {

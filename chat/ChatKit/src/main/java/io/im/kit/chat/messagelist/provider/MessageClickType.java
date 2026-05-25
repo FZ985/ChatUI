@@ -16,6 +16,10 @@ public class MessageClickType {
 
     public static final int EDIT_CLICK = -6;
 
+    public static final int REPLY_CONTENT_CLICK = -7;//回复点击
+
+    public static final int REPLY_CONTENT_LONG_CLICK = -8;//回复长按
+
 
 //
 //

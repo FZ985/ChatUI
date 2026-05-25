@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -159,7 +160,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         return mInputModeLiveData;
     }
 
-    public void onSendClick() {
+    public void onSendClick(@Nullable Message replyMessage) {
         if (editText == null) return;
         if (TextUtils.isEmpty(editText.getText())
                 || TextUtils.isEmpty(editText.getText().toString().trim())) {
@@ -179,7 +180,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         TextMessage textMessage = TextMessage.obtain(text);
         Message message = Message.obtain(fragment.getUser(), fragment.getConversationType(), MessageType.CHAT_TEXT, textMessage);
         message.setSendStatus(Message.SentStatus.SENDING.getValue());
-        MessageOperate.sendMessage(message, null);
+        MessageOperate.sendMessage(message, replyMessage, null);
 
     }
 }

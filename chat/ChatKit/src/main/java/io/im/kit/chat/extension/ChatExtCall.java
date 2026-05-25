@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.im.kit.helper.IChatHelper;
 import io.im.lib.model.ConversationType;
 import io.im.lib.model.UserInfo;
 
@@ -34,4 +35,7 @@ public interface ChatExtCall {
 
     Intent getConversationIntent();
 
+    ChatMessageViewModel getChatMessageViewModel();
+
+    IChatHelper getIChatHelper();
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/chat_dp5">
+
+    <TextView
+        android:id="@+id/def_reply_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/kit_bg_default_reply"
+        android:includeFontPadding="false"
+        android:paddingHorizontal="@dimen/chat_dp10"
+        android:paddingVertical="@dimen/chat_dp5"
+        android:textColor="@color/chat_color_666666"
+        android:textSize="@dimen/chat_sp13"
+        tools:text="张三：啊哈哈哈" />
+
+</LinearLayout>

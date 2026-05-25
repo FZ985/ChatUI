@@ -17,6 +17,7 @@ import java.util.List;
 import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.helper.OptionsHelper;
+import io.im.kit.helper.ReplyUIHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.utils.DateUtil;
 import io.im.kit.widget.adapter.IViewProviderListener;
@@ -35,6 +36,8 @@ import io.im.lib.utils.JLog;
 public abstract class BaseMessageItemProvider<T extends MessageContent> implements ConversationMessageProvider<T> {
 
     protected MessageItemProviderConfig mConfig = new MessageItemProviderConfig();
+
+    private final ReplyUIHelper replyUIHelper = new ReplyUIHelper();
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,12 +66,14 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 holder.setSelected(R.id.base_edit_iv, uiMessage.isSelected());
                 holder.setOnClickListener(
                         R.id.base_edit,
-                        v -> listener.onViewClick(v, MessageClickType.EDIT_CLICK, uiMessage));
+                        v -> listener.onViewClick(v, MessageClickType.EDIT_CLICK, position, uiMessage));
             }
             initTime(holder, position, list, message);
             initContent(holder, isSender, uiMessage, position, listener, list);
+            initReply(holder, isSender, uiMessage, position, listener, list);
             initStatus(holder, uiMessage, position, listener, message, isSender, list);
             initUserInfo(holder, uiMessage, position, listener, isSender);
+
 
             if (holder instanceof MessageViewHolder) {
                 T msgContent = null;
@@ -139,10 +144,13 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         }
         holder.setPadding(R.id.base_content, 0, 0, 0, 0);
         LinearLayout layout = holder.getView(R.id.base_layout);
+        LinearLayout bsRoot = holder.getView(R.id.bs_root);
         if (mConfig.centerInHorizontal) {
             layout.setGravity(Gravity.CENTER_HORIZONTAL);
+            bsRoot.setGravity(Gravity.CENTER_HORIZONTAL);
         } else {
             layout.setGravity(isSender ? Gravity.END : Gravity.START);
+            bsRoot.setGravity(isSender ? Gravity.END : Gravity.START);
         }
         holder.setOnClickListener(
                 R.id.base_content,
@@ -165,7 +173,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                                 listener);
                     }
                     if (!result) {
-                        listener.onViewClick(v, MessageClickType.CONTENT_CLICK, uiMessage);
+                        listener.onViewClick(v, MessageClickType.CONTENT_CLICK, position, uiMessage);
                     }
                 });
 
@@ -189,12 +197,43 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                                 listener);
                     }
                     if (!result) {
-                        return listener.onViewLongClick(v, MessageClickType.CONTENT_LONG_CLICK, uiMessage);
+                        return listener.onViewLongClick(v, MessageClickType.CONTENT_LONG_CLICK, position, uiMessage);
                     }
                     return true;
                 });
     }
 
+    //初始化回复内容
+    private void initReply(final ViewHolder holder, boolean isSender, final UiMessage uiMessage, final int position,
+                           final IViewProviderListener<UiMessage> listener, final List<UiMessage> list) {
+        FrameLayout replyContentView = holder.getView(R.id.base_reply_content);
+        if (uiMessage.getMessage() != null && uiMessage.getMessage().getInnerReplyMessage() != null) {
+            T msgContent = null;
+            try {
+                msgContent = (T) uiMessage.getMessage().getMessageContent();
+            } catch (ClassCastException e) {
+                log("bindViewHolder Message cast Exception, e:" + e.getMessage());
+            }
+            if (msgContent != null) {
+                replyContentView.setVisibility(View.VISIBLE);
+                bindReplyContent(replyContentView, uiMessage, position, isSender, list, listener);
+            } else {
+                replyContentView.setVisibility(View.GONE);
+            }
+        } else {
+            replyContentView.setVisibility(View.GONE);
+        }
+    }
+
+    protected void bindReplyContent(
+            FrameLayout replyContentView,
+            UiMessage uiMessage,
+            int position,
+            boolean isSender,
+            List<UiMessage> list,
+            IViewProviderListener<UiMessage> listener) {
+        replyUIHelper.bindReplyContent(replyContentView, uiMessage, isSender, position, list, listener);
+    }
 
     //初始化状态
     private void initStatus(
@@ -210,7 +249,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 holder.setVisible(R.id.base_warning, true);
                 holder.setOnClickListener(
                         R.id.base_warning,
-                        v -> listener.onViewClick(v, MessageClickType.WARNING_CLICK, uiMessage));
+                        v -> listener.onViewClick(v, MessageClickType.WARNING_CLICK, position, uiMessage));
             } else {
                 holder.setVisible(R.id.base_warning, false);
             }
@@ -261,26 +300,26 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             IMCenter.getInstance().getOptions().getImageLoader().loadConversationAvatar(holder.getContext(), headImage, uiMessage.getMessage(), isSender);
             holder.setOnClickListener(
                     R.id.base_left_avatar,
-                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, uiMessage));
+                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
 
             holder.setOnClickListener(
                     R.id.base_right_avatar,
-                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, uiMessage));
+                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
 
             holder.setOnLongClickListener(
                     R.id.base_left_avatar,
-                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, uiMessage));
+                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
 
             holder.setOnLongClickListener(
                     R.id.base_right_avatar,
-                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, uiMessage));
+                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
 
             if (mConfig.showNickName && uiMessage.getMessage().getConversationType() == ConversationType.PRIVATE) {
                 if (isSender) {
                     holder.setVisible(R.id.base_title, false);
                 } else {
                     holder.setVisible(R.id.base_title, true);
-                    holder.setText(R.id.base_title, uiMessage.getMessage().getToUser().getUserName());
+                    holder.setText(R.id.base_title, uiMessage.getMessage().getFromUser().getUserName());
                 }
             } else {
                 //隐藏昵称
@@ -355,7 +394,6 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
     public static class MessageViewHolder extends ViewHolder {
         private final ViewHolder mMessageContentViewHolder;
-
         private UiMessage uiMessage;
         private MessageItemProviderConfig mConfig;
 

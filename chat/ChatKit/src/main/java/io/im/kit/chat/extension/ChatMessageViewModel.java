@@ -287,17 +287,25 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         return mUiMessageLiveData;
     }
 
-    public void onViewClick(View view, int clickType, UiMessage data) {
+    public void onViewClick(View view, int clickType, int position, UiMessage data) {
         if (clickType == MessageClickType.EDIT_CLICK) {
             //编辑中
             Toast.makeText(view.getContext(), "编辑中", Toast.LENGTH_SHORT).show();
+        } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
+            Toast.makeText(view.getContext(), "点击回复", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public boolean onViewLongClick(View view, int clickType, UiMessage data) {
-        Toast.makeText(view.getContext(), "long click", Toast.LENGTH_SHORT).show();
+    public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
+        if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
+            Toast.makeText(view.getContext(), "长按回复", Toast.LENGTH_SHORT).show();
+        } else {
+            Message message = data.getMessage();
+            mCall.getIChatHelper().setReplyMessage(message, mCall.getChatMessageViewModel().findUIMessageIndexById(message.getMessageId()));
+//            Toast.makeText(view.getContext(), "long click", Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 }

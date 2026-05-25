@@ -3,6 +3,7 @@
     <color name="chat_conversation_toolbar">@color/chat_white</color>
     <color name="chat_conversation_toolbar_title">@color/chat_black</color>
     <color name="chat_conversation_bottom_panel">@color/chat_color_F6F6F6</color>
+    <color name="chat_conversation_reply">@color/chat_color_EAEAEA</color>
 
     <color name="kit_input_icon">@color/chat_black</color>
     <color name="kit_input_text">@color/chat_black</color>

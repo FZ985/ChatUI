@@ -123,13 +123,13 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
         liveDataListener();
-        scrollToBottom();
+        scrollToBottom(-1);
         subscribeUi();
     }
 
     private void subscribeUi() {
-        MessageOperate.sendMessage(IMTest.message().get(9).getMessage(),null);
-        MessageOperate.sendMessage(IMTest.message().get(1).getMessage(),null);
+        MessageOperate.sendMessage(IMTest.message().get(9).getMessage(), null, null);
+        MessageOperate.sendMessage(IMTest.message().get(1).getMessage(), null, null);
         binding.edit.setOnClickListener(v -> {
             messageViewModel.setEdit(true);
         });
@@ -137,7 +137,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             messageViewModel.setEdit(false);
         });
 
-        binding.test.setOnLongClickListener(v->{
+        binding.test.setOnLongClickListener(v -> {
             return true;
         });
     }
@@ -169,13 +169,13 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     }
 
     @Override
-    public void onViewClick(View view, int clickType, UiMessage data) {
-        messageViewModel.onViewClick(view, clickType, data);
+    public void onViewClick(View view, int clickType, int position, UiMessage data) {
+        messageViewModel.onViewClick(view, clickType, position, data);
     }
 
     @Override
-    public boolean onViewLongClick(View view, int clickType, UiMessage data) {
-        return messageViewModel.onViewLongClick(view, clickType, data);
+    public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
+        return messageViewModel.onViewLongClick(view, clickType, position, data);
     }
 
     @Override
@@ -215,8 +215,10 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         messageViewModel.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void scrollToBottom() {
-        binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
+    public void scrollToBottom(int index) {
+        if (index == -1) {
+            binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
+        }
     }
 
     private void closeExpand() {
@@ -275,5 +277,15 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public boolean onBackPressed() {
         return helper.onBackPressed();
+    }
+
+    @Override
+    public ChatMessageViewModel getChatMessageViewModel() {
+        return messageViewModel;
+    }
+
+    @Override
+    public IChatHelper getIChatHelper() {
+        return helper;
     }
 }

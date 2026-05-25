@@ -21,12 +21,15 @@ public class MessageOperate {
 
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable SendMessageCallback callback) {
-        sendMessage(message, true, callback);
+    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable SendMessageCallback callback) {
+        sendMessage(message, replayMessage, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, boolean postEvent, @Nullable SendMessageCallback callback) {
+    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable SendMessageCallback callback) {
+        if (replyMessage != null) {
+            message.setReplyMessage(replyMessage.toJson());
+        }
         if (postEvent) {
             postSendEvent(new ChatMessageEvent(ChatMessageEvent.ATTACH, message));
         }

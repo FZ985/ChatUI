@@ -1,7 +1,14 @@
 package io.im.kit.chat.extension.component.plugins;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+
+import io.im.lib.base.ChatBaseFragment;
+import io.im.lib.model.Message;
 
 /**
  * by JFZ
@@ -26,4 +33,42 @@ public interface ChatPluginModule {
      */
     String obtainTitle(Context context);
 
+    /**
+     * 插件点击
+     *
+     * @param fragment     插件所在页面
+     * @param v            view
+     * @param replyMessage 回复消息
+     */
+    default void onPluginClick(ChatBaseFragment fragment, View v, @Nullable Message replyMessage) {
+    }
+
+    /**
+     * 插件长按
+     *
+     * @param fragment     插件所在页面
+     * @param v            view
+     * @param replyMessage 回复消息
+     * @return true，false
+     */
+    default boolean onPluginLongClick(ChatBaseFragment fragment, View v, @Nullable Message replyMessage) {
+        return false;
+    }
+
+    /**
+     * 插件所在页面的结果回调
+     *
+     * @param fragment    插件所在页面
+     * @param requestCode 请求code
+     * @param resultCode  结果code
+     * @param data        结果
+     */
+    default void onPluginActivityResult(ChatBaseFragment fragment, int requestCode, int resultCode, Intent data) {
+    }
+
+    /**
+     * 插件释放
+     */
+    default void onPluginDestroy() {
+    }
 }

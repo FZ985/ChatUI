@@ -50,6 +50,7 @@ class IChatInputPanel : FrameLayout {
         OptionsHelper.updateTextSize(binding.edit, 15)
         OptionsHelper.updateTextSize(binding.send, 15)
         OptionsHelper.updateTextSize(binding.voiceBtn, 15)
+        OptionsHelper.updateTextSize(binding.replyTv, 13)
     }
 
     fun setInputStyle(style: InputStyle) {

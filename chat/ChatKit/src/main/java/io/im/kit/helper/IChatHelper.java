@@ -1,6 +1,8 @@
 package io.im.kit.helper;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.Spannable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,13 +11,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.im.kit.IMCenter;
 import io.im.kit.R;
 import io.im.kit.chat.IChatFragment;
 import io.im.kit.chat.extension.ChatExtensionViewModel;
 import io.im.kit.chat.extension.component.emoticon.ChatEmoticonBoard;
 import io.im.kit.chat.extension.component.plugins.ChatPluginBoard;
+import io.im.kit.chat.extension.component.plugins.ChatPluginModule;
 import io.im.kit.config.enums.ChatInputMode;
 import io.im.kit.config.enums.InputStyle;
+import io.im.kit.event.actionevent.ChatMessageEvent;
+import io.im.kit.listener.MessageEventListener;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.switchpanel.PanelSwitchHelper;
 import io.im.kit.widget.switchpanel.interfaces.ContentScrollMeasurer;
@@ -25,6 +31,8 @@ import io.im.kit.widget.switchpanel.interfaces.listener.OnViewClickListener;
 import io.im.kit.widget.switchpanel.view.panel.IPanelView;
 import io.im.kit.widget.switchpanel.view.panel.PanelView;
 import io.im.lib.callback.ChatLifecycle;
+import io.im.lib.model.Message;
+import io.im.lib.model.MessageUser;
 import io.im.lib.utils.ChatLibUtil;
 import io.im.lib.utils.JLog;
 
@@ -33,7 +41,7 @@ import io.im.lib.utils.JLog;
  * date : 2024/1/30 17:09
  * description :
  */
-public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
+public final class IChatHelper implements ChatLifecycle, OnViewClickListener, MessageEventListener {
 
     private static final String TAG = "IChatHelper";
     private PanelSwitchHelper mHelper;
@@ -45,6 +53,11 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
     private Context mContext;
 
     private ChatExtensionViewModel mExtensionViewModel;
+
+    @Nullable
+    private Message replyMessage;
+
+    private int replyIndex = -1;
 
     public void bindConversation(Context context, IChatFragment fragment) {
         if (fragment == null || context == null) return;
@@ -72,6 +85,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                 }
             }
         });
+        IMCenter.getInstance().getOptions().addMessageEventListener(this);
     }
 
     @Override
@@ -88,7 +102,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         log("输入框是否获得焦点 : " + hasFocus);
                         if (hasFocus) {
-                            scrollToBottom();
+                            scrollToBottom(replyIndex);
                         }
                         mFragment.getBinding().inputPanel.onEditTextFocus(hasFocus);
                     })
@@ -142,7 +156,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                                     emoticonBoard.initEmoji(mFragment);
                                 } else if (panelView.getId() == R.id.panel_addition) {
                                     ChatPluginBoard pluginBoard = mFragment.getBinding().panelAddition.findViewById(R.id.plugin_board);
-                                    pluginBoard.initPlugin(mFragment);
+                                    pluginBoard.initPlugin(mFragment, replyMessage);
                                 }
                             }
                         }
@@ -153,9 +167,9 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
         mFragment.getBinding().recycler.setTouchCall(this::closeExpand);
     }
 
-    private void scrollToBottom() {
+    private void scrollToBottom(int index) {
         if (mFragment != null) {
-            mFragment.scrollToBottom();
+            mFragment.scrollToBottom(index);
         }
     }
 
@@ -216,9 +230,33 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
                 }
             } else if (id == R.id.send) {
                 //点击 发送按钮
-                mExtensionViewModel.onSendClick();
+                mExtensionViewModel.onSendClick(replyMessage);
             }
             log("点击了View : " + view);
+        }
+    }
+
+    public void setReplyMessage(@Nullable Message replyMessage, int index) {
+        this.replyMessage = replyMessage;
+        this.replyIndex = index;
+        if (mFragment != null) {
+            if (replyMessage != null) {
+                mFragment.getBinding().inputPanel.getBinding().replyLl.setVisibility(View.VISIBLE);
+                mFragment.getBinding().inputPanel.getBinding().replyClose.setOnClickListener(v -> setReplyMessage(null, -1));
+
+                MessageUser user = replyMessage.getFromUser();
+                Spannable spannable = IMCenter.getInstance().getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), replyMessage.getMessageContent());
+                StringBuilder sb = new StringBuilder(user.getUserName() + "：");
+                sb.append(spannable);
+                mFragment.getBinding().inputPanel.getBinding().replyTv.setText(sb);
+
+                mFragment.getBinding().inputPanel.postDelayed(() -> {
+                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
+                }, 100);
+            } else {
+                mFragment.getBinding().inputPanel.getBinding().replyLl.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -235,6 +273,48 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener {
         return mHelper.hookSystemBackByPanelSwitcher();
     }
 
+    @Override
+    public void onSendMessage(ChatMessageEvent event) {
+        //发送完成后刷新引用布局
+        setReplyMessage(null, -1);
+    }
+
+    @Override
+    public void onSendMediaMessage(ChatMessageEvent event) {
+
+    }
+
+    @Override
+    public void onSendOtherMessage(ChatMessageEvent event) {
+
+    }
+
+    @Override
+    public void onReceiveMessage(ChatMessageEvent event) {
+
+    }
+
+    @Override
+    public void onReceiveOtherMessage(ChatMessageEvent event) {
+
+    }
+
+    @Override
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mFragment != null) {
+            for (ChatPluginModule plugin : IMCenter.getInstance().getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
+                plugin.onPluginActivityResult(mFragment, requestCode, resultCode, data);
+            }
+        }
+        return ChatLifecycle.super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        for (ChatPluginModule plugin : IMCenter.getInstance().getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
+            plugin.onPluginDestroy();
+        }
+    }
 
     public boolean onBackPressed() {
         return mHelper != null && closeExpand();
