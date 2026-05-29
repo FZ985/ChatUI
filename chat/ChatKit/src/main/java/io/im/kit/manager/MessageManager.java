@@ -29,7 +29,7 @@ import io.im.lib.utils.JLog;
  */
 public class MessageManager {
 
-    private final HashMap<Long, MessageCallback> callbackMap = new HashMap<>();
+    private final HashMap<Long, MessageCallback<Message>> callbackMap = new HashMap<>();
 
     private final List<OnSocketMessageListener> socketMessageListeners = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class MessageManager {
     //发送的消息
     private void filterSendMessage(Message message, int errorCode) {
         message = transformMessage(message);
-        MessageCallback callback = callbackMap.get(message.getMessageId());
+        MessageCallback<Message> callback = callbackMap.get(message.getMessageId());
         if (errorCode == SocketCode.success) {
 //            ResendManager.getInstance().removeResendMessage(message.getMessageId());
             if (callback != null) {
@@ -130,7 +130,7 @@ public class MessageManager {
     }
 
     //发送消息,所有发送消息，都应该执行这个函数
-    public void sendMessage(Message message, @Nullable MessageCallback callback) {
+    public void sendMessage(Message message, @Nullable MessageCallback<Message> callback) {
         if (callback != null) {
             callbackMap.put(message.getMessageId(), callback);
         }

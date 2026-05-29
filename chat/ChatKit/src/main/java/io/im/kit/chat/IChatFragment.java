@@ -125,6 +125,17 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             }
             return true;
         }
+
+        @Override
+        public boolean onForward(Message messageInfo) {
+            IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+            if (listener != null && listener.onForward(messageInfo)) {
+                return true;
+            }
+            ChatMsgCache.addMessage(messageInfo);
+            RouteUtil.goForwardSelect(mActivity, userInfo, false);
+            return true;
+        }
     };
 
     @Nullable
@@ -186,7 +197,6 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
 
-        checkMultiSelectView();
         IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(getViewLifecycleOwner(), fontSize -> {
             if (!isDetached() && fontSize != null) {
                 binding.conversationToolbar.updateTitleSize();
@@ -199,7 +209,24 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             ChatPopActionFactory.getInstance().setChatPopMenu(IMCenter.getInstance().getOptions().chatPopMenu);
         }
         ChatPopActionFactory.getInstance().setActionListener(menuClickListener);
+        uiListener();
+    }
 
+    private void uiListener() {
+        //逐条转发
+        binding.shareMulti.setOnClickListener(v -> {
+            RouteUtil.goForwardSelect(mActivity, userInfo, false);
+        });
+
+        //和并转发
+        binding.shareSingle.setOnClickListener(v -> {
+            RouteUtil.goForwardSelect(mActivity, userInfo, true);
+        });
+
+        //删除
+        binding.shareDelete.setOnClickListener(v -> {
+            MessageOperate.deleteMessage(ChatMsgCache.getMessageList(), null);
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -248,6 +275,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         super.onResume();
         helper.onResume();
         messageViewModel.onResume();
+        checkMultiSelectView();
     }
 
     @Override
@@ -288,12 +316,32 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     @Override
     public void checkMultiSelectView() {
-        int count = ChatMsgCache.getMessageCount();
-        if (count > 0 || messageViewModel.isEdit()) {
+        if (messageViewModel.isEdit()) {
+            int count = ChatMsgCache.getMessageCount();
+            binding.inputPanel.setVisibility(View.GONE);
+            binding.multiSelectLl.setVisibility(View.VISIBLE);
             binding.conversationToolbar.setTitleName(getString(R.string.chat_message_select_count, String.valueOf(count)));
             binding.conversationToolbar.setLeftIcon(io.im.lib.R.drawable.chat_skin_close_black);
             binding.conversationToolbar.setLeftOnclick(v -> messageViewModel.setEdit(false));
+            if (count > 0) {
+                binding.shareMulti.setEnabled(true);
+                binding.shareMulti.setAlpha(1f);
+                binding.shareSingle.setEnabled(true);
+                binding.shareSingle.setAlpha(1f);
+                binding.shareDelete.setEnabled(true);
+                binding.shareDelete.setAlpha(1f);
+            } else {
+                binding.shareMulti.setAlpha(0.3f);
+                binding.shareMulti.setEnabled(false);
+                binding.shareSingle.setAlpha(0.3f);
+                binding.shareSingle.setEnabled(false);
+                binding.shareDelete.setAlpha(0.3f);
+                binding.shareDelete.setEnabled(false);
+            }
         } else {
+            ChatMsgCache.clear();
+            binding.multiSelectLl.setVisibility(View.GONE);
+            binding.inputPanel.setVisibility(View.VISIBLE);
             if (userInfo != null) {
                 binding.conversationToolbar.setTitleName(userInfo.getUserName());
             }

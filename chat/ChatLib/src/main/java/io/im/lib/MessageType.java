@@ -40,6 +40,8 @@ public class MessageType {
 
     public static final int CHAT_FILE = 8;//聊天文件消息
 
+    public static final int CHAT_FORWARD = 9;//转发消息
+
 
     //app消息，全局通知类
     public static final int APP_SYSTEM_NOTIFICATION = 601;//应用系统通知

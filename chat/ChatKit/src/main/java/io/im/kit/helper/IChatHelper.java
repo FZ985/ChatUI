@@ -3,6 +3,7 @@ package io.im.kit.helper;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -246,7 +247,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
 
                 MessageUser user = replyMessage.getFromUser();
                 Spannable spannable = IMCenter.getInstance().getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), replyMessage.getMessageContent());
-                StringBuilder sb = new StringBuilder(user.getUserName() + "：");
+                SpannableStringBuilder sb = new SpannableStringBuilder(user.getUserName() + "：");
                 sb.append(spannable);
                 mFragment.getBinding().replyTv.setText(sb);
                 OptionsHelper.updateTextSize(mFragment.getBinding().replyTv, 13);

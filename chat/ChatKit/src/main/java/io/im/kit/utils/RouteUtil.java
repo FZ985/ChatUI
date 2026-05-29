@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import io.im.kit.chat.IChatActivity;
+import io.im.kit.forward.IForwardSelectorActivity;
 import io.im.lib.model.UserInfo;
 
 /**
@@ -19,6 +20,14 @@ public class RouteUtil {
     public static final String ConversationType = "conversation_type";
 
     public static final String InputStyle = "input_style";
+    public static final String IsMerge = "is_merge";
+
+
+    public static void goForwardSelect(Context context, UserInfo user,  boolean merge) {
+        go(context, new Intent(context, IForwardSelectorActivity.class)
+                .putExtra(User, user)
+                .putExtra(IsMerge, merge));
+    }
 
     public static void goPrivateChat(Context context, UserInfo user) {
         go(context, new Intent(context, IChatActivity.class)

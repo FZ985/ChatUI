@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/msg_image_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/kit_bg_message_forward"
+    android:paddingHorizontal="@dimen/chat_dp10"
+    android:paddingTop="@dimen/chat_dp10">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/forward_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/chat_dp230">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/chat_skin_Text"
+            android:textSize="@dimen/chat_sp17"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="张三与李四的聊天记录" />
+
+        <TextView
+            android:id="@+id/content1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp3"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/chat_dp210"
+            android:maxLines="1"
+            android:textColor="@color/chat_color_999999"
+            android:textSize="@dimen/chat_sp12"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="张三：哈哈哈哈"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/content2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/chat_dp210"
+            android:maxLines="1"
+            android:textColor="@color/chat_color_999999"
+            android:textSize="@dimen/chat_sp12"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content1"
+            tools:text="张三：哈哈哈哈"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/content3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/chat_dp210"
+            android:maxLines="1"
+            android:textColor="@color/chat_color_999999"
+            android:textSize="@dimen/chat_sp12"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content2"
+            tools:text="张三：哈哈哈哈"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/content4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/chat_dp210"
+            android:maxLines="1"
+            android:textColor="@color/chat_color_999999"
+            android:textSize="@dimen/chat_sp12"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content3"
+            tools:text="张三：哈哈哈哈"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/f_line"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/chat_dp0_8"
+        android:layout_marginTop="@dimen/chat_dp5"
+        android:alpha="0.5"
+        android:background="@color/chat_skin_line"
+        app:layout_constraintEnd_toEndOf="@id/forward_cl"
+        app:layout_constraintStart_toStartOf="@id/forward_cl"
+        app:layout_constraintTop_toBottomOf="@id/forward_cl" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/f_label"
+        android:paddingVertical="@dimen/chat_dp5"
+        android:text="@string/forward_t2"
+        android:textColor="@color/chat_color_999999"
+        android:textSize="@dimen/chat_sp11"
+        app:layout_constraintTop_toBottomOf="@id/f_line" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

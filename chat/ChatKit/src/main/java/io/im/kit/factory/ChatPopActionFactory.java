@@ -89,49 +89,19 @@ public class ChatPopActionFactory {
         if (customPopMenu == null
                 || customPopMenu.get() == null
                 || customPopMenu.get().showDefaultPopMenu()) {
-//            if (message.getMessageData().getMessage().getSendingState()
-//                    == V2NIMMessageSendingState.V2NIM_MESSAGE_SENDING_STATE_FAILED
-//                    || message.getMessageData().getMessage().getSendingState()
-//                    == V2NIMMessageSendingState.V2NIM_MESSAGE_SENDING_STATE_SENDING
-//                    || message.getViewType() == V2NIMMessageType.V2NIM_MESSAGE_TYPE_INVALID.getValue()) {
-//                addCopyActionIfNeed(context, actions, message);
-//                actions.add(getDeleteAction(context, message));
-//                actions.add(getMultiSelectAction(context, message));
-//                addPluginTextActionIfNeed(actions, message);
-//                return actions;
-//            }
-
-//            if (message.getViewType() == MsgTypeEnum.nrtc_netcall.getValue()) {
-//                // call
-//                actions.add(getDeleteAction(context, message));
-//                actions.add(getMultiSelectAction(context, message));
-//                return actions;
-//            }
-//            // 基础消息类型都在MsgTypeEnum中定义,自定义消息类型都是MsgTypeEnum.custom，
 
             // 自定义消息，根据自定义消息的Type区分
+            //复制
             addCopyActionIfNeed(context, actions, message);
-            actions.add(getReplyAction(context, message));
-            actions.add(getMultiSelectAction(context, message));
+            //转发
+            actions.add(getForwardAction(context, message));
+            //删除
             actions.add(getDeleteAction(context, message));
-//            if (!MessageHelper.isReceivedMessage(message)) {
-//                actions.add(getRecallAction(context, message));
-//            }
-//            if (IMKitConfigCenter.getEnableCollectionMessage()) {
-//                actions.add(getCollectionAction(context, message));
-//            }
-//            if (IMKitConfigCenter.getEnableTopMessage()
-//                    && message.getMessageData().getMessage().getConversationType()
-//                    == V2NIMConversationType.V2NIM_CONVERSATION_TYPE_TEAM) {
-//                actions.add(getTopStickyAction(context, message));
-//            }
-//            if (IMKitConfigCenter.getEnableVoiceToText()
-//                    && message.getMessageData().getMessage().getMessageType()
-//                    == V2NIMMessageType.V2NIM_MESSAGE_TYPE_AUDIO
-//                    && TextUtils.isEmpty(message.getVoiceToText())) {
-//                actions.add(getVoiceToTextAction(context, message));
-//            }
-//            addPluginTextActionIfNeed(actions, message);
+            //多选
+            actions.add(getMultiSelectAction(context, message));
+            //回复
+            actions.add(getReplyAction(context, message));
+
         }
         if (customPopMenu != null && customPopMenu.get() != null) {
             return customPopMenu.get().customizePopMenu(actions, message);
@@ -328,22 +298,20 @@ public class ChatPopActionFactory {
     }
 
     // 构建转发按钮
-//    private PluginAction<ChatMessageBean> getTransmitAction(
-//            Context context, ChatMessageBean message) {
-//        return new PluginAction<>(
-//                ActionConstants.POP_ACTION_TRANSMIT,
-//                context.getString(R.string.chat_message_action_transmit),
-//                R.drawable.ic_message_transmit,
-//                (view, messageInfo) -> {
-//                    YunXinExt.postOperate();
-//                    if (!NetworkUtils.isConnected()) {
-//                        ToastX.showShortToast(R.string.chat_network_error_tip);
-//                        return;
-//                    }
-//                    if (actionListener != null) {
-//                        actionListener.get().onForward(messageInfo);
-//                    }
-//                },
-//                message);
-//    }
+    private PluginAction<Message> getForwardAction(Context context, Message message) {
+        return new PluginAction<>(
+                ActionConstants.POP_ACTION_FORWARD,
+                context.getString(R.string.chat_message_action_forward),
+                R.drawable.kit_message_menu_forward,
+                (view, messageInfo) -> {
+                    if (!ChatNetworkUtil.isConnection(context)) {
+                        ChatToast.toast(context, R.string.chat_network_error_tip);
+                        return;
+                    }
+                    if (actionListener != null) {
+                        actionListener.get().onForward(messageInfo);
+                    }
+                },
+                message);
+    }
 }

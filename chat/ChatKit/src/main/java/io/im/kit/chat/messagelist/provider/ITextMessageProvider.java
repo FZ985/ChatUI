@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.im.kit.R;
-import io.im.kit.chat.extension.component.emoticon.ChatAndroidEmoji;
 import io.im.kit.helper.OptionsHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.ui.web.IWebActivity;
@@ -142,7 +141,10 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
             if (content.length() > 100) {
                 content = content.substring(0, 100);
             }
-            return new SpannableString(ChatAndroidEmoji.ensure(content));
+            SpannableStringBuilder spannable = TextViewUtils.getSpannable(content, spannable1 -> {
+            });
+//            return new SpannableString(ChatAndroidEmoji.ensure(content));
+            return spannable;
         } else {
             return new SpannableString("");
         }

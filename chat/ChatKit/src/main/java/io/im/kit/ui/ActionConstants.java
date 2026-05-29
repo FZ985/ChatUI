@@ -16,4 +16,6 @@ public class ActionConstants {
     public static final String POP_ACTION_REPLY = "POP_ACTION_REPLY";
     //消息长按菜单-多选
     public static final String POP_ACTION_MULTI_SELECT = "POP_ACTION_MULTI_SELECT";
+    //消息长按菜单-转发
+    public static final String POP_ACTION_FORWARD = "POP_ACTION_FORWARD";
 }

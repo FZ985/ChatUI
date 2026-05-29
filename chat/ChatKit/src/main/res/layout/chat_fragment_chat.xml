@@ -81,10 +81,64 @@
                     tools:text="张三：哈哈哈哈" />
             </LinearLayout>
 
-            <io.im.kit.chat.extension.component.inputpanel.IChatInputPanel
-                android:id="@+id/input_panel"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <io.im.kit.chat.extension.component.inputpanel.IChatInputPanel
+                    android:id="@+id/input_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/multi_select_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/chat_conversation_bottom_panel"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/share_multi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/chat_share_message_multi"
+                        android:drawablePadding="@dimen/chat_dp3"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/chat_dp10"
+                        android:text="@string/chat_message_select_share_multi"
+                        android:textColor="@color/chat_skin_Text"
+                        android:textSize="@dimen/chat_sp11" />
+
+                    <TextView
+                        android:id="@+id/share_single"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/chat_share_message_single"
+                        android:drawablePadding="@dimen/chat_dp3"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/chat_dp10"
+                        android:text="@string/chat_message_select_share_single"
+                        android:textColor="@color/chat_skin_Text"
+                        android:textSize="@dimen/chat_sp11" />
+
+                    <TextView
+                        android:id="@+id/share_delete"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/chat_share_message_delete"
+                        android:drawablePadding="@dimen/chat_dp3"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/chat_dp10"
+                        android:text="@string/chat_message_select_share_delete"
+                        android:textColor="@color/chat_skin_Text"
+                        android:textSize="@dimen/chat_sp11" />
+
+                </LinearLayout>
+            </FrameLayout>
 
         </io.im.kit.widget.switchpanel.view.content.LinearContentContainer>
 

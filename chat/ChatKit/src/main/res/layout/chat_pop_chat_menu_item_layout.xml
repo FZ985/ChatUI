@@ -2,21 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_ll"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/root_ll"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/chat_pop_menu_ripple_click"
     android:gravity="center_horizontal"
-    android:minWidth="@dimen/chat_dp60"
+    android:minWidth="@dimen/chat_dp55"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/chat_dp10"
-    tools:background="@color/theme">
+    android:paddingVertical="@dimen/chat_dp10">
 
     <ImageView
         android:id="@+id/menu_icon"
-        android:layout_width="@dimen/chat_dp24"
-        android:layout_height="@dimen/chat_dp24"
+        android:layout_width="@dimen/chat_dp18"
+        android:layout_height="@dimen/chat_dp18"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
         android:tint="@color/chat_white"
@@ -31,7 +30,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/chat_dp3"
         android:textColor="@color/chat_white"
-        android:textSize="@dimen/chat_sp12"
+        android:textSize="@dimen/chat_sp11"
         tools:text="复制" />
 
 </LinearLayout>

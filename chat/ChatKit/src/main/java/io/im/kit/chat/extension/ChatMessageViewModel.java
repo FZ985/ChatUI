@@ -155,12 +155,19 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 refreshSingleMessage(uiMessage);
             }
         }
+        if (isEdit()) {
+            setEdit(false);
+        }
     }
 
     @Override
     public void onDeleteMessage(DeleteMessageEvent event) {
         if (event.getEvent() == DeleteMessageEvent.SUCCESS) {
-            removeMessage(event.getMessages());
+            List<Message> messages = event.getMessages();
+            removeMessage(messages);
+            if (isEdit()) {
+                setEdit(false);
+            }
         }
     }
 
@@ -361,6 +368,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 return onItemMessageLongClick(view, clickType, position, data);
             } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
                 Toast.makeText(view.getContext(), "长按点击回复", Toast.LENGTH_SHORT).show();
+                return true;
             }
             return false;
         } else {

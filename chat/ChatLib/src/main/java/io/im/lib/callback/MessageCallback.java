@@ -1,17 +1,18 @@
 package io.im.lib.callback;
 
 
-import io.im.lib.model.Message;
-
 /**
  * author : JFZ
  * date : 2023/12/21 14:04
  * description :
  */
-public interface MessageCallback {
+public interface MessageCallback<T> {
 
-    void onSuccess(Message message);
+    void onSuccess(T message);
 
-    void onError(Message message, int errorCode);
+    void onError(T message, int errorCode);
+
+    default void onProgress(T message, int progress) {
+    }
 
 }

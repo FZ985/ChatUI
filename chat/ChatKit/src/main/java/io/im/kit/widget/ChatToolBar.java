@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 
 import io.im.kit.R;
@@ -64,6 +65,13 @@ public class ChatToolBar extends Toolbar {
         }
     }
 
+    public void setTitleRes(@StringRes int res) {
+        if (title != null) {
+            title.setText(res);
+            updateTitleSize();
+        }
+    }
+
     public void setLeftIcon(@DrawableRes int res) {
         if (left != null) {
             left.setImageResource(res);
@@ -77,6 +85,6 @@ public class ChatToolBar extends Toolbar {
     }
 
     public void updateTitleSize() {
-        OptionsHelper.updateTextSize(title, 16);
+        OptionsHelper.updateTextSize(title, 18);
     }
 }

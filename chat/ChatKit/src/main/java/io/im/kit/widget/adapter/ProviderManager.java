@@ -42,7 +42,9 @@ public class ProviderManager<T> {
         mProviders.put(viewType, provider);
     }
 
-    /** 设置默认模板。当找不到和 viewType 对应的模板时，使用此默认模板进行 ui 处理。 */
+    /**
+     * 设置默认模板。当找不到和 viewType 对应的模板时，使用此默认模板进行 ui 处理。
+     */
     public void setDefaultProvider(IViewProvider<T> defaultProvider) {
         mDefaultProvider = defaultProvider;
     }

@@ -28,9 +28,9 @@ public interface IChatPopMenuClickListener {
     }
 
     // 点击转发
-//  default boolean onForward(ChatMessageBean messageInfo) {
-//    return false;
-//  }
+    default boolean onForward(Message messageInfo) {
+        return false;
+    }
 
     // 点击置顶
 //  default boolean onTopSticky(ChatMessageBean messageInfo, boolean isAdd) {

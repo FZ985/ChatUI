@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -16,9 +17,13 @@ import io.im.kit.event.actionevent.DeleteMessageEvent;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.manager.MessageManager;
 import io.im.lib.MessageType;
+import io.im.lib.callback.ChatFun;
 import io.im.lib.callback.MessageCallback;
 import io.im.lib.core.ChatSDK;
+import io.im.lib.message.im.ForwardMessage;
+import io.im.lib.model.ConversationType;
 import io.im.lib.model.Message;
+import io.im.lib.model.UserInfo;
 import io.im.lib.utils.ChatToast;
 
 /**
@@ -28,21 +33,78 @@ import io.im.lib.utils.ChatToast;
  **/
 public class MessageOperate {
 
+    //合并转发消息
+    public static void sendMergeForwardMessage(ConversationType conversationType,
+                                               UserInfo user, List<Message> messageList, List<UserInfo> users, @Nullable MessageCallback<Message> callback) {
+        ForwardMessage forward = ForwardMessage.obtain(
+                ChatSDK.getConnectUser().getUserName(),
+                user.getUserName(),
+                messageList);
+        for (UserInfo u : users) {
+            Message message = Message.obtain(u,
+                    conversationType,
+                    MessageType.CHAT_FORWARD,
+                    forward
+            );
+            sendMessage(message, null, callback);
+        }
+    }
+
+    //逐条发送消息
+    public static void sendForwardMessage(List<Message> messageList, List<UserInfo> users, @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
+        if (messageList.isEmpty()) return;
+        for (UserInfo user : users) {
+            List<Message> msgList = new ArrayList<>();
+            for (int i = 0; i < messageList.size(); i++) {
+                Message m = messageList.get(i);
+                Message newMsg = Message.obtain(user, m.getConversationType(), m.getMessageType(), m.getMessageContent());
+                newMsg.setMessageTime(System.currentTimeMillis() + i);
+                newMsg.setReplyMessage(m.getReplyMessage());
+                msgList.add(newMsg);
+            }
+            sendForwardMessage(msgList, new ArrayList<>(), new ArrayList<>(), callback);
+        }
+    }
+
+    private static void sendForwardMessage(List<Message> messageList,
+                                           List<Message> successMessage, List<Message> errorMessage,
+                                           @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
+        if (!messageList.isEmpty()) {
+            Message message = messageList.get(0);
+            sendMessage(message, null, new MessageCallback<Message>() {
+                @Override
+                public void onSuccess(Message message) {
+                    successMessage.add(message);
+                    messageList.remove(0);
+                    sendForwardMessage(messageList, successMessage, errorMessage, callback);
+                }
+
+                @Override
+                public void onError(Message message, int errorCode) {
+                    errorMessage.add(message);
+                    messageList.remove(0);
+                    sendForwardMessage(messageList, successMessage, errorMessage, callback);
+                }
+            });
+        } else {
+            callback.apply(successMessage, errorMessage);
+        }
+    }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable MessageCallback callback) {
+    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable MessageCallback<Message> callback) {
         sendMessage(message, replayMessage, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable MessageCallback callback) {
+    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable MessageCallback<Message> callback) {
         if (replyMessage != null) {
             message.setReplyMessage(replyMessage.toJson());
         }
         if (postEvent) {
             postSendEvent(new ChatMessageEvent(ChatMessageEvent.ATTACH, message));
         }
-        MessageManager.getInstance().sendMessage(message, new MessageCallback() {
+        MessageManager.getInstance().sendMessage(message, new MessageCallback<Message>() {
             @Override
             public void onSuccess(Message message) {
                 if (postEvent) {
@@ -75,18 +137,18 @@ public class MessageOperate {
 
 
     //删除消息
-    public static void deleteMessage(Message message, @Nullable MessageCallback callback) {
+    public static void deleteMessage(Message message, @Nullable MessageCallback<Message> callback) {
         List<Message> messageList = new ArrayList<>();
         messageList.add(message);
         deleteMessage(messageList, callback);
     }
 
     //删除消息
-    public static void deleteMessage(List<Message> messageList, @Nullable MessageCallback callback) {
+    public static void deleteMessage(List<Message> messageList, @Nullable MessageCallback<Message> callback) {
         postDeleteMessage(new DeleteMessageEvent(DeleteMessageEvent.SUCCESS, messageList));
     }
 
-    //    //发送阅读消息
+//    //发送阅读消息
 //    public void sendReadMessage(Message message, MessageCallback callback) {
 //        message.setType(MessageType.READ_MESSAGE);
 //        sendMessage(message, callback);

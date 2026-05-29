@@ -42,7 +42,8 @@ abstract class ChatBaseActivity<VB : ViewBinding> : AppCompatActivity() {
                 binding.root
             ) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+                val top = if (isSafeTop()) systemBars.top else 0
+                v.setPadding(systemBars.left, top, systemBars.right, systemBars.bottom)
                 insets
             }
         }
@@ -50,6 +51,8 @@ abstract class ChatBaseActivity<VB : ViewBinding> : AppCompatActivity() {
     }
 
     abstract fun onInitPage(savedInstanceState: Bundle?)
+
+    open fun isSafeTop(): Boolean = false
 
     private var imm: InputMethodManager? = null
 

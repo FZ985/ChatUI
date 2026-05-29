@@ -20,14 +20,15 @@
             android:maxLines="1"
             android:paddingHorizontal="@dimen/chat_dp56"
             android:textColor="@color/chat_conversation_toolbar_title"
-            android:textSize="@dimen/chat_dp16"
+            android:textSize="@dimen/chat_dp18"
             tools:text="张三" />
 
         <ImageView
             android:id="@+id/left"
-            android:layout_width="@dimen/chat_dp56"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="@dimen/chat_dp15"
+            android:paddingStart="@dimen/chat_dp15"
+            android:paddingEnd="@dimen/chat_dp15"
             android:src="@drawable/chat_skin_arrow_left_black" />
     </RelativeLayout>
 

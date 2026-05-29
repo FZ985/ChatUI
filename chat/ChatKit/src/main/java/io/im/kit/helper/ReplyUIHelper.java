@@ -2,6 +2,7 @@ package io.im.kit.helper;
 
 
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -33,7 +34,7 @@ public class ReplyUIHelper {
         binding = ChatItemDefaultReplyBinding.inflate(LayoutInflater.from(replyContentView.getContext()), replyContentView, true);
         MessageContent messageContent = uiMessage.getMessage().getInnerReplyMessage().getMessageContent();
         Spannable spannable = IMCenter.getInstance().getOptions().getChatConfig().getMessageSummary(replyContentView.getContext(), messageContent);
-        StringBuilder sb = new StringBuilder(uiMessage.getMessage().getInnerReplyMessage().getFromUser().getUserName() + "：");
+        SpannableStringBuilder sb = new SpannableStringBuilder(uiMessage.getMessage().getInnerReplyMessage().getFromUser().getUserName() + "：");
         sb.append(spannable);
         binding.defReplyTv.setText(sb);
         replyContentView.setOnClickListener(v -> listener.onViewClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));

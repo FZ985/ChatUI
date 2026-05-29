@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import io.im.lib.model.Message;
+import io.im.lib.model.UserInfo;
 
 /**
  * author : JFZ
@@ -12,6 +13,8 @@ import io.im.lib.model.Message;
  */
 public interface ImageLoader {
 
-    void loadConversationAvatar(Context context, ImageView view, Message message,boolean isSender);
+    void loadConversationAvatar(Context context, ImageView view, Message message, boolean isSender);
+
+    void loadForwardSelectorAvatar(Context context, ImageView view, UserInfo userInfo);
 
 }

@@ -9,12 +9,14 @@ import java.util.List;
 
 import io.im.kit.chat.messagelist.provider.ConversationMessageProvider;
 import io.im.kit.chat.messagelist.provider.ConversationSummaryProvider;
+import io.im.kit.chat.messagelist.provider.IForwardMessageProvider;
 import io.im.kit.chat.messagelist.provider.IImageMessageProvider;
 import io.im.kit.chat.messagelist.provider.ITextMessageProvider;
 import io.im.kit.chat.messagelist.provider.IUnKnowMessageProvider;
 import io.im.kit.model.UiMessage;
 import io.im.kit.widget.adapter.ProviderManager;
 import io.im.lib.MessageType;
+import io.im.lib.message.im.ForwardMessage;
 import io.im.lib.message.im.ImageMessage;
 import io.im.lib.message.im.TextMessage;
 import io.im.lib.model.MessageContent;
@@ -39,6 +41,7 @@ public class ChatConfig {
         mMessageListProvider.setDefaultProvider(defaultMessageProvider);
         addMessageProvider(MessageType.CHAT_TEXT, new ITextMessageProvider(), TextMessage.class);
         addMessageProvider(MessageType.CHAT_IMAGE, new IImageMessageProvider(), ImageMessage.class);
+        addMessageProvider(MessageType.CHAT_FORWARD, new IForwardMessageProvider(), ForwardMessage.class);
     }
 
     public ProviderManager<UiMessage> getConversationProvider() {
