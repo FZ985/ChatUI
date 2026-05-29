@@ -1,16 +1,25 @@
 package io.im.kit;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.im.kit.event.actionevent.ChatMessageEvent;
+import io.im.kit.event.actionevent.DeleteMessageEvent;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.manager.MessageManager;
 import io.im.lib.MessageType;
-import io.im.lib.callback.SendMessageCallback;
+import io.im.lib.callback.MessageCallback;
+import io.im.lib.core.ChatSDK;
 import io.im.lib.model.Message;
+import io.im.lib.utils.ChatToast;
 
 /**
  * by DAD FZ
@@ -21,19 +30,19 @@ public class MessageOperate {
 
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable SendMessageCallback callback) {
+    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable MessageCallback callback) {
         sendMessage(message, replayMessage, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable SendMessageCallback callback) {
+    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable MessageCallback callback) {
         if (replyMessage != null) {
             message.setReplyMessage(replyMessage.toJson());
         }
         if (postEvent) {
             postSendEvent(new ChatMessageEvent(ChatMessageEvent.ATTACH, message));
         }
-        MessageManager.getInstance().sendMessage(message, new SendMessageCallback() {
+        MessageManager.getInstance().sendMessage(message, new MessageCallback() {
             @Override
             public void onSuccess(Message message) {
                 if (postEvent) {
@@ -64,8 +73,21 @@ public class MessageOperate {
         });
     }
 
+
+    //删除消息
+    public static void deleteMessage(Message message, @Nullable MessageCallback callback) {
+        List<Message> messageList = new ArrayList<>();
+        messageList.add(message);
+        deleteMessage(messageList, callback);
+    }
+
+    //删除消息
+    public static void deleteMessage(List<Message> messageList, @Nullable MessageCallback callback) {
+        postDeleteMessage(new DeleteMessageEvent(DeleteMessageEvent.SUCCESS, messageList));
+    }
+
     //    //发送阅读消息
-//    public void sendReadMessage(Message message, SendMessageCallback callback) {
+//    public void sendReadMessage(Message message, MessageCallback callback) {
 //        message.setType(MessageType.READ_MESSAGE);
 //        sendMessage(message, callback);
 //    }
@@ -76,14 +98,14 @@ public class MessageOperate {
 //    }
 //
 //    //发送撤回消息
-//    public void sendRevokeMessage(Message message, SendMessageCallback callback) {
+//    public void sendRevokeMessage(Message message, MessageCallback callback) {
 //        message.setType(MessageType.REVOKE_705);
 //        sendMessage(message, callback);
 //    }
 //
 //
 //    //发送订单消息
-//    public void sendOrderMessage(UserInfo user, Conversation.ConversationType type, OrderMessage body, SendMessageCallback callback) {
+//    public void sendOrderMessage(UserInfo user, Conversation.ConversationType type, OrderMessage body, MessageCallback callback) {
 //        Message message = Message.obtain(user, type, MessageType.ORDER, body);
 //        List<MessageEventListener> eventListeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
 //        for (MessageEventListener listener : eventListeners) {
@@ -95,13 +117,13 @@ public class MessageOperate {
 //    }
 //
 //    //发送商品消息
-//    public void sendGoodsMessage(UserInfo user, Conversation.ConversationType type, GoodsMessage goodsMessage, SendMessageCallback callback) {
+//    public void sendGoodsMessage(UserInfo user, Conversation.ConversationType type, GoodsMessage goodsMessage, MessageCallback callback) {
 //        Message message = Message.obtain(user, type, MessageType.GOODS, goodsMessage);
 //        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
 //        for (MessageEventListener listener : listeners) {
 //            listener.onSendMessage(new SendEvent(SendEvent.ATTACH, message));
 //        }
-//        sendMessage(message, new SendMessageCallback() {
+//        sendMessage(message, new MessageCallback() {
 //            @Override
 //            public void onSuccess(Message message) {
 //                List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
@@ -138,7 +160,7 @@ public class MessageOperate {
 //            for (MessageEventListener listener : eventListeners) {
 //                body.setContent(url);
 //                message.setBody(body);
-//                MessageManager.getInstance().sendMessage(message, new SendMessageCallback() {
+//                MessageManager.getInstance().sendMessage(message, new MessageCallback() {
 //                    @Override
 //                    public void onSuccess(Message message1) {
 //                        message1.setStatus(State.SUCCESS);
@@ -177,7 +199,7 @@ public class MessageOperate {
 //            for (MessageEventListener listener : eventListeners) {
 //                body.setContent(url);
 //                message.setBody(body);
-//                MessageManager.getInstance().sendMessage(message, new SendMessageCallback() {
+//                MessageManager.getInstance().sendMessage(message, new MessageCallback() {
 //                    @Override
 //                    public void onSuccess(Message message) {
 //                        message.setStatus(State.SUCCESS);
@@ -273,6 +295,42 @@ public class MessageOperate {
             }
         } catch (Exception e) {
             //
+        }
+    }
+
+
+    //分发删除消息的回调事件
+    public static void postDeleteMessage(DeleteMessageEvent event) {
+        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
+        try {
+            for (MessageEventListener listener : listeners) {
+                if (listener != null) {
+                    listener.onDeleteMessage(event);
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+
+    /**
+     * 复制文本到剪切板
+     *
+     * @param text      文本内容
+     * @param showToast 是否显示Toast提示
+     */
+    public static void copyText(String text, boolean showToast) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        ClipboardManager cmb = (ClipboardManager) ChatSDK.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(null, text);
+        if (clipData != null) {
+            cmb.setPrimaryClip(clipData);
+            if (showToast) {
+                ChatToast.toast(ChatSDK.getContext(), R.string.chat_message_action_copy_success);
+            }
         }
     }
 }

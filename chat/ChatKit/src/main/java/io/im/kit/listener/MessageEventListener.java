@@ -1,22 +1,32 @@
 package io.im.kit.listener;
 
 import io.im.kit.event.actionevent.ChatMessageEvent;
+import io.im.kit.event.actionevent.DeleteMessageEvent;
 
 public interface MessageEventListener {
 
     //发送消息回调
-    void onSendMessage(ChatMessageEvent event);
+    default void onSendMessage(ChatMessageEvent event) {
+    }
 
     //发送媒体消息回调
-    void onSendMediaMessage(ChatMessageEvent event);
+    default void onSendMediaMessage(ChatMessageEvent event) {
+    }
 
     //发送的其他消息回调
-    void onSendOtherMessage(ChatMessageEvent event);
+    default void onSendOtherMessage(ChatMessageEvent event) {
+    }
 
     //接收消息回调
-    void onReceiveMessage(ChatMessageEvent event);
+    default void onReceiveMessage(ChatMessageEvent event) {
+    }
 
     //接收的其他消息回调
-    void onReceiveOtherMessage(ChatMessageEvent event);
+    default void onReceiveOtherMessage(ChatMessageEvent event) {
+    }
+
+    //删除消息回调
+    default void onDeleteMessage(DeleteMessageEvent event) {
+    }
 
 }

@@ -20,6 +20,7 @@ import io.im.kit.R;
 import io.im.kit.chat.IChatFragment;
 import io.im.kit.chat.extension.component.emoticon.ChatAndroidEmoji;
 import io.im.kit.config.enums.ChatInputMode;
+import io.im.kit.widget.text.selection.SelectableTextHelper;
 import io.im.lib.MessageType;
 import io.im.lib.message.im.TextMessage;
 import io.im.lib.model.Message;
@@ -64,6 +65,8 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
 
         @Override
         public void afterTextChanged(Editable s) {
+            //隐藏文本选择器选择框
+            SelectableTextHelper.getInstance().dismiss();
             if (isProcess) {
                 return;
             }

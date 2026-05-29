@@ -95,6 +95,10 @@ public class UiMessage extends UiBaseBean {
     }
 
 
+    public boolean isSender() {
+        return getMessage().getMessageDirection() == Message.MessageDirection.SEND;
+    }
+
     public int getProgress() {
         return progress;
     }

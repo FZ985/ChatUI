@@ -18,12 +18,19 @@ import io.im.kit.IMCenter;
 import io.im.kit.chat.messagelist.provider.MessageClickType;
 import io.im.kit.event.PageEvent;
 import io.im.kit.event.actionevent.ChatMessageEvent;
+import io.im.kit.event.actionevent.DeleteMessageEvent;
 import io.im.kit.event.uievent.ScrollToEndEvent;
+import io.im.kit.listener.IMessageViewModelProcessor;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.model.UiMessage;
+import io.im.kit.ui.popmenu.ChatPopMenu;
+import io.im.kit.ui.popmenu.IChatPopMenuClickListener;
+import io.im.kit.widget.text.selection.SelectableTextHelper;
 import io.im.lib.callback.ChatLifecycle;
+import io.im.lib.helper.ChatMsgCache;
 import io.im.lib.model.Message;
 import io.im.lib.model.State;
+import io.im.lib.utils.JLog;
 
 /**
  * by DAD FZ
@@ -40,6 +47,8 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     private ChatExtCall mCall;
 
+    private ChatPopMenu popMenu;
+
     public ChatMessageViewModel(@NonNull Application application) {
         super(application);
     }
@@ -47,6 +56,10 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     public void bindConversation(@NonNull ChatExtCall extCall) {
         this.mCall = extCall;
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
+    }
+
+    public ChatExtCall getChatExtCall() {
+        return mCall;
     }
 
     @Override
@@ -124,11 +137,6 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onSendOtherMessage(ChatMessageEvent event) {
-
-    }
-
-    @Override
     public void onReceiveMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
         if (Objects.equals(mCall.getUser().getUserId(), msg.getFromUser().getUserId())
@@ -150,16 +158,29 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     @Override
-    public void onReceiveOtherMessage(ChatMessageEvent event) {
-
+    public void onDeleteMessage(DeleteMessageEvent event) {
+        if (event.getEvent() == DeleteMessageEvent.SUCCESS) {
+            removeMessage(event.getMessages());
+        }
     }
 
     public void setEdit(boolean edit) {
         mIsEditStatus.setValue(edit);
+        if (!edit) {
+            ChatMsgCache.clear();
+            mCall.checkMultiSelectView();
+        }
         for (UiMessage m : mUiMessages) {
             m.setEdit(edit);
+            if (!edit) {
+                m.setSelected(false);
+            }
         }
         refreshAllMessage(false);
+    }
+
+    public boolean isEdit() {
+        return (mIsEditStatus.getValue() != null && mIsEditStatus.getValue());
     }
 
     public UiMessage mapUIMessage(Message message) {
@@ -191,6 +212,20 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             }
         }
         return position;
+    }
+
+    public void removeMessage(List<Message> list) {
+        List<UiMessage> uiMessageList = new ArrayList<>();
+        for (Message m : list) {
+            UiMessage uiMessage = findUIMessageById(m.getMessageId());
+            if (uiMessage != null) {
+                uiMessageList.add(uiMessage);
+            }
+        }
+        if (!uiMessageList.isEmpty()) {
+            mUiMessages.removeAll(uiMessageList);
+            refreshAllMessage();
+        }
     }
 
     public void refreshAllMessage() {
@@ -276,6 +311,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     @Override
     public void onDestroy() {
+        ChatMsgCache.clear();
         IMCenter.getInstance().getOptions().removeMessageEventListener(this);
     }
 
@@ -289,23 +325,93 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     public void onViewClick(View view, int clickType, int position, UiMessage data) {
         if (clickType == MessageClickType.EDIT_CLICK) {
-            //编辑中
-            Toast.makeText(view.getContext(), "编辑中", Toast.LENGTH_SHORT).show();
+            checkSelectMessage(data);
         } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
             Toast.makeText(view.getContext(), "点击回复", Toast.LENGTH_SHORT).show();
         } else {
+            if (popMenu != null && !popMenu.isShowing()) {
+                SelectableTextHelper.getInstance().dismiss();
+            }
             Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
-        if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
-            Toast.makeText(view.getContext(), "长按回复", Toast.LENGTH_SHORT).show();
+    public void checkSelectMessage(@NonNull UiMessage data) {
+        //编辑中
+        boolean isSelect = !data.isSelected();
+        if (isSelect) {
+            ChatMsgCache.addMessage(data.getMessage());
         } else {
-            Message message = data.getMessage();
-            mCall.getIChatHelper().setReplyMessage(message, mCall.getChatMessageViewModel().findUIMessageIndexById(message.getMessageId()));
-//            Toast.makeText(view.getContext(), "long click", Toast.LENGTH_SHORT).show();
+            ChatMsgCache.removeMessage(data.getMessageId());
+        }
+        data.setSelected(isSelect);
+        refreshSingleMessage(data);
+        mCall.checkMultiSelectView();
+    }
+
+    public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
+        IMessageViewModelProcessor viewModelProcessor =
+                IMCenter.getInstance().getOptions().getViewModelProcessor();
+        boolean isProcess = false;
+        if (viewModelProcessor != null) {
+            isProcess = viewModelProcessor.onViewLongClick(this, clickType, data);
+        }
+        if (!isProcess) {
+            if (clickType == MessageClickType.CONTENT_LONG_CLICK) {
+                return onItemMessageLongClick(view, clickType, position, data);
+            } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
+                Toast.makeText(view.getContext(), "长按点击回复", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean onTextSelected(View view, int position, UiMessage uiMessage, String text, boolean isSelectAll) {
+        IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+        if (listener == null || listener.onTextSelected(view, position, uiMessage.getMessage(), text, isSelectAll)) {
+
+//            if (messageInfo.isRevoked()) {
+//                return false;
+//            }
+
+            // show pop menu
+            if (popMenu == null) {
+                popMenu = new ChatPopMenu();
+            }
+            JLog.e("onTextSelected:" + uiMessage.getMessage());
+
+            if (isSelectAll) {
+                popMenu.show(view.getContext(), view, uiMessage.getMessage(), uiMessage.isSender());
+            } else {
+                popMenu.show(
+                        view.getContext(),
+                        view,
+                        text,
+                        uiMessage.getMessage(),
+                        uiMessage.isSender());
+            }
         }
         return true;
+    }
+
+    private boolean onItemMessageLongClick(View view, int clickType, int position, UiMessage data) {
+        if (popMenu != null && popMenu.isShowing()) {
+            popMenu.hide();
+        }
+        popMenu = new ChatPopMenu();
+        //popMenu.setDismissListener(() -> SelectableTextHelper.getInstance().dismiss());
+        popMenu.show(view.getContext(), view, data.getMessage(), data.isSender());
+        return true;
+    }
+
+
+    public boolean onBackPressed() {
+        if (mIsEditStatus.getValue() != null && mIsEditStatus.getValue()) {
+            setEdit(false);
+            return true;
+        }
+        return false;
     }
 }

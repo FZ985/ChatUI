@@ -38,4 +38,7 @@ public interface ChatExtCall {
     ChatMessageViewModel getChatMessageViewModel();
 
     IChatHelper getIChatHelper();
+
+    void checkMultiSelectView();
+
 }

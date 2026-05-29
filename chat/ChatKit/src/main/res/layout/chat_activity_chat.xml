@@ -4,24 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.im.kit.widget.systemui.StatusBarView
-        android:id="@+id/status_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/chat_conversation_toolbar" />
-
-    <io.im.kit.widget.ChatToolBar
-        android:id="@+id/conversation_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/kit_toolbar_height"
-        android:layout_below="@id/status_view"
-        android:background="@color/chat_conversation_toolbar" />
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/conversation_toolbar"
         android:overScrollMode="never" />
 
 </RelativeLayout>

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.im.kit.R;
+import io.im.kit.chat.extension.component.emoticon.ChatAndroidEmoji;
 import io.im.kit.helper.OptionsHelper;
 import io.im.kit.model.UiMessage;
 import io.im.kit.ui.web.IWebActivity;
@@ -27,6 +28,7 @@ import io.im.kit.utils.TextViewUtils;
 import io.im.kit.widget.adapter.IViewProviderListener;
 import io.im.kit.widget.adapter.ViewHolder;
 import io.im.kit.widget.text.LinkTextViewMovementMethod;
+import io.im.kit.widget.text.selection.SelectableTextHelper;
 import io.im.lib.message.im.TextMessage;
 import io.im.lib.model.MessageContent;
 
@@ -84,20 +86,40 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
             return result;
         }));
 
+        //设置选中文本监听回调
+        SelectableTextHelper.getInstance().setSelectableOnChangeListener(null);
+
         textView.setOnClickListener(view -> {
+            SelectableTextHelper.getInstance().dismiss();
             ViewParent parent = contentHolder.itemView.getParent();
             if (parent instanceof View) {
                 ((View) parent).performClick();
             }
         });
 
-//        textView.setOnLongClickListener(view -> {
-//            ViewParent parent = contentHolder.itemView.getParent();
-//            if (parent instanceof View) {
-//                return ((View) parent).performLongClick();
-//            }
-//            return false;
-//        });
+        textView.setOnLongClickListener(view -> {
+            //设置选中文本监听回调
+            SelectableTextHelper.getInstance()
+                    .setSelectableOnChangeListener(
+                            (v, pos, msg, text, isSelectAll) -> {
+                                if (listener != null) {
+                                    listener.onTextSelected(v, pos, uiMessage, text.toString(), isSelectAll);
+                                }
+                            });
+
+            SelectableTextHelper.getInstance()
+                    .showSelectView(
+                            textView,
+                            textView.getLayout(),
+                            position,
+                            uiMessage.getMessage());
+
+            ViewParent parent = contentHolder.itemView.getParent();
+            if (parent instanceof View) {
+                return ((View) parent).performLongClick();
+            }
+            return false;
+        });
 
         textView.setTextColor(isSender ?
                 ContextCompat.getColor(contentHolder.getContext(), io.im.lib.R.color.chat_white_90)
@@ -114,7 +136,16 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
 
     @Override
     public Spannable getSummarySpannable(Context context, TextMessage textMessage) {
-        return new SpannableString("");
+        if (textMessage != null && !TextUtils.isEmpty(textMessage.getContent())) {
+            String content = textMessage.getContent();
+            content = content.replace("\n", " ");
+            if (content.length() > 100) {
+                content = content.substring(0, 100);
+            }
+            return new SpannableString(ChatAndroidEmoji.ensure(content));
+        } else {
+            return new SpannableString("");
+        }
     }
 
     @Override

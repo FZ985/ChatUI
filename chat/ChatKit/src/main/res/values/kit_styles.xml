@@ -6,4 +6,9 @@
         <item name="cornerSize">@dimen/chat_dp5</item>
     </style>
 
+    <style name="ChatPopAnim">
+        <item name="android:windowEnterAnimation">@anim/chat_pop_fade_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/chat_pop_fade_scale_out</item>
+    </style>
+
 </resources>

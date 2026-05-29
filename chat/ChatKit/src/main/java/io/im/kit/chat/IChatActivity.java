@@ -11,14 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.kit.IMCenter;
+import io.im.kit.IMTest;
+import io.im.kit.MessageOperate;
 import io.im.kit.R;
 import io.im.kit.databinding.ChatActivityChatBinding;
-import io.im.kit.utils.RouteUtil;
 import io.im.lib.base.ChatBaseActivity;
 import io.im.lib.base.ChatBaseFragment;
 import io.im.lib.base.ChatFragmentPageAdapter;
-import io.im.lib.model.UserInfo;
 
 /**
  * author : JFZ
@@ -37,21 +36,14 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         List<ChatBaseFragment> fragments = new ArrayList<>();
         fragments.add(new IChatFragment());
         getBinding().pager.setAdapter(adapter = new ChatFragmentPageAdapter(getSupportFragmentManager(), fragments));
-        UserInfo user = (UserInfo) getIntent().getSerializableExtra(RouteUtil.User);
-        if (user != null) {
-            getBinding().conversationToolbar.setTitleName(user.getUserName());
-        }
-        getBinding().conversationToolbar.setLeftOnclick(v -> onBackPressed());
-
 //        StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
 
-        IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(this, fontSize -> {
-            if (!isFinishing() && fontSize != null) {
-                getBinding().conversationToolbar.updateTitleSize();
-            }
-        });
-
         uiMode = getResources().getConfiguration().uiMode;
+
+        getBinding().pager.postDelayed(() -> {
+            MessageOperate.sendMessage(IMTest.message().get(9).getMessage(), null, null);
+            MessageOperate.sendMessage(IMTest.message().get(1).getMessage(), null, null);
+        }, 350);
     }
 
     @Override

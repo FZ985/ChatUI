@@ -15,4 +15,9 @@ public interface IViewProviderListener<T> {
      * @param data      传递的数据源
      */
     boolean onViewLongClick(View view, int clickType, int position, T data);
+
+
+    default boolean onTextSelected(View view, int position, T data, String text, boolean isSelectAll) {
+        return false;
+    }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/root_ll"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/chat_pop_menu_ripple_click"
+    android:gravity="center_horizontal"
+    android:minWidth="@dimen/chat_dp60"
+    android:orientation="vertical"
+    android:paddingVertical="@dimen/chat_dp10"
+    tools:background="@color/theme">
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="@dimen/chat_dp24"
+        android:layout_height="@dimen/chat_dp24"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:tint="@color/chat_white"
+        app:tint="@color/chat_white"
+        tools:ignore="UseAppTint"
+        tools:src="@drawable/kit_message_menu_copy" />
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/chat_dp3"
+        android:textColor="@color/chat_white"
+        android:textSize="@dimen/chat_sp12"
+        tools:text="复制" />
+
+</LinearLayout>

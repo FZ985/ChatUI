@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<io.im.kit.widget.ChatView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <io.im.kit.widget.systemui.StatusBarView
+        android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/chat_conversation_toolbar" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/edit"
-            android:layout_width="wrap_content"
-            android:text="编辑"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/chat_dp15" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancel_edit"
-            android:layout_width="wrap_content"
-            android:text="取消编辑"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/chat_dp15" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="5dp"
-            android:text="哈哈哈哈哈"
-            android:id="@+id/test"/>
-    </LinearLayout>
+    <io.im.kit.widget.ChatToolBar
+        android:id="@+id/conversation_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/kit_toolbar_height"
+        android:layout_below="@id/status_view"
+        android:background="@color/chat_conversation_toolbar" />
 
     <io.im.kit.widget.switchpanel.view.PanelSwitchLayout
         android:id="@+id/switch_layout"
@@ -59,6 +46,40 @@
                     android:overScrollMode="never"
                     android:scrollbars="none" />
             </io.im.kit.widget.ChatSwipeRefreshLayout>
+
+            <LinearLayout
+                android:id="@+id/reply_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/chat_conversation_reply"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/chat_dp1"
+                android:paddingEnd="@dimen/chat_dp12"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/reply_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/chat_dp26"
+                    android:paddingVertical="@dimen/chat_dp5"
+                    android:paddingStart="@dimen/chat_dp10"
+                    android:paddingEnd="@dimen/chat_dp10"
+                    android:src="@drawable/kit_vec_close_24" />
+
+                <TextView
+                    android:id="@+id/reply_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:paddingVertical="@dimen/chat_dp5"
+                    android:textColor="@color/chat_color_666666"
+                    android:textSize="@dimen/chat_sp13"
+                    tools:text="张三：哈哈哈哈" />
+            </LinearLayout>
 
             <io.im.kit.chat.extension.component.inputpanel.IChatInputPanel
                 android:id="@+id/input_panel"
@@ -93,4 +114,4 @@
     </io.im.kit.widget.switchpanel.view.PanelSwitchLayout>
 
 
-</LinearLayout>
+</io.im.kit.widget.ChatView>

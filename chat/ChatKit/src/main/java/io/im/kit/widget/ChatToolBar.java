@@ -3,17 +3,20 @@ package io.im.kit.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import io.im.kit.R;
 import io.im.kit.helper.OptionsHelper;
+import io.im.kit.widget.text.selection.SelectableTextHelper;
 import io.im.lib.callback.ChatFun;
 
 
@@ -59,6 +62,18 @@ public class ChatToolBar extends Toolbar {
             title.setText(name);
             updateTitleSize();
         }
+    }
+
+    public void setLeftIcon(@DrawableRes int res) {
+        if (left != null) {
+            left.setImageResource(res);
+        }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        SelectableTextHelper.getInstance().dismiss();
+        return super.onInterceptTouchEvent(ev);
     }
 
     public void updateTitleSize() {

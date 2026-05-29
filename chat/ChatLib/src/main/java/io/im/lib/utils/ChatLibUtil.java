@@ -1,5 +1,6 @@
 package io.im.lib.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.google.gson.Gson;
@@ -41,6 +42,21 @@ public class ChatLibUtil {
     public static int dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    @SuppressLint("InternalInsetResource")
+    public static int getStatusBarHeight(Context context) {
+        int resourceId = context.getResources()
+                .getIdentifier(
+                        "status_bar_height",
+                        "dimen",
+                        "android"
+                );
+        if (resourceId > 0) {
+            return context.getResources()
+                    .getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     public static int randomColor() {

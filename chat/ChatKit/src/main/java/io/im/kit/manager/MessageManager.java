@@ -13,7 +13,7 @@ import io.im.kit.MessageOperate;
 import io.im.kit.event.actionevent.ChatMessageEvent;
 import io.im.kit.listener.MessageInterceptListener;
 import io.im.lib.MessageType;
-import io.im.lib.callback.SendMessageCallback;
+import io.im.lib.callback.MessageCallback;
 import io.im.lib.core.IMClientCore;
 import io.im.lib.core.socket.ErrorResult;
 import io.im.lib.core.socket.SocketCode;
@@ -29,7 +29,7 @@ import io.im.lib.utils.JLog;
  */
 public class MessageManager {
 
-    private final HashMap<Long, SendMessageCallback> callbackMap = new HashMap<>();
+    private final HashMap<Long, MessageCallback> callbackMap = new HashMap<>();
 
     private final List<OnSocketMessageListener> socketMessageListeners = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class MessageManager {
     //发送的消息
     private void filterSendMessage(Message message, int errorCode) {
         message = transformMessage(message);
-        SendMessageCallback callback = callbackMap.get(message.getMessageId());
+        MessageCallback callback = callbackMap.get(message.getMessageId());
         if (errorCode == SocketCode.success) {
 //            ResendManager.getInstance().removeResendMessage(message.getMessageId());
             if (callback != null) {
@@ -130,7 +130,7 @@ public class MessageManager {
     }
 
     //发送消息,所有发送消息，都应该执行这个函数
-    public void sendMessage(Message message, @Nullable SendMessageCallback callback) {
+    public void sendMessage(Message message, @Nullable MessageCallback callback) {
         if (callback != null) {
             callbackMap.put(message.getMessageId(), callback);
         }

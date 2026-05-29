@@ -22,21 +22,26 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.List;
 
 import io.im.kit.IMCenter;
-import io.im.kit.IMTest;
 import io.im.kit.MessageOperate;
+import io.im.kit.R;
 import io.im.kit.chat.extension.ChatExtCall;
 import io.im.kit.chat.extension.ChatMessageViewModel;
 import io.im.kit.databinding.ChatFragmentChatBinding;
 import io.im.kit.event.PageEvent;
 import io.im.kit.event.uievent.RefreshEvent;
 import io.im.kit.event.uievent.ScrollToEndEvent;
+import io.im.kit.factory.ChatPopActionFactory;
 import io.im.kit.helper.IChatHelper;
 import io.im.kit.model.UiMessage;
+import io.im.kit.ui.popmenu.IChatPopMenuClickListener;
 import io.im.kit.utils.RouteUtil;
 import io.im.kit.widget.FixedLinearLayoutManager;
 import io.im.kit.widget.adapter.IViewProviderListener;
+import io.im.kit.widget.text.selection.SelectableTextHelper;
 import io.im.lib.base.ChatBaseFragment;
+import io.im.lib.helper.ChatMsgCache;
 import io.im.lib.model.ConversationType;
+import io.im.lib.model.Message;
 import io.im.lib.model.UserInfo;
 import io.im.lib.utils.ChatLibUtil;
 
@@ -73,6 +78,52 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             } else if (pageEvent instanceof RefreshEvent) {
                 binding.refresh.setRefreshing(false);
             }
+        }
+    };
+
+    private final IChatPopMenuClickListener menuClickListener = new IChatPopMenuClickListener() {
+        @Override
+        public boolean onCopy(String text) {
+            IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+            if (listener != null && listener.onCopy(text)) {
+                return true;
+            }
+            MessageOperate.copyText(text, true);
+            return true;
+        }
+
+        @Override
+        public boolean onDelete(Message messageInfo) {
+            IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+            if (listener != null && listener.onDelete(messageInfo)) {
+                return true;
+            }
+            MessageOperate.deleteMessage(messageInfo, null);
+            return true;
+        }
+
+        @Override
+        public boolean onReply(Message messageInfo) {
+            IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+            if (listener != null && listener.onReply(messageInfo)) {
+                return true;
+            }
+            helper.setReplyMessage(messageInfo, -1);
+            return true;
+        }
+
+        @Override
+        public boolean onMultiSelected(Message messageInfo) {
+            IChatPopMenuClickListener listener = IMCenter.getInstance().getOptions().popMenuClickListener;
+            if (listener != null && listener.onMultiSelected(messageInfo)) {
+                return true;
+            }
+            UiMessage uiMessage = messageViewModel.findUIMessageById(messageInfo.getMessageId());
+            if (uiMessage != null) {
+                messageViewModel.setEdit(true);
+                messageViewModel.checkSelectMessage(uiMessage);
+            }
+            return true;
         }
     };
 
@@ -117,41 +168,50 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
                 return gd.onTouchEvent(e);
             }
         });
+
+        binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    SelectableTextHelper.getInstance().hideSelectView();
+                } else {
+                    SelectableTextHelper.getInstance().resumeSelection();
+                }
+            }
+        });
+
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(RouteUtil.User);
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(RouteUtil.ConversationType, ConversationType.PRIVATE.getValue()));
         helper.bindConversation(mActivity, this);
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
+
+        checkMultiSelectView();
+        IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(getViewLifecycleOwner(), fontSize -> {
+            if (!isDetached() && fontSize != null) {
+                binding.conversationToolbar.updateTitleSize();
+            }
+        });
+
         liveDataListener();
         scrollToBottom(-1);
-        subscribeUi();
-    }
+        if (IMCenter.getInstance().getOptions().chatPopMenu != null) {
+            ChatPopActionFactory.getInstance().setChatPopMenu(IMCenter.getInstance().getOptions().chatPopMenu);
+        }
+        ChatPopActionFactory.getInstance().setActionListener(menuClickListener);
 
-    private void subscribeUi() {
-        MessageOperate.sendMessage(IMTest.message().get(9).getMessage(), null, null);
-        MessageOperate.sendMessage(IMTest.message().get(1).getMessage(), null, null);
-        binding.edit.setOnClickListener(v -> {
-            messageViewModel.setEdit(true);
-        });
-        binding.cancelEdit.setOnClickListener(v -> {
-            messageViewModel.setEdit(false);
-        });
-
-        binding.test.setOnLongClickListener(v -> {
-            return true;
-        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void liveDataListener() {
+        messageViewModel.getPageEventLiveData().observeForever(mPageObserver);
+        messageViewModel.getUiMessageLiveData().observeForever(mListObserver);
         IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(getViewLifecycleOwner(), fontSize -> {
             if (!isDetached() && fontSize != null) {
                 binding.inputPanel.updateTextSize();
-                adapter.notifyDataSetChanged();
+                messageViewModel.refreshAllMessage();
             }
         });
-        messageViewModel.getPageEventLiveData().observeForever(mPageObserver);
-        messageViewModel.getUiMessageLiveData().observeForever(mListObserver);
     }
 
     private void refreshList(List<UiMessage> data) {
@@ -176,6 +236,11 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
         return messageViewModel.onViewLongClick(view, clickType, position, data);
+    }
+
+    @Override
+    public boolean onTextSelected(View view, int position, UiMessage data, String text, boolean isSelectAll) {
+        return messageViewModel.onTextSelected(view, position, data, text, isSelectAll);
     }
 
     @Override
@@ -218,6 +283,22 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     public void scrollToBottom(int index) {
         if (index == -1) {
             binding.recycler.scrollToPosition(adapter.getItemCount() - 1);
+        }
+    }
+
+    @Override
+    public void checkMultiSelectView() {
+        int count = ChatMsgCache.getMessageCount();
+        if (count > 0 || messageViewModel.isEdit()) {
+            binding.conversationToolbar.setTitleName(getString(R.string.chat_message_select_count, String.valueOf(count)));
+            binding.conversationToolbar.setLeftIcon(io.im.lib.R.drawable.chat_skin_close_black);
+            binding.conversationToolbar.setLeftOnclick(v -> messageViewModel.setEdit(false));
+        } else {
+            if (userInfo != null) {
+                binding.conversationToolbar.setTitleName(userInfo.getUserName());
+            }
+            binding.conversationToolbar.setLeftOnclick(v -> mActivity.onBackPressed());
+            binding.conversationToolbar.setLeftIcon(io.im.lib.R.drawable.chat_skin_arrow_left_black);
         }
     }
 
@@ -276,6 +357,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     @Override
     public boolean onBackPressed() {
+        if (messageViewModel.onBackPressed()) {
+            return true;
+        }
         return helper.onBackPressed();
     }
 

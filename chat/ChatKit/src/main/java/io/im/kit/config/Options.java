@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.kit.listener.ImageLoader;
 import io.im.kit.config.enums.FontSize;
+import io.im.kit.listener.IMessageViewModelProcessor;
+import io.im.kit.listener.ImageLoader;
 import io.im.kit.listener.MessageEventListener;
 import io.im.kit.listener.MessageInterceptListener;
+import io.im.kit.ui.popmenu.IChatPopMenu;
+import io.im.kit.ui.popmenu.IChatPopMenuClickListener;
 
 /**
  * author : JFZ
@@ -107,5 +110,21 @@ public final class Options {
     }
 
 
-    //消息事件---------------------------------------------------------------------------
+    //聊天列表消息点击处理---------------------------------------------------------------------------
+    private IMessageViewModelProcessor viewModelProcessor;
+
+    public IMessageViewModelProcessor getViewModelProcessor() {
+        return viewModelProcessor;
+    }
+
+    public void setViewModelProcessor(IMessageViewModelProcessor viewModelProcessor) {
+        this.viewModelProcessor = viewModelProcessor;
+    }
+
+    //长按消息弹窗事件---------------------------------------------------------------------------
+    public IChatPopMenu chatPopMenu;
+    //消息长按菜单时间定制
+    public IChatPopMenuClickListener popMenuClickListener;
+
+    //---------------------------------------------------------------------------
 }

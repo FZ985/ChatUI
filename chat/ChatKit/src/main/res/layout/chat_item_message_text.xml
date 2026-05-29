@@ -13,7 +13,6 @@
         android:paddingVertical="@dimen/chat_dp8"
         android:textColor="@color/chat_skin_Text"
         android:textColorLink="@color/chat_link_blue"
-        android:textIsSelectable="true"
         android:textSize="@dimen/chat_dp15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

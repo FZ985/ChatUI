@@ -241,21 +241,22 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
         this.replyIndex = index;
         if (mFragment != null) {
             if (replyMessage != null) {
-                mFragment.getBinding().inputPanel.getBinding().replyLl.setVisibility(View.VISIBLE);
-                mFragment.getBinding().inputPanel.getBinding().replyClose.setOnClickListener(v -> setReplyMessage(null, -1));
+                mFragment.getBinding().replyLl.setVisibility(View.VISIBLE);
+                mFragment.getBinding().replyClose.setOnClickListener(v -> setReplyMessage(null, -1));
 
                 MessageUser user = replyMessage.getFromUser();
                 Spannable spannable = IMCenter.getInstance().getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), replyMessage.getMessageContent());
                 StringBuilder sb = new StringBuilder(user.getUserName() + "：");
                 sb.append(spannable);
-                mFragment.getBinding().inputPanel.getBinding().replyTv.setText(sb);
+                mFragment.getBinding().replyTv.setText(sb);
+                OptionsHelper.updateTextSize(mFragment.getBinding().replyTv, 13);
 
                 mFragment.getBinding().inputPanel.postDelayed(() -> {
                     mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
                     mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 }, 100);
             } else {
-                mFragment.getBinding().inputPanel.getBinding().replyLl.setVisibility(View.GONE);
+                mFragment.getBinding().replyLl.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -277,26 +278,6 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     public void onSendMessage(ChatMessageEvent event) {
         //发送完成后刷新引用布局
         setReplyMessage(null, -1);
-    }
-
-    @Override
-    public void onSendMediaMessage(ChatMessageEvent event) {
-
-    }
-
-    @Override
-    public void onSendOtherMessage(ChatMessageEvent event) {
-
-    }
-
-    @Override
-    public void onReceiveMessage(ChatMessageEvent event) {
-
-    }
-
-    @Override
-    public void onReceiveOtherMessage(ChatMessageEvent event) {
-
     }
 
     @Override

@@ -399,4 +399,16 @@ public class Message implements Serializable {
     public String toString() {
         return toJson();
     }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (o instanceof Message) {
+            Message that = (Message) o;
+            return getMessageId() == that.getMessageId()
+                    && getMessageTime() == that.getMessageTime()
+                    && getMessageType() == that.getMessageType()
+                    && getChatType() == that.getChatType();
+        }
+        return false;
+    }
 }

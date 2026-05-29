@@ -8,7 +8,7 @@ import io.im.lib.model.Message;
  * date : 2023/12/21 14:04
  * description :
  */
-public interface SendMessageCallback {
+public interface MessageCallback {
 
     void onSuccess(Message message);
 
