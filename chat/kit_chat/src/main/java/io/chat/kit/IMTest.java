@@ -31,6 +31,7 @@ public class IMTest {
         List<UiMessage> list = new ArrayList<>();
         list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
         list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234234234234234234234234234234234234234234234234234234"))));
+        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("https://www.baidu.com"))));
         list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("123123123123123")).setReadStatusEnum(Message.ReadStatus.READ)));
         list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("123"))));
         list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));

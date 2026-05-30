@@ -166,7 +166,8 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                     .addViewClickListener(IChatHelper.this)
                     .build();
         }
-        mFragment.getBinding().recycler.setTouchCall(this::closeExpand);
+
+//        mFragment.getBinding().recycler.setTouchCall(this::closeExpand);
     }
 
     private void scrollToBottom(int index) {
@@ -198,6 +199,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
             } else if (id == R.id.edit) {
                 //点击 输入框
                 mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+                mExtensionViewModel.setSoftInputKeyBoard(true, false);
             } else if (id == R.id.emoji) {
                 //点击 表情按钮
                 if (mExtensionViewModel.getInputModeLiveData().getValue() != null) {
@@ -265,15 +267,16 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
 
     @Override
     public void onPause() {
-        if (mFragment != null) {
-            mFragment.getBinding().switchLayout.recycle();
-            mHelper = null;
-        }
+//        if (mFragment != null) {
+//            mFragment.getBinding().switchLayout.recycle();
+//            mHelper = null;
+//        }
     }
 
     public boolean closeExpand() {
         mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
-        return mHelper.hookSystemBackByPanelSwitcher();
+        mHelper.resetState();
+        return true;
     }
 
     @Override
@@ -300,7 +303,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     }
 
     public boolean onBackPressed() {
-        return mHelper != null && closeExpand();
+        return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
     }
 
     private void log(String m) {

@@ -1,6 +1,8 @@
 package io.chat.kit.listener;
 
 
+import android.content.Context;
+
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
 import io.chat.kit.model.UiMessage;
 
@@ -15,4 +17,7 @@ public interface IMessageViewModelProcessor {
 
     boolean onViewLongClick(ChatMessageViewModel viewModel, int clickType, UiMessage data);
 
+    default boolean onClickLink(Context context, String link) {
+        return false;
+    }
 }

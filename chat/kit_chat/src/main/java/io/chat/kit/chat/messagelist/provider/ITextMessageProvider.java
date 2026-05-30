@@ -20,16 +20,15 @@ import java.util.List;
 import java.util.Locale;
 
 import io.chat.kit.R;
-import io.im.uicommon.helper.OptionsHelper;
 import io.chat.kit.model.UiMessage;
-import io.im.uicommon.ui.web.IWebActivity;
 import io.chat.kit.utils.TextViewUtil;
-import io.im.uicommon.adapter.IViewProviderListener;
-import io.im.uicommon.adapter.ViewHolder;
-import io.im.uicommon.widgets.text.LinkTextViewMovementMethod;
-import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 import io.im.core.message.im.TextMessage;
 import io.im.core.model.MessageContent;
+import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.adapter.ViewHolder;
+import io.im.uicommon.helper.OptionsHelper;
+import io.im.uicommon.widgets.text.LinkTextViewMovementMethod;
+import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
 /**
  * author : JFZ
@@ -75,15 +74,7 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
             uiMessage.setContentSpannable(spannable);
         }
         textView.setText(uiMessage.getContentSpannable());
-        textView.setMovementMethod(new LinkTextViewMovementMethod(link -> {
-            boolean result = false;
-            String str = link.toLowerCase();
-            if (str.startsWith("http") || str.startsWith("https")) {
-                IWebActivity.startWeb(contentHolder.getContext(), link);
-                result = true;
-            }
-            return result;
-        }));
+        textView.setMovementMethod(new LinkTextViewMovementMethod(listener::onClickLink));
 
         //设置选中文本监听回调
         SelectableTextHelper.getInstance().setSelectableOnChangeListener(null);

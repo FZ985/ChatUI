@@ -30,7 +30,7 @@ class IWebFragment : ChatBaseFragment() {
     }
 
     private var webUrl = ""
-    private lateinit var webView: IMBasicWebView
+    private var webView: IMBasicWebView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,28 +42,31 @@ class IWebFragment : ChatBaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        webView = IMBasicWebView(mActivity)
-        binding.webParent.addView(
-            webView,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
+        //webview会影响前一个页面的panelSwitchLayout关闭
+        binding.webParent.postDelayed({
+            webView = IMBasicWebView(mActivity)
+            binding.webParent.addView(
+                webView,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
             )
-        )
-        initWeb()
-        loadUrl(webUrl)
+            initWeb()
+            loadUrl(webUrl)
+        }, 350)
     }
 
     fun loadUrl(url: String) {
         webUrl = url
         if (!TextUtils.isEmpty(url)) {
-            webView.loadUrl(webUrl)
+            webView?.loadUrl(webUrl)
         }
     }
 
     fun onBack(): Boolean {
-        if (webView.canGoBack()) {
-            webView.goBack()
+        if (webView?.canGoBack() ?: false) {
+            webView?.goBack()
             return true
         }
         return false
@@ -72,7 +75,7 @@ class IWebFragment : ChatBaseFragment() {
     override fun onResume() {
         super.onResume()
         try {
-            webView.onResume()
+            webView?.onResume()
         } catch (_: Exception) {
         }
     }
@@ -80,22 +83,22 @@ class IWebFragment : ChatBaseFragment() {
     override fun onPause() {
         super.onPause()
         try {
-            webView.onPause()
+            webView?.onPause()
         } catch (_: Exception) {
         }
     }
 
     override fun onDestroy() {
         try {
-            webView.clearHistory()
-            webView.freeMemory()
-            val parent = webView.parent as? ViewGroup
+            webView?.clearHistory()
+            webView?.freeMemory()
+            val parent = webView?.parent as? ViewGroup
             parent?.removeView(webView)
             binding.webParent.removeAllViews()
             binding.webParent.visibility = View.GONE
-            webView.visibility = View.GONE
-            webView.removeAllViews()
-            webView.destroy()
+            webView?.visibility = View.GONE
+            webView?.removeAllViews()
+            webView?.destroy()
         } catch (_: Exception) {
         }
         super.onDestroy()
@@ -103,9 +106,9 @@ class IWebFragment : ChatBaseFragment() {
 
 
     private fun initWeb() {
-        webView.getSettings().cacheMode = WebSettings.LOAD_NO_CACHE
-        webView.clearCache(true)
-        webView.setWebChromeClient(object : WebChromeClient() {
+        webView?.getSettings()?.cacheMode = WebSettings.LOAD_NO_CACHE
+        webView?.clearCache(true)
+        webView?.setWebChromeClient(object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 mActivity.runOnUiThread {
@@ -132,7 +135,7 @@ class IWebFragment : ChatBaseFragment() {
                 }
             }
         })
-        webView.setWebViewClient(object : WebViewClient() {
+        webView?.setWebViewClient(object : WebViewClient() {
             @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 return true

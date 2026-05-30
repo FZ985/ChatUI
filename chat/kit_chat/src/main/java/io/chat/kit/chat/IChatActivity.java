@@ -41,9 +41,11 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         uiMode = getResources().getConfiguration().uiMode;
 
         getBinding().pager.postDelayed(() -> {
-            MessageOperate.sendMessage(IMTest.message().get(9).getMessage(), null, null);
+            MessageOperate.sendMessage(IMTest.message().get(10).getMessage(), null, null);
             MessageOperate.sendMessage(IMTest.message().get(1).getMessage(), null, null);
+            MessageOperate.sendMessage(IMTest.message().get(2).getMessage(), null, null);
         }, 350);
+
     }
 
     @Override

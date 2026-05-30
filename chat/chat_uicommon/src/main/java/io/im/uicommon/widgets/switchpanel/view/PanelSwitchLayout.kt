@@ -1180,7 +1180,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @param expectHeight 期望高度
      */
     private fun updatePanelStateByAnimation(expectHeight: Int) {
-        Log.d(TAG, "updatePanelStateByAnimation: $expectHeight")
         val translationY = panelContainer.translationY
         val targetY = -expectHeight.toFloat()
         if (translationY != targetY) {

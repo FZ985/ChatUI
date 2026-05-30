@@ -2,6 +2,7 @@ package io.chat.kit.chat.messagelist.viewmodel;
 
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,7 @@ import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.event.DeleteMessageEvent;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.ui.web.IWebActivity;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
 /**
@@ -372,6 +374,25 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 return true;
             }
             return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean onClickLink(Context context, String link) {
+        IMessageViewModelProcessor viewModelProcessor = ChatProvider.getOptions().getViewModelProcessor();
+        boolean isProcess = false;
+        if (viewModelProcessor != null) {
+            isProcess = viewModelProcessor.onClickLink(context, link);
+        }
+        if (!isProcess) {
+            boolean result = false;
+            String str = link.toLowerCase();
+            if (str.startsWith("http") || str.startsWith("https")) {
+                IWebActivity.startWeb(context, link);
+                result = true;
+            }
+            return result;
         } else {
             return true;
         }

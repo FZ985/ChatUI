@@ -21,9 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
-import io.chat.kit.provider.ChatProvider;
-import io.im.uicommon.IMCenter;
-import io.im.uicommon.MessageOperate;
+import io.chat.kit.ChatRoute;
 import io.chat.kit.R;
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
@@ -34,17 +32,19 @@ import io.chat.kit.event.ScrollToEndEvent;
 import io.chat.kit.factory.ChatPopActionFactory;
 import io.chat.kit.helper.IChatHelper;
 import io.chat.kit.model.UiMessage;
+import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
-import io.chat.kit.ChatRoute;
-import io.im.uicommon.widgets.FixedLinearLayoutManager;
-import io.im.uicommon.adapter.IViewProviderListener;
-import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
-import io.im.uicommon.base.ChatBaseFragment;
-import io.im.uicommon.helper.ChatMsgCache;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatLibUtil;
+import io.im.uicommon.IMCenter;
+import io.im.uicommon.MessageOperate;
+import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.base.ChatBaseFragment;
+import io.im.uicommon.helper.ChatMsgCache;
+import io.im.uicommon.widgets.FixedLinearLayoutManager;
+import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
 /**
  * author : JFZ
@@ -95,6 +95,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         @Override
         public boolean onDelete(Message messageInfo) {
+            closeExpand();
             IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onDelete(messageInfo)) {
                 return true;
@@ -115,6 +116,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         @Override
         public boolean onMultiSelected(Message messageInfo) {
+            closeExpand();
             IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onMultiSelected(messageInfo)) {
                 return true;
@@ -129,6 +131,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         @Override
         public boolean onForward(Message messageInfo) {
+            closeExpand();
             IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onForward(messageInfo)) {
                 return true;
@@ -170,8 +173,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             @Override
             public boolean onSingleTapUp(@NonNull MotionEvent e) {
                 closeExpand();
-                return super.onSingleTapUp(e);
+                return false;
             }
+
         });
 
         binding.recycler.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
@@ -264,6 +268,12 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
         return messageViewModel.onViewLongClick(view, clickType, position, data);
+    }
+
+    @Override
+    public boolean onClickLink(String link) {
+        closeExpand();
+        return messageViewModel.onClickLink(mActivity, link);
     }
 
     @Override
