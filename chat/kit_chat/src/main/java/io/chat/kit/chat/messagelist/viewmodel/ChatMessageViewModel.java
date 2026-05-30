@@ -3,6 +3,7 @@ package io.chat.kit.chat.messagelist.viewmodel;
 
 import android.app.Application;
 import android.os.Looper;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,24 +16,23 @@ import java.util.List;
 import java.util.Objects;
 
 import io.chat.kit.chat.extension.ChatExtCall;
-import io.chat.kit.provider.ChatProvider;
-import io.im.uicommon.IMCenter;
 import io.chat.kit.chat.messagelist.provider.MessageClickType;
 import io.chat.kit.event.PageEvent;
-import io.im.uicommon.event.ChatMessageEvent;
-import io.im.uicommon.event.DeleteMessageEvent;
 import io.chat.kit.event.ScrollToEndEvent;
 import io.chat.kit.listener.IMessageViewModelProcessor;
-import io.im.uicommon.listener.MessageEventListener;
 import io.chat.kit.model.UiMessage;
+import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
-import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 import io.im.core.listener.ChatLifecycle;
-import io.im.uicommon.helper.ChatMsgCache;
 import io.im.core.model.Message;
 import io.im.core.model.State;
-import io.im.core.utils.JLog;
+import io.im.uicommon.IMCenter;
+import io.im.uicommon.event.ChatMessageEvent;
+import io.im.uicommon.event.DeleteMessageEvent;
+import io.im.uicommon.helper.ChatMsgCache;
+import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
 /**
  * by DAD FZ
@@ -377,30 +377,35 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         }
     }
 
-    public boolean onTextSelected(View view, int position, UiMessage uiMessage, String text, boolean isSelectAll) {
+    public boolean onTextSelected(View view, int position, UiMessage uiMessage, String text, boolean isSelectAll, int eventAction) {
         IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
-        if (listener == null || listener.onTextSelected(view, position, uiMessage.getMessage(), text, isSelectAll)) {
+        if (listener == null || listener.onTextSelected(view, position, uiMessage.getMessage(), text, isSelectAll, eventAction)) {
 
 //            if (messageInfo.isRevoked()) {
 //                return false;
 //            }
 
-            // show pop menu
-            if (popMenu == null) {
-                popMenu = new ChatPopMenu();
+            if (eventAction == MotionEvent.ACTION_MOVE) {
+                if (popMenu != null && popMenu.isShowing()) {
+                    popMenu.hide();
+                }
+            } else if (eventAction == MotionEvent.ACTION_UP || eventAction == MotionEvent.ACTION_CANCEL) {
+                // show pop menu
+                if (popMenu == null) {
+                    popMenu = new ChatPopMenu();
+                }
+                if (isSelectAll) {
+                    popMenu.show(view.getContext(), view, uiMessage.getMessage(), uiMessage.isSender());
+                } else {
+                    popMenu.show(
+                            view.getContext(),
+                            view,
+                            text,
+                            uiMessage.getMessage(),
+                            uiMessage.isSender());
+                }
             }
-            JLog.e("onTextSelected:" + uiMessage.getMessage());
 
-            if (isSelectAll) {
-                popMenu.show(view.getContext(), view, uiMessage.getMessage(), uiMessage.isSender());
-            } else {
-                popMenu.show(
-                        view.getContext(),
-                        view,
-                        text,
-                        uiMessage.getMessage(),
-                        uiMessage.isSender());
-            }
         }
         return true;
     }

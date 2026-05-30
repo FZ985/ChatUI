@@ -14,12 +14,12 @@ import io.chat.kit.chat.messagelist.provider.IImageMessageProvider;
 import io.chat.kit.chat.messagelist.provider.ITextMessageProvider;
 import io.chat.kit.chat.messagelist.provider.IUnKnowMessageProvider;
 import io.chat.kit.model.UiMessage;
-import io.im.uicommon.adapter.ProviderManager;
 import io.im.core.MessageType;
 import io.im.core.message.im.ForwardMessage;
 import io.im.core.message.im.ImageMessage;
 import io.im.core.message.im.TextMessage;
 import io.im.core.model.MessageContent;
+import io.im.uicommon.adapter.ProviderManager;
 
 /**
  * author : JFZ

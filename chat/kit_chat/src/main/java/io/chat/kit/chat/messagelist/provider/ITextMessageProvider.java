@@ -100,9 +100,9 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
             //设置选中文本监听回调
             SelectableTextHelper.getInstance()
                     .setSelectableOnChangeListener(
-                            (v, pos, msg, text, isSelectAll) -> {
+                            (v, pos, msg, text, isSelectAll, eventAction) -> {
                                 if (listener != null) {
-                                    listener.onTextSelected(v, pos, uiMessage, text.toString(), isSelectAll);
+                                    listener.onTextSelected(v, pos, uiMessage, text.toString(), isSelectAll, eventAction);
                                 }
                             });
 

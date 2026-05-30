@@ -18,7 +18,7 @@ public interface IChatPopMenuClickListener {
         return false;
     }
 
-    default boolean onTextSelected(View view, int position, Message messageInfo, String text, boolean isSelectAll) {
+    default boolean onTextSelected(View view, int position, Message messageInfo, String text, boolean isSelectAll, int eventAction) {
         return false;
     }
 

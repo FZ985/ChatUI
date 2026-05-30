@@ -267,8 +267,8 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     }
 
     @Override
-    public boolean onTextSelected(View view, int position, UiMessage data, String text, boolean isSelectAll) {
-        return messageViewModel.onTextSelected(view, position, data, text, isSelectAll);
+    public boolean onTextSelected(View view, int position, UiMessage data, String text, boolean isSelectAll, int eventAction) {
+        return messageViewModel.onTextSelected(view, position, data, text, isSelectAll, eventAction);
     }
 
     @Override

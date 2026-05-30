@@ -137,7 +137,7 @@ public class SelectableTextHelper {
         if (mSpannable == null || startOffset >= mTextView.getText().length()) {
             return;
         }
-        selectText(startOffset, endOffset, false);
+        selectText(startOffset, endOffset, false, MotionEvent.ACTION_DOWN);
         showCursorHandle(mStartHandle);
         showCursorHandle(mEndHandle);
     }
@@ -217,7 +217,7 @@ public class SelectableTextHelper {
     /**
      * 选择文本 startPos:起始索引 endPos：尾部索引
      */
-    private void selectText(int startPos, int endPos, boolean callListener) {
+    private void selectText(int startPos, int endPos, boolean callListener, int eventAction) {
         if (startPos != -1) {
             mSelectionInfo.setStart(startPos);
         } else {
@@ -236,8 +236,7 @@ public class SelectableTextHelper {
 
         if (mSpannable != null) {
             if (mSpan == null) {
-                mSpan =
-                        new BackgroundColorSpan(ContextCompat.getColor(ChatSDK.getContext(), mSelectedColor));
+                mSpan = new BackgroundColorSpan(ContextCompat.getColor(ChatSDK.getContext(), mSelectedColor));
             }
 
             mSelectionInfo.mSelectionContent =
@@ -258,7 +257,7 @@ public class SelectableTextHelper {
                         mPosition,
                         mMessage,
                         mSelectionInfo.mSelectionContent,
-                        startPos == 0 && endPos == mTextView.getText().length());
+                        startPos == 0 && endPos == mTextView.getText().length(), eventAction);
             }
         }
     }
@@ -323,7 +322,8 @@ public class SelectableTextHelper {
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            switch (event.getAction()) {
+            int action = event.getAction();
+            switch (action) {
                 case MotionEvent.ACTION_DOWN:
                     mBeforeDragStart = mSelectionInfo.getStart(mTextView);
                     mBeforeDragEnd = mSelectionInfo.getEnd(mTextView);
@@ -332,11 +332,10 @@ public class SelectableTextHelper {
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    break;
                 case MotionEvent.ACTION_MOVE:
-                    int rawX = (int) event.getRawX();
-                    int rawY = (int) event.getRawY();
-                    update(rawX + mAdjustX - mWidth - getTextViewX(), rawY + mAdjustY - mHeight);
+                    int rawX2 = (int) event.getRawX();
+                    int rawY2 = (int) event.getRawY();
+                    update(rawX2 + mAdjustX - mWidth - getTextViewX(), rawY2 + mAdjustY - mHeight, action);
                     break;
             }
             return true;
@@ -353,7 +352,7 @@ public class SelectableTextHelper {
 
         private int[] mTempCoors = new int[2];
 
-        public void update(int x, int y) {
+        public void update(int x, int y, int eventAction) {
             mTextView.getLocationInWindow(mTempCoors);
             int oldOffset;
             if (isLeft) {
@@ -365,7 +364,6 @@ public class SelectableTextHelper {
             y -= mTempCoors[1];
 
             int offset = TextLayoutUtils.getHysteresisOffset(mTextView, x, y, oldOffset);
-
             if (offset != oldOffset) {
                 resetSelectionInfo();
                 if (isLeft) {
@@ -374,10 +372,10 @@ public class SelectableTextHelper {
                         changeDirection();
                         handle.changeDirection();
                         mBeforeDragStart = mBeforeDragEnd;
-                        selectText(mBeforeDragEnd, offset, true);
+                        selectText(mBeforeDragEnd, offset, true, eventAction);
                         handle.updateCursorHandle();
                     } else {
-                        selectText(offset, -1, true);
+                        selectText(offset, -1, true, eventAction);
                     }
                     updateCursorHandle();
                 } else {
@@ -386,13 +384,15 @@ public class SelectableTextHelper {
                         handle.changeDirection();
                         changeDirection();
                         mBeforeDragEnd = mBeforeDragStart;
-                        selectText(offset, mBeforeDragStart, true);
+                        selectText(offset, mBeforeDragStart, true, eventAction);
                         handle.updateCursorHandle();
                     } else {
-                        selectText(mBeforeDragStart, offset, true);
+                        selectText(mBeforeDragStart, offset, true, eventAction);
                     }
                     updateCursorHandle();
                 }
+            } else {
+                selectText(mSelectionInfo.getStart(mTextView), mSelectionInfo.getEnd(mTextView), true, eventAction);
             }
         }
 
