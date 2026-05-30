@@ -5,9 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.provider.Settings;
 
-import io.im.kit.IMCenter;
-import io.im.kit.IMTest;
-import io.im.kit.config.Options;
+import io.chat.kit.IMTest;
+import io.im.uicommon.IMCenter;
+import io.im.uicommon.config.Options;
 
 /**
  * by DAD FZ

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="voice" type="id" />
+    <item name="voice_btn" type="id" />
+    <item name="edit" type="id" />
+    <item name="emoji" type="id" />
+    <item name="add" type="id" />
+    <item name="send_root" type="id" />
+    <item name="send" type="id" />
+</resources>

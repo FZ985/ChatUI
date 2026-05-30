@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'io.im.uicommon'
+    compileSdk appCompileSdk
+
+    defaultConfig {
+        minSdk appMinSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+dependencies {
+    api KtxCore
+    api Appcompat
+    api Material
+    api Recyclerview
+    api Swiperefreshlayout
+
+    api AndroidViewModel
+    api AndroidLiveData
+    api AndroidLifecycleRuntime
+
+    api AndroidEmoji2
+
+    api Glide
+
+    api project(':chat:chat_core')
+
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <provider
+            android:name=".provider.ChatProvider"
+            android:authorities="@${applicationId}.chatInit"
+            android:exported="false" />
+
+        <activity
+            android:name=".chat.IChatActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity
+            android:name=".forward.IForwardSelectorActivity"
+            android:screenOrientation="portrait" />
+
+    </application>
+</manifest>

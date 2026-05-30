@@ -6,13 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.im.app.databinding.ActivityMainBinding
-import io.im.kit.IMTest
-import io.im.kit.ui.popmenu.ChatPopMenu
-import io.im.kit.utils.RouteUtil
+import io.chat.kit.IMTest
+import io.chat.kit.ChatRoute
 
 class MainActivity : AppCompatActivity() {
 
-    val popMenu = ChatPopMenu()
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.goChat.setOnClickListener {
-            RouteUtil.goPrivateChat(this, IMTest.toUser)
+            ChatRoute.goPrivateChat(this, IMTest.toUser)
         }
 
     }

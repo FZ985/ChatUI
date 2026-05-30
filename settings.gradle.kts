@@ -17,5 +17,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "ChatUI"
 include(":app")
-include(":chat:ChatKit")
-include(":chat:ChatLib")
+include(":chat:chat_core")
+include(":chat:chat_uicommon")
+include(":chat:kit_chat")

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="chat_conversation_toolbar_title">@color/chat_color_858585</color>
+
+
+    <color name="kit_ripple_color">#33ffffff</color>
+</resources>
