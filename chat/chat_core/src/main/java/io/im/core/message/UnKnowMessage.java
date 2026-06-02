@@ -1,5 +1,8 @@
 package io.im.core.message;
 
+import android.content.Context;
+import android.text.Spannable;
+
 import androidx.annotation.Keep;
 
 import org.json.JSONObject;
@@ -21,5 +24,10 @@ public final class UnKnowMessage extends MessageContent {
 
     public static UnKnowMessage obtain() {
         return new UnKnowMessage();
+    }
+
+    @Override
+    public Spannable getSummarySpannable(Context context) {
+        return null;
     }
 }

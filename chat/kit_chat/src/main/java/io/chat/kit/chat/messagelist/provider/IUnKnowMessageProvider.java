@@ -34,6 +34,10 @@ public class IUnKnowMessageProvider implements ConversationMessageProvider {
 
     @Override
     public Spannable getSummarySpannable(Context context, MessageContent messageContent) {
+        Spannable summarySpannable = messageContent.getSummarySpannable(context);
+        if (summarySpannable != null) {
+            return summarySpannable;
+        }
         return new SpannableString(context.getString(R.string.kit_message_unknown));
     }
 

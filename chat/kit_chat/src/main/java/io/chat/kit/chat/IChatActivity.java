@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.chat.kit.IMTest;
-import io.im.uicommon.MessageOperate;
 import io.chat.kit.R;
 import io.chat.kit.databinding.ChatActivityChatBinding;
+import io.im.uicommon.MessageOperate;
 import io.im.uicommon.base.ChatBaseActivity;
 import io.im.uicommon.base.ChatBaseFragment;
 import io.im.uicommon.base.ChatFragmentPageAdapter;

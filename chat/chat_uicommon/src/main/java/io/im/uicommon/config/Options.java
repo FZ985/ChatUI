@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.im.uicommon.config.enums.FontSize;
+import io.im.uicommon.listener.IPermissionProxy;
 import io.im.uicommon.listener.ImageLoader;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.listener.MessageInterceptListener;
@@ -86,6 +87,30 @@ public final class Options {
     public void setMessageInterceptListener(MessageInterceptListener messageInterceptListener) {
         this.messageInterceptListener = messageInterceptListener;
     }
+
+    //权限申请代理---------------------------------------------------------------------------
+    private IPermissionProxy permissionProxy;
+
+    public IPermissionProxy getPermissionProxy() {
+        return permissionProxy;
+    }
+
+    public void setPermissionProxy(IPermissionProxy permissionProxy) {
+        this.permissionProxy = permissionProxy;
+    }
+
+
+    //语音消息是否连续播放---------------------------------------------------------------------
+    private boolean rc_play_audio_continuous = true;
+
+    public boolean isRc_play_audio_continuous() {
+        return rc_play_audio_continuous;
+    }
+
+    public void setRc_play_audio_continuous(boolean rc_play_audio_continuous) {
+        this.rc_play_audio_continuous = rc_play_audio_continuous;
+    }
+
 
     //---------------------------------------------------------------------------
 }

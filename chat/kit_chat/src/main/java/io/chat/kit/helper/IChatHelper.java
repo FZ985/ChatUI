@@ -1,5 +1,6 @@
 package io.chat.kit.helper;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Spannable;
@@ -28,7 +29,11 @@ import io.im.core.model.MessageUser;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
+import io.im.uicommon.MessageOperate;
 import io.im.uicommon.event.ChatMessageEvent;
+import io.im.uicommon.event.PermissionEvent;
+import io.im.uicommon.helper.ChatPermissionHelper;
+import io.im.uicommon.listener.IPermissionProxy;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.widgets.switchpanel.PanelSwitchHelper;
 import io.im.uicommon.widgets.switchpanel.interfaces.ContentScrollMeasurer;
@@ -87,6 +92,9 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 }
             }
         });
+
+        mFragment.getBinding().inputPanel.setSendVoiceCall(result -> MessageOperate.sendVoiceMessage(fragment.getUser(), fragment.getConversationType(), result, replyMessage, null));
+
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
     }
 
@@ -176,25 +184,40 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
         }
     }
 
+
+    private void switchVoice(View view) {
+        //点击 语音按钮
+        if (mFragment.getBinding().inputPanel.isVoiceInputMode()) {
+            mFragment.getBinding().inputPanel.setIsVoiceInputMode(false);
+            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+            // 切换到文本输入模式后需要弹出软键盘
+            view.postDelayed(() -> {
+                mFragment.getBinding().inputPanel.getEditText().requestFocus();
+                mExtensionViewModel.setSoftInputKeyBoard(true, true);
+            }, 150);
+        } else {
+            closeExpand();
+            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.VoiceInput);
+            mFragment.getBinding().inputPanel.setIsVoiceInputMode(true);
+            mExtensionViewModel.setSoftInputKeyBoard(false, true);
+        }
+    }
+
     @Override
     public void onClickBefore(@Nullable View view) {
         if (view != null && mFragment != null) {
             int id = view.getId();
             if (id == R.id.voice) {
-                //点击 语音按钮
-                if (mFragment.getBinding().inputPanel.isVoiceInputMode()) {
-                    mFragment.getBinding().inputPanel.setIsVoiceInputMode(false);
-                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                    // 切换到文本输入模式后需要弹出软键盘
-                    view.postDelayed(() -> {
-                        mFragment.getBinding().inputPanel.getEditText().requestFocus();
-                        mExtensionViewModel.setSoftInputKeyBoard(true, true);
-                    }, 150);
+                IPermissionProxy permissionProxy = IMCenter.getInstance().getOptions().getPermissionProxy();
+                if (permissionProxy != null) {
+                    permissionProxy.requestPermission(mFragment.getActivity(),
+                            new PermissionEvent(PermissionEvent.AUDIO),
+                            () -> switchVoice(view));
                 } else {
-                    closeExpand();
-                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.VoiceInput);
-                    mFragment.getBinding().inputPanel.setIsVoiceInputMode(true);
-                    mExtensionViewModel.setSoftInputKeyBoard(false, true);
+                    ChatPermissionHelper.request(mFragment,
+                            Manifest.permission.RECORD_AUDIO,
+                            view.getContext().getString(R.string.permission_msg_send_audio, ChatLibUtil.getAppName(view.getContext())),
+                            () -> switchVoice(view));
                 }
             } else if (id == R.id.edit) {
                 //点击 输入框
@@ -202,24 +225,19 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 mExtensionViewModel.setSoftInputKeyBoard(true, false);
             } else if (id == R.id.emoji) {
                 //点击 表情按钮
-                if (mExtensionViewModel.getInputModeLiveData().getValue() != null) {
-                    ChatInputMode value = mExtensionViewModel.getInputModeLiveData().getValue();
-                    if (value == ChatInputMode.EmoticonMode) {
-                        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                        mExtensionViewModel.setSoftInputKeyBoard(true, false);
-                    } else {
-                        if (value == ChatInputMode.NormalMode) {
-                            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
-                            mExtensionViewModel.setSoftInputKeyBoard(false, true);
-                            view.postDelayed(() -> mExtensionViewModel.clearFocus(), 250);
-                        } else {
-                            mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
-                            mExtensionViewModel.setSoftInputKeyBoard(false, false);
-                        }
-                    }
+                ChatInputMode value = mExtensionViewModel.getInputModeLiveData().getValue();
+                if (value == ChatInputMode.EmoticonMode) {
+                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
+                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 } else {
-                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
-                    mExtensionViewModel.setSoftInputKeyBoard(false, false);
+                    if (value == ChatInputMode.NormalMode) {
+                        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
+                        mExtensionViewModel.setSoftInputKeyBoard(false, true);
+                        view.postDelayed(() -> mExtensionViewModel.clearFocus(), 250);
+                    } else {
+                        mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.EmoticonMode);
+                        mExtensionViewModel.setSoftInputKeyBoard(false, false);
+                    }
                 }
             } else if (id == R.id.add) {
                 //点击 添加插件
@@ -260,7 +278,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                     mExtensionViewModel.setSoftInputKeyBoard(true, false);
                 }, 100);
             } else {
-                mFragment.getBinding().replyLl.setVisibility(View.INVISIBLE);
+                mFragment.getBinding().replyLl.setVisibility(View.GONE);
             }
         }
     }
@@ -274,7 +292,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     }
 
     public boolean closeExpand() {
-        mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
+//        mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
         mHelper.resetState();
         return true;
     }

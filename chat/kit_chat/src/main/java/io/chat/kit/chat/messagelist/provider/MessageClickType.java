@@ -16,9 +16,11 @@ public class MessageClickType {
 
     public static final int EDIT_CLICK = -6;
 
-    public static final int REPLY_CONTENT_CLICK = -7;//回复点击
+    public static final int AUDIO_CLICK = -7;//语音播放
 
-    public static final int REPLY_CONTENT_LONG_CLICK = -8;//回复长按
+    public static final int REPLY_CONTENT_CLICK = -8;//回复点击
+
+    public static final int REPLY_CONTENT_LONG_CLICK = -9;//回复长按
 
 
 //
@@ -28,7 +30,6 @@ public class MessageClickType {
 //    public static final int READ_RECEIPT_STATE_CLICK = -3;
 //
 //
-//    public static final int AUDIO_CLICK = -7;
 //
 //    public static final int REEDIT_CLICK = -8;
 //

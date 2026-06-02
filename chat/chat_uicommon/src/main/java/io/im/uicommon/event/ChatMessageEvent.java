@@ -22,11 +22,10 @@ public class ChatMessageEvent {
     public static final int ERROR = 2;
     public static final int PROGRESS = 3;
     public static final int CANCEL = 4;
-
-    private @Event int event;
-    private Message message;
-    private int code;
-    private int progress;
+    private final @Event int event;
+    private final Message message;
+    private final int code;
+    private final int progress;
 
     public ChatMessageEvent(@ChatMessageEvent.Event int event, Message message) {
         this(event, message, 0, -1);
@@ -40,8 +39,7 @@ public class ChatMessageEvent {
         this(event, message, 0, code);
     }
 
-    public ChatMessageEvent(
-            @ChatMessageEvent.Event int event, Message message, int progress, int code) {
+    public ChatMessageEvent(@ChatMessageEvent.Event int event, Message message, int progress, int code) {
         this.event = event;
         this.message = message;
         this.progress = progress;

@@ -126,6 +126,10 @@ public class ITextMessageProvider extends BaseMessageItemProvider<TextMessage> {
 
     @Override
     public Spannable getSummarySpannable(Context context, TextMessage textMessage) {
+        Spannable textMessageSummarySpannable = textMessage.getSummarySpannable(context);
+        if (textMessageSummarySpannable != null) {
+            return textMessageSummarySpannable;
+        }
         if (textMessage != null && !TextUtils.isEmpty(textMessage.getContent())) {
             String content = textMessage.getContent();
             content = content.replace("\n", " ");

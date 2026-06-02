@@ -2,6 +2,8 @@ package io.im.core.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import com.google.gson.Gson;
 
@@ -97,5 +99,13 @@ public class ChatLibUtil {
         }
         return object;
     }
+
+    public static String getAppName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        CharSequence label = packageManager.getApplicationLabel(applicationInfo);
+        return label.toString();
+    }
+
 
 }

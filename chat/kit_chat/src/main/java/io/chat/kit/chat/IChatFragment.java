@@ -2,6 +2,7 @@ package io.chat.kit.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.chat.kit.ChatRoute;
@@ -42,7 +44,9 @@ import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
 import io.im.uicommon.adapter.IViewProviderListener;
 import io.im.uicommon.base.ChatBaseFragment;
+import io.im.uicommon.helper.ChatDialog;
 import io.im.uicommon.helper.ChatMsgCache;
+import io.im.uicommon.helper.IMAlertHelper;
 import io.im.uicommon.widgets.FixedLinearLayoutManager;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
@@ -68,9 +72,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     private boolean onScrollStopRefreshList = false;
 
-    private Observer<List<UiMessage>> mListObserver = uiMessages -> refreshList(uiMessages);
+    private final Observer<List<UiMessage>> mListObserver = this::refreshList;
 
-    private Observer<PageEvent> mPageObserver = new Observer<PageEvent>() {
+    private final Observer<PageEvent> mPageObserver = new Observer<PageEvent>() {
         @Override
         public void onChanged(PageEvent pageEvent) {
             if (isDetached()) return;
@@ -100,7 +104,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onDelete(messageInfo)) {
                 return true;
             }
-            MessageOperate.deleteMessage(messageInfo, null);
+            List<Message> messageList = new ArrayList<>();
+            messageList.add(messageInfo);
+            deleteMessage(messageList);
             return true;
         }
 
@@ -152,7 +158,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        thisFragmentId = (System.currentTimeMillis() + ChatLibUtil.randomNumber(10, 999)) + "";
+        thisFragmentId = ((System.currentTimeMillis() * 1000) + ChatLibUtil.randomNumber(10, 999)) + "";
         binding.refresh.setColorSchemeResources(io.im.core.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
         FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);
@@ -198,9 +204,10 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(ChatRoute.User);
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.PRIVATE.getValue()));
-        helper.bindConversation(mActivity, this);
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
+
+        helper.bindConversation(mActivity, this);
 
         IMCenter.getInstance().getOptions().getFontSizeLiveData().observe(getViewLifecycleOwner(), fontSize -> {
             if (!isDetached() && fontSize != null) {
@@ -229,9 +236,20 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         });
 
         //删除
-        binding.shareDelete.setOnClickListener(v -> {
-            MessageOperate.deleteMessage(ChatMsgCache.getMessageList(), null);
-        });
+        binding.shareDelete.setOnClickListener(v -> deleteMessage(ChatMsgCache.getMessageList()));
+    }
+
+    private void deleteMessage(List<Message> list) {
+        IMAlertHelper.with(mActivity)
+                .message(io.im.uicommon.R.string.im_alert_tip_confirm)
+                .messagePadding(new Rect(0, 30, 0, 30))
+                .messageTextSize(18)
+                .cancel(io.im.uicommon.R.string.im_alert_cancel, ChatDialog::dismiss)
+                .confirm(io.im.uicommon.R.string.im_alert_delete, dialog -> {
+                    MessageOperate.deleteMessage(list, null);
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     @SuppressLint("NotifyDataSetChanged")

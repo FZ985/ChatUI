@@ -19,16 +19,16 @@ import io.im.core.utils.FileUtils;
  * description :
  */
 @Keep
-public class MediaMessage extends MessageContent implements Serializable {
+public abstract class MediaMessage extends MessageContent implements Serializable {
 
     private String url;
-    private String localUri;
+    private String localPath;
 
     @Override
     public MessageContent parseContent(JSONObject obj) {
         if (obj != null) {
             setUrl(obj.optString("url"));
-            setLocalUri(obj.optString("localUri"));
+            setLocalPath(obj.optString("localPath"));
         }
         return this;
     }
@@ -41,20 +41,25 @@ public class MediaMessage extends MessageContent implements Serializable {
         this.url = url;
     }
 
-    public String getLocalUri() {
-        return localUri;
+    public String getLocalPath() {
+        return localPath;
     }
 
-    public void setLocalUri(String localUri) {
-        this.localUri = localUri;
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
     }
+
+    public Uri getLocalUri() {
+        return Uri.parse(getLocalPath());
+    }
+
 
     public boolean isLocalExit(Context context) {
         boolean notExit =
-                (getLocalUri() == null
-                        || TextUtils.isEmpty(getLocalUri())
+                (getLocalPath() == null
+                        || TextUtils.isEmpty(getLocalPath())
                         || !FileUtils.isFileExistsWithUri(
-                        context, Uri.parse(getLocalUri())));
+                        context, getLocalUri()));
         return !notExit;
     }
 }

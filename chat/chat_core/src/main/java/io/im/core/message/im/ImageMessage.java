@@ -1,5 +1,7 @@
 package io.im.core.message.im;
 
+import android.content.Context;
+import android.text.Spannable;
 import android.util.Size;
 
 import androidx.annotation.Keep;
@@ -22,14 +24,14 @@ public class ImageMessage extends MediaMessage implements Serializable {
 
     private int height;
 
-    public static ImageMessage obtain(String url, String localUri) {
-        return obtain(url, localUri, null);
+    public static ImageMessage obtain(String url, String localPath) {
+        return obtain(url, localPath, null);
     }
 
-    public static ImageMessage obtain(String url, String localUri, Size size) {
+    public static ImageMessage obtain(String url, String localPath, Size size) {
         ImageMessage message = new ImageMessage();
         message.setUrl(url);
-        message.setLocalUri(localUri);
+        message.setLocalPath(localPath);
         if (size != null) {
             message.setWidth(size.getWidth());
             message.setHeight(size.getHeight());
@@ -61,5 +63,10 @@ public class ImageMessage extends MediaMessage implements Serializable {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    @Override
+    public Spannable getSummarySpannable(Context context) {
+        return null;
     }
 }

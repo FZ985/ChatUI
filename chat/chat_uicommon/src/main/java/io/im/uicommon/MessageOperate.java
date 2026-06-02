@@ -17,10 +17,13 @@ import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatFun;
 import io.im.core.listener.MessageCallback;
 import io.im.core.message.im.ForwardMessage;
+import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatToast;
+import io.im.uicommon.bean.AudioDataBean;
+import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.manager.MessageManager;
 
@@ -64,6 +67,7 @@ public class MessageOperate {
         }
     }
 
+    //多条转发消息发送
     private static void sendForwardMessage(List<Message> messageList,
                                            List<Message> successMessage, List<Message> errorMessage,
                                            @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
@@ -144,6 +148,14 @@ public class MessageOperate {
     //删除消息
     public static void deleteMessage(List<Message> messageList, @Nullable MessageCallback<Message> callback) {
         postDeleteMessage(new io.im.uicommon.event.DeleteMessageEvent(io.im.uicommon.event.DeleteMessageEvent.SUCCESS, messageList));
+    }
+
+    //发送语音消息
+    public static void sendVoiceMessage(UserInfo toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message replyMessage, @Nullable MessageCallback<Message> callback) {
+        HQVoiceMessage voiceBody = HQVoiceMessage.obtain(voiceData.getUrl(), voiceData.getPath(), voiceData.getDuration());
+        Message message = Message.obtain(toUser, conversationType, MessageType.CHAT_VOICE, voiceBody);
+        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
+        sendMessage(message, replyMessage, callback);
     }
 
 //    //发送阅读消息

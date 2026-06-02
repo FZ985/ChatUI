@@ -24,4 +24,14 @@
     <string name="kit_date_pm">下午</string>
     <string name="kit_date_night">晚上</string>
 
+
+    <string name="im_alert_tip">提示</string>
+    <string name="im_alert_cancel">取消</string>
+    <string name="im_alert_confirm">确定</string>
+    <string name="im_alert_delete">删除</string>
+    <string name="im_alert_agree">同意</string>
+    <string name="im_alert_tip_confirm">确认删除？</string>
+    <string name="im_alert_next_say">下次再说</string>
+
+
 </resources>

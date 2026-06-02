@@ -46,7 +46,6 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
     private Integer maxSize = null;
 
     public IImageMessageProvider() {
-        mConfig.showProgress = false;
         mConfig.showReadState = true;
         mConfig.showContentBubble = false;
     }
@@ -64,7 +63,7 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
         String thumbUri = "";
         boolean localExit = message.isLocalExit(contentHolder.getContext());
         if (localExit) {
-            thumbUri = message.getLocalUri();
+            thumbUri = message.getLocalPath();
         } else {
             thumbUri = ChatNull.compat(message.getUrl());
         }
@@ -208,6 +207,7 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
 
     @Override
     public Spannable getSummarySpannable(Context context, ImageMessage imageMessage) {
-        return new SpannableString("[图片]");
+        Spannable imageMessageSummarySpannable = imageMessage.getSummarySpannable(context);
+        return imageMessageSummarySpannable == null ? new SpannableString("[图片]") : imageMessageSummarySpannable;
     }
 }

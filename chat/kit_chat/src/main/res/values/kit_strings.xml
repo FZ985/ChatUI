@@ -7,7 +7,6 @@
 
     <string name="kit_message_unknown">当前版本暂不支持查看此消息</string>
 
-
     <string name="plugin_picture">相册</string>
     <string name="plugin_capture">拍摄</string>
     <string name="plugin_video_call">视频通话</string>
@@ -36,5 +35,14 @@
     <string name="forward_t2">聊天记录</string>
     <string name="forward_t3">%s与%s的聊天记录</string>
 
+    <string name="chat_voice_rec">手指上滑，取消发送</string>
+    <string name="chat_voice_cancel">手指上滑，取消发送</string>
+    <string name="chat_voice_short">录音时间太短</string>
+    <string name="chat_voice_failure">录音失败！</string>
+    <string name="chat_voice_too_long">录制时间超长</string>
+
+    <string name="voice_tip">语音</string>
+
+    <string name="permission_msg_send_audio">是否允许%s使用麦克风权限用于发送语音消息?</string>
 
 </resources>

@@ -1,5 +1,8 @@
 package io.im.core.message.im;
 
+import android.content.Context;
+import android.text.Spannable;
+
 import androidx.annotation.Keep;
 
 import org.json.JSONObject;
@@ -39,5 +42,10 @@ public final class TextMessage extends MessageContent implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public Spannable getSummarySpannable(Context context) {
+        return null;
     }
 }

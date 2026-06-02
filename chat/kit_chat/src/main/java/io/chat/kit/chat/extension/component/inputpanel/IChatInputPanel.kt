@@ -8,16 +8,20 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import io.chat.kit.R
+import io.chat.kit.chat.voice.AudioPlayManager
+import io.chat.kit.chat.voice.AudioRecordManager
 import io.chat.kit.config.enums.ChatInputMode
 import io.chat.kit.config.enums.InputStyle
 import io.chat.kit.databinding.ChatComponentInputPanelBinding
+import io.im.core.listener.ChatFun
+import io.im.uicommon.bean.AudioDataBean
 import io.im.uicommon.helper.OptionsHelper
+import io.im.uicommon.utils.decorViewOrRootView
 
 
 /**
@@ -29,6 +33,7 @@ class IChatInputPanel : FrameLayout {
 
     private lateinit var binding: ChatComponentInputPanelBinding
 
+    private var sendVoiceCall: ChatFun.Fun1<AudioDataBean>? = null
     private lateinit var mInputStyle: InputStyle
 
     constructor(context: Context) : this(context, null)
@@ -44,6 +49,10 @@ class IChatInputPanel : FrameLayout {
         binding.edit.addTextChangedListener(mEditTextWatcher)
         binding.voiceBtn.setOnTouchListener(mOnVoiceBtnTouchListener)
         updateTextSize()
+    }
+
+    fun setSendVoiceCall(sendVoiceCall: ChatFun.Fun1<AudioDataBean>) {
+        this.sendVoiceCall = sendVoiceCall
     }
 
     fun updateTextSize() {
@@ -240,6 +249,7 @@ class IChatInputPanel : FrameLayout {
             }
 
             ChatInputMode.EmoticonMode -> {
+                mIsVoiceInputMode = false
                 binding.voice.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -358,6 +368,7 @@ class IChatInputPanel : FrameLayout {
             }
 
             ChatInputMode.EmoticonMode -> {
+                mIsVoiceInputMode = false
                 binding.voice.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -434,6 +445,7 @@ class IChatInputPanel : FrameLayout {
             }
 
             ChatInputMode.EmoticonMode -> {
+                mIsVoiceInputMode = false
                 binding.voice.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -539,6 +551,7 @@ class IChatInputPanel : FrameLayout {
             }
 
             ChatInputMode.EmoticonMode -> {
+                mIsVoiceInputMode = false
                 binding.voice.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -651,37 +664,37 @@ class IChatInputPanel : FrameLayout {
         val mOffsetLimit = 70 * v.context.resources.displayMetrics.density
         //需要拦截请求权限
         if (event.action == MotionEvent.ACTION_DOWN) {
-//                if (AudioPlayManager.getInstance().isPlaying()) {
-//                    AudioPlayManager.getInstance().stopPlay()
-//                }
+            if (AudioPlayManager.getInstance().isPlaying) {
+                AudioPlayManager.getInstance().stopPlay()
+            }
             // 判断正在视频通话和语音通话中不能进行语音消息发送
-            // do -------
-//                AudioRecordManager.getInstance()
-//                    .startRecord(v.getRootView(), mConversationType, mTargetId)
+            // do something -------
+            //开始录制
+            AudioRecordManager.getInstance().startRecord(v.decorViewOrRootView())
             mLastTouchY = event.y
             mUpDirection = false
             val textView = v as TextView
             textView.setText(R.string.kit_voice_t2)
             textView.background = ContextCompat.getDrawable(
-                v.getContext(),
+                v.context,
                 R.drawable.kit_voice_btn2
             )
         } else if (event.action == MotionEvent.ACTION_MOVE) {
             if (mLastTouchY - event.y > mOffsetLimit && !mUpDirection) {
-//                    AudioRecordManager.getInstance().willCancelRecord()
+                AudioRecordManager.getInstance().willCancelRecord()
                 mUpDirection = true
                 val textView = v as TextView
                 textView.setText(R.string.kit_voice_t1)
                 textView.background = ContextCompat.getDrawable(
-                    v.getContext(),
+                    v.context,
                     R.drawable.kit_voice_btn1
                 )
             } else if (event.y - mLastTouchY > -mOffsetLimit && mUpDirection) {
-//                    AudioRecordManager.getInstance().continueRecord()
+                AudioRecordManager.getInstance().continueRecord()
                 mUpDirection = false
                 val textView = v as TextView
                 textView.background = ContextCompat.getDrawable(
-                    v.getContext(),
+                    v.context,
                     R.drawable.kit_voice_btn2
                 )
                 textView.setText(R.string.kit_voice_t2)
@@ -689,11 +702,13 @@ class IChatInputPanel : FrameLayout {
         } else if (event.action == MotionEvent.ACTION_UP
             || event.action == MotionEvent.ACTION_CANCEL
         ) {
-//                AudioRecordManager.getInstance().stopRecord()
+            AudioRecordManager.getInstance().stopRecord { result ->
+                sendVoiceCall?.apply(result)
+            }
             val textView = v as TextView
             textView.setText(R.string.kit_voice_t1)
             textView.background = ContextCompat.getDrawable(
-                v.getContext(),
+                v.context,
                 R.drawable.kit_voice_btn1
             )
         }

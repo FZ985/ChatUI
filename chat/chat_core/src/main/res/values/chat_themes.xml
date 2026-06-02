@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Chat_Theme.Base" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/chat_theme</item>
         <item name="colorPrimaryVariant">@color/chat_theme</item>
@@ -31,4 +32,27 @@
     </style>
     <!-- M3 alert 主题设置 end   -->
 
+
+    <style name="chat_core_dialog_custom" parent="Theme.Material3.Light.Dialog">
+        <!-- 解决 ActionBar 占位导致 Dialog 无法全屏显示的问题 -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowFullscreen">true</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/chat_theme</item>
+        <item name="colorPrimaryVariant">@color/chat_theme</item>
+        <item name="colorSecondary">@color/chat_theme</item>
+        <item name="colorSecondaryVariant">@color/chat_theme</item>
+        <item name="colorControlActivated">@color/chat_theme</item>
+        <item name="colorControlHighlight">@color/chat_transparent</item>
+        <item name="android:colorActivatedHighlight">@color/chat_theme80</item>
+        <item name="android:textColorHighlight">@color/chat_theme80</item>
+    </style>
 </resources>

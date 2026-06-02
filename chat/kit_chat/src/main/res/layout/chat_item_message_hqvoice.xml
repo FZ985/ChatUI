@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/voice_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/voice_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/chat_dp40"
+        android:adjustViewBounds="true"
+        android:gravity="center_vertical"
+        android:maxWidth="@dimen/chat_dp230"
+        android:minWidth="@dimen/chat_dp52"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/chat_dp10"
+        android:paddingRight="@dimen/chat_dp10">
+
+        <ImageView
+            android:id="@+id/voice_receive"
+            android:layout_width="@dimen/chat_dp16"
+            android:layout_height="@dimen/chat_dp16"
+            android:src="@drawable/voice_vec_left3"
+            android:visibility="gone"
+            app:tint="@color/chat_skin_Text"
+            tools:ignore="ContentDescription"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/voice_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:layout_weight="1"
+            android:textColor="@color/chat_skin_Text"
+            android:textDirection="locale"
+            android:textSize="@dimen/chat_sp14"
+            android:textStyle="bold"
+            tools:text="10'" />
+
+        <ImageView
+            android:id="@+id/voice_send"
+            android:layout_width="@dimen/chat_dp16"
+            android:layout_height="@dimen/chat_dp16"
+            android:src="@drawable/voice_vec_right3"
+            android:visibility="gone"
+            app:tint="@color/chat_skin_Text"
+            tools:ignore="ContentDescription"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/voice_unread"
+        android:layout_width="@dimen/chat_dp8"
+        android:layout_height="@dimen/chat_dp8"
+        android:layout_marginStart="@dimen/chat_dp8"
+        android:src="@drawable/voice_unread"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/voice_download_error"
+        android:layout_width="@dimen/chat_dp16"
+        android:layout_height="@dimen/chat_dp16"
+        android:layout_marginStart="@dimen/chat_dp8"
+        android:src="@drawable/voice_hq_message_download_error"
+        android:visibility="gone"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/voice_download_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="@dimen/chat_dp16"
+        android:layout_height="@dimen/chat_dp16"
+        android:layout_marginStart="@dimen/chat_dp8"
+        android:indeterminateDrawable="@drawable/voice_message_downloading_style"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

@@ -1,5 +1,8 @@
 package io.im.core.message.im;
 
+import android.content.Context;
+import android.text.Spannable;
+
 import androidx.annotation.Keep;
 
 import org.json.JSONArray;
@@ -81,5 +84,10 @@ public final class ForwardMessage extends MessageContent implements Serializable
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    @Override
+    public Spannable getSummarySpannable(Context context) {
+        return null;
     }
 }

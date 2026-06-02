@@ -1,5 +1,9 @@
 package io.im.core.message.app;
 
+import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+
 import androidx.annotation.Keep;
 
 import org.json.JSONObject;
@@ -21,5 +25,10 @@ public final class AppSystemNotificationMessage extends MessageContent {
 
     public static AppSystemNotificationMessage obtain() {
         return new AppSystemNotificationMessage();
+    }
+
+    @Override
+    public Spannable getSummarySpannable(Context context) {
+        return new SpannableString("[应用通知]");
     }
 }

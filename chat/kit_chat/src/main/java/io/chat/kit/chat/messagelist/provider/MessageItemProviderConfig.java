@@ -28,7 +28,7 @@ public class MessageItemProviderConfig {
     /**
      * 是否显示发送进度。
      */
-    public boolean showProgress = true;
+    public boolean showProgress = false;
 
     /**
      * 会话界面是否在消息上面显示昵称。

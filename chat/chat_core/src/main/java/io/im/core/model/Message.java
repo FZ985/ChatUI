@@ -61,7 +61,7 @@ public class Message implements Serializable {
     private int readStatus;//阅读状态
 
     @ColumnInfo(name = "sendStatus")
-    private int sendStatus;//发送、接收状态
+    private int sendStatus;//发送状态
 
     @Ignore
     private MessageDirection messageDirection;//消息方向， 左边、右边
@@ -113,6 +113,12 @@ public class Message implements Serializable {
 
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
+        parseBody();
+    }
+
+    public void updateMessageBody(MessageContent messageContent) {
+        this.messageBody = messageContent.toJson();
+        this.messageContent = null;
         parseBody();
     }
 

@@ -1,5 +1,8 @@
 package io.im.core.model;
 
+import android.content.Context;
+import android.text.Spannable;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -67,4 +70,6 @@ public abstract class MessageContent implements Serializable {
     public MessageContent copy() {
         return ChatLibUtil.deepSerializableCopy(this);
     }
+
+    public abstract Spannable getSummarySpannable(Context context);
 }

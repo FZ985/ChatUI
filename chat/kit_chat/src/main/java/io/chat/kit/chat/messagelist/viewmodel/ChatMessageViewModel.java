@@ -3,7 +3,10 @@ package io.chat.kit.chat.messagelist.viewmodel;
 
 import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -12,28 +15,37 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MediatorLiveData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.provider.MessageClickType;
+import io.chat.kit.chat.voice.AudioPlayManager;
 import io.chat.kit.event.PageEvent;
 import io.chat.kit.event.ScrollToEndEvent;
+import io.chat.kit.listener.IAudioPlayListener;
 import io.chat.kit.listener.IMessageViewModelProcessor;
 import io.chat.kit.model.UiMessage;
 import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
+import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatLifecycle;
+import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.model.Message;
+import io.im.core.model.MessageContent;
 import io.im.core.model.State;
+import io.im.core.utils.ChatExecutorHelper;
+import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.event.DeleteMessageEvent;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.ui.web.IWebActivity;
+import io.im.uicommon.utils.SavePathUtils;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
 /**
@@ -53,12 +65,15 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     private ChatPopMenu popMenu;
 
+    private boolean isDestroy;
+
     public ChatMessageViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void bindConversation(@NonNull ChatExtCall extCall) {
         this.mCall = extCall;
+        isDestroy = false;
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
     }
 
@@ -322,6 +337,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     @Override
     public void onDestroy() {
+        isDestroy = true;
         ChatMsgCache.clear();
         IMCenter.getInstance().getOptions().removeMessageEventListener(this);
     }
@@ -343,7 +359,18 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             if (popMenu != null && !popMenu.isShowing()) {
                 SelectableTextHelper.getInstance().dismiss();
             }
-            Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
+            IMessageViewModelProcessor viewModelProcessor = ChatProvider.getOptions().getViewModelProcessor();
+            boolean isProcess = false;
+            if (viewModelProcessor != null) {
+                isProcess = viewModelProcessor.onViewClick(this, clickType, data);
+            }
+            if (!isProcess) {
+                if (clickType == MessageClickType.AUDIO_CLICK) {
+                    onAudioClick(data);
+                } else {
+                    Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -448,5 +475,129 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             return true;
         }
         return false;
+    }
+
+    public void onAudioClick(UiMessage uiMessage) {
+        // 处理暂停逻辑
+        MessageContent content = uiMessage.getMessage().getMessageContent();
+        if (content instanceof HQVoiceMessage) {
+            if (AudioPlayManager.getInstance().isPlaying()) {
+                Uri playingUri = AudioPlayManager.getInstance().getPlayingUri();
+                AudioPlayManager.getInstance().stopPlay();
+                // 暂停的是当前播放的 Uri
+                if (playingUri.equals(((HQVoiceMessage) content).getLocalUri())) return;
+            }
+            // 如果被 voip 占用通道，则不播放，弹提示框
+//            if (AudioPlayManager.getInstance().isInVOIPMode(getApplication())) {
+//                mPageEventLiveData.setValue(new ToastEvent(getApplication().getString(R.string.rc_voip_occupying)));
+//                return;
+//            }
+            playOrDownloadHQVoiceMsg((HQVoiceMessage) uiMessage.getMessage().getMessageContent(), uiMessage);
+        }
+    }
+
+    private void playOrDownloadHQVoiceMsg(HQVoiceMessage content, UiMessage uiMessage) {
+        boolean ifDownloadHQVoiceMsg = !content.isLocalExit(getApplication());
+        if (ifDownloadHQVoiceMsg) {
+            downloadHQVoiceMsg(uiMessage);
+        } else {
+            playVoiceMessage(uiMessage);
+        }
+    }
+
+    private void downloadHQVoiceMsg(final UiMessage uiMessage) {
+        MessageContent body = uiMessage.getMessage().getMessageContent();
+        if (body instanceof HQVoiceMessage) {
+            HQVoiceMessage hqVoiceMessage = (HQVoiceMessage) body;
+            File file = new File(((HQVoiceMessage) body).getLocalPath());
+            File savePath = SavePathUtils.getSavePath(getApplication().getCacheDir());
+            String path = savePath.getAbsolutePath();
+            String fileName = file.getName();
+//            DownLoadInfo info = new DownLoadInfo(hqVoiceMessage.getUrl(), path, fileName);
+//            DownloadModel.get()
+//                    .download(info, (progress, percent, length) -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
+//                        if (!isDestroy) {
+//                            uiMessage.setState(State.PROGRESS);
+//                            uiMessage.setProgress(percent.intValue());
+//                            refreshSingleMessage(uiMessage);
+//                        }
+//                    }), completeFile -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
+//                        if (!isDestroy) {
+//                            uiMessage.setState(State.NORMAL);
+//                            refreshSingleMessage(uiMessage);
+//                            playVoiceMessage(uiMessage);
+//                        }
+//                    }), () -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
+//                        if (!isDestroy) {
+//                            uiMessage.setState(State.ERROR);
+//                            refreshSingleMessage(uiMessage);
+//                        }
+//                    }));
+        }
+    }
+
+    private void playVoiceMessage(final UiMessage uiMessage) {
+        final MessageContent content = uiMessage.getMessage().getMessageContent();
+        Uri voicePath = null;
+        if (content instanceof HQVoiceMessage) {
+            voicePath = ((HQVoiceMessage) content).getLocalUri();
+        }
+        Log.e("ddd", "voicePath:" + voicePath);
+        if (voicePath != null) {
+            AudioPlayManager.getInstance().startPlay(
+                    getApplication(),
+                    voicePath,
+                    new IAudioPlayListener() {
+                        @Override
+                        public void onStart(Uri uri) {
+                            uiMessage.setPlaying(true);
+                            refreshSingleMessage(uiMessage);
+                        }
+
+                        @Override
+                        public void onStop(Uri uri) {
+                            uiMessage.setPlaying(false);
+                            refreshSingleMessage(uiMessage);
+                        }
+
+                        @Override
+                        public void onComplete(Uri uri) {
+                            uiMessage.setPlaying(false);
+                            // 找到下个播放消息继续播放
+                            if (uiMessage.getMessage()
+                                    .getMessageDirection()
+                                    .equals(Message.MessageDirection.RECEIVE)) {
+                                refreshSingleMessage(uiMessage);
+                            } else {
+                                refreshSingleMessage(uiMessage);
+                                // 不切换线程会造成，ui 一直显示播放的 bug
+                                ChatExecutorHelper.getInstance()
+                                        .mainThread()
+                                        .execute(() -> findNextHQVoice(uiMessage));
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void findNextHQVoice(UiMessage uiMessage) {
+        if (!IMCenter.getInstance().getOptions().isRc_play_audio_continuous()) {
+            JLog.e("TAG", "rc_play_audio_continuous is disabled.");
+            return;
+        }
+        int position = findUIMessageIndexById(uiMessage.getMessage().getMessageId());
+        if (position == -1) {
+            JLog.e("the message isn't found in the list.");
+            return;
+        }
+        for (int i = position; i < mUiMessages.size(); i++) {
+            UiMessage item = mUiMessages.get(i);
+            if (item.getMessage().getMessageContent() instanceof HQVoiceMessage) {
+                if (!TextUtils.equals(item.getMessage().getFromUser().getUserId(), ChatSDK.getConnectUser().getUserId())) {
+                    onAudioClick(item);
+                    break;
+                }
+            }
+        }
     }
 }

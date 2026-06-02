@@ -20,6 +20,9 @@ public class UiMessage extends UiBaseBean {
 
     private boolean isEdit = false;//是否为编辑
     private boolean isSelected = false;//是否选中
+
+    private boolean isPlaying = false;//是否语音播放中
+
     private int progress;//进度
 
     private @State.Value int state;
@@ -105,6 +108,15 @@ public class UiMessage extends UiBaseBean {
 
     public void setProgress(int progress) {
         this.progress = progress;
+        change();
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
         change();
     }
 }

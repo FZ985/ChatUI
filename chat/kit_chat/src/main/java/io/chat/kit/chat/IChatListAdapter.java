@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.chat.kit.utils.KtExtKt;
 import io.im.core.model.Message;
 import io.chat.kit.R;
 import io.chat.kit.chat.messagelist.provider.BaseMessageItemProvider;
@@ -24,6 +23,7 @@ import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.utils.AnimatedColor;
 import io.im.uicommon.adapter.BaseAdapter;
 import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.utils.KtExtKt;
 
 /**
  * author : JFZ

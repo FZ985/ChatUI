@@ -32,7 +32,6 @@ public class IForwardMessageProvider extends BaseMessageItemProvider<ForwardMess
 
 
     public IForwardMessageProvider() {
-        mConfig.showProgress = false;
         mConfig.showReadState = true;
         mConfig.showContentBubble = false;
 
@@ -102,7 +101,11 @@ public class IForwardMessageProvider extends BaseMessageItemProvider<ForwardMess
     }
 
     @Override
-    public Spannable getSummarySpannable(Context context, ForwardMessage imageMessage) {
+    public Spannable getSummarySpannable(Context context, ForwardMessage forwardMessage) {
+        Spannable summarySpannable = forwardMessage.getSummarySpannable(context);
+        if (summarySpannable != null) {
+            return summarySpannable;
+        }
         return new SpannableString("[" + context.getString(R.string.forward_t2) + "]");
     }
 }
