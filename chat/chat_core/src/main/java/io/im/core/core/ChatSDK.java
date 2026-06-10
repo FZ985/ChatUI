@@ -39,7 +39,7 @@ public class ChatSDK {
     private static boolean isBackground = false;
 
     public static boolean isInitialized() {
-        return mContext != null && !TextUtils.isEmpty(getConnectUser().getUserId()) && isOnLine();
+        return mContext != null && !TextUtils.isEmpty(getConnectUser().getId()) && isOnLine();
     }
 
     public static Context getContext() {

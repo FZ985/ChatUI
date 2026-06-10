@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'io.chat.session'
+    compileSdk {
+        version = release(appCompileSdk)
+    }
+
+    defaultConfig {
+        minSdk {
+            version = release(appMinSdk)
+        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+}
+
+dependencies {
+    api project(':chat:chat_uicommon')
+    implementation project(':chat:kit_chat')
+}

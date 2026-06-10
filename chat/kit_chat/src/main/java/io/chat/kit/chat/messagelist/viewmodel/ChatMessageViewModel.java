@@ -85,7 +85,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     public void onSendMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
-            if (!Objects.equals(mCall.getUser().getUserId(), msg.getToUser().getUserId())) {
+            if (!Objects.equals(mCall.getUser().getId(), msg.getToUser().getId())) {
                 return;
             }
             UiMessage uiMessage = findUIMessageById(msg.getMessageId());
@@ -118,7 +118,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     public void onSendMediaMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
-            if (!Objects.equals(mCall.getUser().getUserId(), msg.getToUser().getUserId())) {
+            if (!Objects.equals(mCall.getUser().getId(), msg.getToUser().getId())) {
                 return;
             }
             UiMessage uiMessage = findUIMessageById(msg.getMessageId());
@@ -158,7 +158,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     @Override
     public void onReceiveMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
-        if (Objects.equals(mCall.getUser().getUserId(), msg.getFromUser().getUserId())
+        if (Objects.equals(mCall.getUser().getId(), msg.getFromUser().getId())
                 && msg.getMessageId() > 0) {
             UiMessage uiMessage = findUIMessageById(msg.getMessageId());
             boolean isAdd = uiMessage == null;
@@ -593,7 +593,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         for (int i = position; i < mUiMessages.size(); i++) {
             UiMessage item = mUiMessages.get(i);
             if (item.getMessage().getMessageContent() instanceof HQVoiceMessage) {
-                if (!TextUtils.equals(item.getMessage().getFromUser().getUserId(), ChatSDK.getConnectUser().getUserId())) {
+                if (!TextUtils.equals(item.getMessage().getFromUser().getId(), ChatSDK.getConnectUser().getId())) {
                     onAudioClick(item);
                     break;
                 }

@@ -38,8 +38,8 @@ public class MessageOperate {
     public static void sendMergeForwardMessage(ConversationType conversationType,
                                                UserInfo user, List<Message> messageList, List<UserInfo> users, @Nullable MessageCallback<Message> callback) {
         ForwardMessage forward = ForwardMessage.obtain(
-                ChatSDK.getConnectUser().getUserName(),
-                user.getUserName(),
+                ChatSDK.getConnectUser().getName(),
+                user.getName(),
                 messageList);
         for (UserInfo u : users) {
             Message message = Message.obtain(u,

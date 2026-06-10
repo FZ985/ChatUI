@@ -23,7 +23,7 @@ public class DefaultImageLoader implements ImageLoader {
     @Override
     public void loadConversationAvatar(Context context, ImageView view, Message message, boolean isSender) {
         Glide.with(context)
-                .load(isSender ? message.getFromUser().getUserAvatar() : message.getToUser().getUserAvatar())
+                .load(isSender ? message.getFromUser().getAvatar() : message.getToUser().getAvatar())
                 .placeholder(R.mipmap.kit_ic_default_avatar)
                 .error(R.mipmap.kit_ic_default_avatar)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -34,7 +34,7 @@ public class DefaultImageLoader implements ImageLoader {
     @Override
     public void loadForwardSelectorAvatar(Context context, ImageView view, UserInfo userInfo) {
         Glide.with(context)
-                .load(userInfo.getUserAvatar())
+                .load(userInfo.getAvatar())
                 .placeholder(R.mipmap.kit_ic_default_avatar)
                 .error(R.mipmap.kit_ic_default_avatar)
                 .transition(DrawableTransitionOptions.withCrossFade())

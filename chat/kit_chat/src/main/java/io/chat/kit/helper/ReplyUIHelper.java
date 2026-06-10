@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
+import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.chat.kit.chat.messagelist.provider.MessageClickType;
 import io.chat.kit.databinding.ChatItemDefaultReplyBinding;
@@ -31,13 +32,16 @@ public class ReplyUIHelper {
             int position,
             List<UiMessage> list,
             IViewProviderListener<UiMessage> listener) {
-        binding = ChatItemDefaultReplyBinding.inflate(LayoutInflater.from(replyContentView.getContext()), replyContentView, true);
-        MessageContent messageContent = uiMessage.getMessage().getInnerReplyMessage().getMessageContent();
-        Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(replyContentView.getContext(), messageContent);
-        SpannableStringBuilder sb = new SpannableStringBuilder(uiMessage.getMessage().getInnerReplyMessage().getFromUser().getUserName() + "：");
-        sb.append(spannable);
-        binding.defReplyTv.setText(sb);
-        replyContentView.setOnClickListener(v -> listener.onViewClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
-        replyContentView.setOnLongClickListener(v -> listener.onViewLongClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
+        Message innerReplyMessage = uiMessage.getMessage().getInnerReplyMessage();
+        if (innerReplyMessage != null) {
+            binding = ChatItemDefaultReplyBinding.inflate(LayoutInflater.from(replyContentView.getContext()), replyContentView, true);
+            MessageContent messageContent = innerReplyMessage.getMessageContent();
+            Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(replyContentView.getContext(), messageContent);
+            SpannableStringBuilder sb = new SpannableStringBuilder(uiMessage.getMessage().getInnerReplyMessage().getFromUser().getName() + "：");
+            sb.append(spannable);
+            binding.defReplyTv.setText(sb);
+            replyContentView.setOnClickListener(v -> listener.onViewClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
+            replyContentView.setOnLongClickListener(v -> listener.onViewLongClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
+        }
     }
 }

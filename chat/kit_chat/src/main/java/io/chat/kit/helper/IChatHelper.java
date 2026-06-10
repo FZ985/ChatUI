@@ -268,15 +268,12 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
 
                 MessageUser user = replyMessage.getFromUser();
                 Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), replyMessage.getMessageContent());
-                SpannableStringBuilder sb = new SpannableStringBuilder(user.getUserName() + "：");
+                SpannableStringBuilder sb = new SpannableStringBuilder(user.getName() + "：");
                 sb.append(spannable);
                 mFragment.getBinding().replyTv.setText(sb);
                 io.im.uicommon.helper.OptionsHelper.updateTextSize(mFragment.getBinding().replyTv, 13);
 
-                mFragment.getBinding().inputPanel.postDelayed(() -> {
-                    mExtensionViewModel.getInputModeLiveData().postValue(ChatInputMode.TextInput);
-                    mExtensionViewModel.setSoftInputKeyBoard(true, false);
-                }, 100);
+                mFragment.getBinding().inputPanel.postDelayed(() -> mFragment.getBinding().inputPanel.getEditText().performClick(), 150);
             } else {
                 mFragment.getBinding().replyLl.setVisibility(View.GONE);
             }

@@ -19,51 +19,51 @@ import io.im.core.utils.ChatNull;
  */
 @Keep
 public class MessageUser implements Serializable {
-    private String userId;
-    private String userName;
-    private String userAvatar;
-    private int userType;
+    private String id;
+    private String name;
+    private String avatar;
+    private int type;
 
     public MessageUser() {
     }
 
     @Ignore
-    public MessageUser(String userId, String userName, String userAvatar) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userAvatar = userAvatar;
+    public MessageUser(String id, String name, String avatar) {
+        this.id = id;
+        this.name = name;
+        this.avatar = avatar;
     }
 
-    public String getUserId() {
-        return ChatNull.compat(userId);
+    public String getId() {
+        return ChatNull.compat(id);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return ChatNull.compat(userName);
+    public String getName() {
+        return ChatNull.compat(name);
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUserAvatar() {
-        return ChatNull.compat(userAvatar);
+    public String getAvatar() {
+        return ChatNull.compat(avatar);
     }
 
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public int getUserType() {
-        return userType;
+    public int getType() {
+        return type;
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public UserInfo toUserInfo() {
@@ -74,10 +74,10 @@ public class MessageUser implements Serializable {
     public static MessageUser fromJSONObject(@Nullable JSONObject obj) {
         MessageUser user = new MessageUser();
         if (obj != null) {
-            user.setUserId(obj.optString("userId"));
-            user.setUserName(obj.optString("userName"));
-            user.setUserAvatar(obj.optString("userAvatar"));
-            user.setUserType(obj.optInt("userType"));
+            user.setId(obj.optString("id"));
+            user.setName(obj.optString("name"));
+            user.setAvatar(obj.optString("avatar"));
+            user.setType(obj.optInt("type"));
         }
         return user;
     }

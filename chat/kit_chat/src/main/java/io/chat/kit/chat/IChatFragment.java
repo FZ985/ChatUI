@@ -372,7 +372,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             binding.multiSelectLl.setVisibility(View.GONE);
             binding.inputPanel.setVisibility(View.VISIBLE);
             if (userInfo != null) {
-                binding.conversationToolbar.setTitleName(userInfo.getUserName());
+                binding.conversationToolbar.setTitleName(userInfo.getName());
             }
             binding.conversationToolbar.setLeftOnclick(v -> mActivity.onBackPressed());
             binding.conversationToolbar.setLeftIcon(io.im.core.R.drawable.chat_skin_arrow_left_black);

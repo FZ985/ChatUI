@@ -3,17 +3,17 @@ package io.chat.kit.forward
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import io.im.core.listener.MessageCallback
-import io.im.core.model.ConversationType
-import io.im.core.model.Message
-import io.im.core.model.UserInfo
-import io.chat.kit.IMTest
+import io.chat.kit.ChatRoute
 import io.chat.kit.R
 import io.chat.kit.databinding.ForwardActivitySelectorBinding
 import io.chat.kit.helper.livedata.ChatLiveData
 import io.chat.kit.model.ForwardSelectorBean
-import io.chat.kit.ChatRoute
+import io.im.core.listener.MessageCallback
+import io.im.core.model.ConversationType
+import io.im.core.model.Message
+import io.im.core.model.UserInfo
 import io.im.uicommon.MessageOperate
+import io.im.uicommon.UserTest
 import io.im.uicommon.adapter.BaseAdapter
 import io.im.uicommon.adapter.ViewHolder
 import io.im.uicommon.base.ChatBaseActivity
@@ -44,7 +44,7 @@ class IForwardSelectorActivity : ChatBaseActivity<ForwardActivitySelectorBinding
         binding.recycler.layoutManager = FixedLinearLayoutManager(this)
         binding.recycler.adapter = adapter
 
-        adapter.setDataCollection(mutableListOf(IMTest.toUser))
+        adapter.setDataCollection(UserTest.randomUserList())
 
         adapter.setItemClickListener(object : BaseAdapter.OnItemClickListener {
             override fun onItemClick(

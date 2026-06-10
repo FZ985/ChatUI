@@ -23,34 +23,33 @@ import io.im.core.model.UserInfo;
  */
 public class IMTest {
 
-    public static UserInfo loginUser = new UserInfo("1", "会飞的牛肉干", "");
+    public final static UserInfo loginUser = io.im.uicommon.UserTest.randomUser();
 
-    public static UserInfo toUser = new UserInfo("123", "哈哈哈", "");
 
-    public static List<UiMessage> message() {
+    public static List<UiMessage> message(UserInfo toUser) {
         List<UiMessage> list = new ArrayList<>();
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234234234234234234234234234234234234234234234234234234"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("https://www.baidu.com"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("123123123123123")).setReadStatusEnum(Message.ReadStatus.READ)));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("123"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234234234234234234234234234234234234234234234234234234"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("https://www.baidu.com"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("123123123123123")).setReadStatusEnum(Message.ReadStatus.READ)));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("123"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
         list.add(new UiMessage(new Message(new UnKnowMessage())));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_IMAGE, ImageMessage.obtain("", "", new Size(800, 500)))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2145774639,3196122421&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500", ""))));
-        list.add(new UiMessage(getSendMsg(MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2457208575,2459586361&fm=253&fmt=auto&app=138&f=JPEG?w=313&h=500", "", new Size(313, 500)))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("", "", new Size(800, 500)))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2145774639,3196122421&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500", ""))));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2457208575,2459586361&fm=253&fmt=auto&app=138&f=JPEG?w=313&h=500", "", new Size(313, 500)))));
         return list;
     }
 
-    public static UiMessage randomMessage() {
-        List<UiMessage> list = message();
+    public static UiMessage randomMessage(UserInfo toUser) {
+        List<UiMessage> list = message(toUser);
         Random random = new Random();
         return list.get(random.nextInt(list.size()));
     }
 
-    private static Message getSendMsg(int msgType, MessageContent content) {
+    private static Message getSendMsg(UserInfo toUser, int msgType, MessageContent content) {
         return Message.obtain(toUser, ConversationType.PRIVATE, msgType, content);
     }
 

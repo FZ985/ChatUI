@@ -166,7 +166,7 @@ public class Message implements Serializable {
 
     public MessageDirection getMessageDirection() {
         if (messageDirection == null) {
-            if (ChatSDK.getConnectUser().getUserId().equals(getFromUser().getUserId())) {
+            if (ChatSDK.getConnectUser().getId().equals(getFromUser().getId())) {
                 setMessageDirection(MessageDirection.SEND);
             } else {
                 setMessageDirection(MessageDirection.RECEIVE);

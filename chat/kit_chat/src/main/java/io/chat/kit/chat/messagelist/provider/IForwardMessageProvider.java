@@ -84,7 +84,7 @@ public class IForwardMessageProvider extends BaseMessageItemProvider<ForwardMess
         text.setVisibility(View.VISIBLE);
         OptionsHelper.updateTextSize(text, 12);
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        sb.append(message.getFromUser().getUserName()).append("：");
+        sb.append(message.getFromUser().getName()).append("：");
         sb.append(ChatProvider.getOptions().getChatConfig().getMessageSummary(text.getContext(), message.getMessageContent()));
         text.setText(sb);
     }

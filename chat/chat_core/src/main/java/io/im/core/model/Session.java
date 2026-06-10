@@ -15,7 +15,7 @@ import io.im.core.utils.ChatNull;
 
 /**
  * author : JFZ
- * date : 2024/1/3 13:40
+ * date : 2026/6/10 15:13
  * description :
  */
 @Keep
@@ -24,169 +24,91 @@ public class Session implements Serializable {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    private String id;
+    @ColumnInfo(name = "sid")
+    private String sid;
 
-    @ColumnInfo(name = "userId")
-    private String userId;
+    @ColumnInfo(name = "session")
+    private String session;//会话用户、群、服务号等等信息
 
-    @ColumnInfo(name = "sessionType")
-    private int sessionType;
+    @ColumnInfo(name = "unreadCount")
+    private int unreadCount;//未读数
 
-    @ColumnInfo(name = "friendId")
-    private String friendId;
+    @ColumnInfo(name = "lastMessage")
+    private String lastMessage;//最后一条消息
 
-    @ColumnInfo(name = "friendAvatar")
-    private String friendAvatar;
+    @ColumnInfo(name = "isTop")
+    private int isTop;//是否置顶
 
-    @ColumnInfo(name = "friendName")
-    private String friendName;
-
-    @ColumnInfo(name = "noReadNumber")
-    private int noReadNumber;
-
-    @ColumnInfo(name = "msgType")
-    private int msgType;
-
-    @ColumnInfo(name = "newMessage")
-    private String newMessage;
-
-    @ColumnInfo(name = "createTime")
-    private String createTime;
-
-    @ColumnInfo(name = "updateTime")
-    private String updateTime;
-
-    @ColumnInfo(name = "newTime")
-    private long newTime;
-
-    @ColumnInfo(name = "shopId")
-    private String shopId;
-
-    @ColumnInfo(name = "topNum")
-    private int topNum;
+    @ColumnInfo(name = "isDisturb")
+    private int isDisturb;//是否免打扰
 
     public Session() {
 
     }
 
     @NonNull
-    public String getId() {
-        return id;
+    public String getSid() {
+        return sid;
     }
 
-    public void setId(@NonNull String id) {
-        this.id = id;
+    public void setSid(@NonNull String sid) {
+        this.sid = sid;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getSession() {
+        return ChatNull.compat(session);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setSession(String session) {
+        this.session = session;
     }
 
-    public int getSessionType() {
-        return sessionType;
+    public int getUnreadCount() {
+        return unreadCount;
     }
 
-    public void setSessionType(int sessionType) {
-        this.sessionType = sessionType;
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
     }
 
-    public String getFriendId() {
-        return ChatNull.compat(friendId);
+    public String getLastMessage() {
+        return lastMessage;
     }
 
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
-    public String getFriendAvatar() {
-        return ChatNull.compat(friendAvatar);
+    public int getIsTop() {
+        return isTop;
     }
 
-    public void setFriendAvatar(String friendAvatar) {
-        this.friendAvatar = friendAvatar;
+    public void setIsTop(int isTop) {
+        this.isTop = isTop;
+    }
+
+    public int getIsDisturb() {
+        return isDisturb;
+    }
+
+    public void setIsDisturb(int isDisturb) {
+        this.isDisturb = isDisturb;
+    }
+
+    public UserInfo getUser() {
+        return UserInfo.fromJson(getSession());
     }
 
     public String getFriendName() {
         String defaultName = "";
-        if (!TextUtils.isEmpty(friendId) && friendId.length() > 4) {
-            defaultName = friendId.substring(friendId.length() - 4);
+        UserInfo user = getUser();
+        if (!TextUtils.isEmpty(user.getId()) && user.getId().length() > 4) {
+            defaultName = user.getId().substring(user.getId().length() - 4);
         }
-        if (TextUtils.isEmpty(friendName)) {
+        if (TextUtils.isEmpty(user.getName())) {
             return "用户" + defaultName;
         }
-        return friendName;
+        return user.getName();
     }
 
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
-    }
-
-    public int getNoReadNumber() {
-        return noReadNumber;
-    }
-
-    public void setNoReadNumber(int noReadNumber) {
-        this.noReadNumber = noReadNumber;
-    }
-
-    public int getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(int msgType) {
-        this.msgType = msgType;
-    }
-
-    public String getNewMessage() {
-        return ChatNull.compat(newMessage);
-    }
-
-    public void setNewMessage(String newMessage) {
-        this.newMessage = newMessage;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public long getNewTime() {
-        return newTime;
-    }
-
-    public void setNewTime(long newTime) {
-        this.newTime = newTime;
-    }
-
-    public String getShopId() {
-        return ChatNull.compat(shopId);
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
-
-    public int getTopNum() {
-        return topNum;
-    }
-
-    public void setTopNum(int topNum) {
-        this.topNum = topNum;
-    }
 }

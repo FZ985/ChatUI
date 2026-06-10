@@ -3,8 +3,8 @@ package io.chat.kit.forward
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import io.im.core.model.UserInfo
 import io.chat.kit.R
+import io.im.core.model.UserInfo
 import io.im.uicommon.IMCenter
 import io.im.uicommon.adapter.IViewProvider
 import io.im.uicommon.adapter.IViewProviderListener
@@ -35,7 +35,7 @@ class ForwardSelectorProvider : IViewProvider<UserInfo> {
         list: List<UserInfo>,
         listener: IViewProviderListener<UserInfo>?
     ) {
-        holder.setText(R.id.name, item.userName)
+        holder.setText(R.id.name, item.name)
 
         val image = holder.getView<ImageView>(R.id.image)
         IMCenter.getInstance().options.imageLoader.loadForwardSelectorAvatar(

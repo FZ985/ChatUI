@@ -319,7 +319,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                     holder.setVisible(R.id.base_title, false);
                 } else {
                     holder.setVisible(R.id.base_title, true);
-                    holder.setText(R.id.base_title, uiMessage.getMessage().getFromUser().getUserName());
+                    holder.setText(R.id.base_title, uiMessage.getMessage().getFromUser().getName());
                 }
             } else {
                 //隐藏昵称

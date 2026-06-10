@@ -38,6 +38,7 @@ public class ImDebug {
 //        request.addParam("device", "android_" + getAndroidId(application));
 //        IMCenter.getInstance().connect(request);
 
+        //模拟IM登录
         IMCenter.login(IMTest.loginUser);
     }
 

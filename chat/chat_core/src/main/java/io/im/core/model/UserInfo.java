@@ -26,56 +26,56 @@ import io.im.core.utils.ChatNull;
 public class UserInfo implements Serializable {
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "userId")
-    private String userId;
-    @ColumnInfo(name = "userName")
-    private String userName;
-    @ColumnInfo(name = "userAvatar")
-    private String userAvatar;
-    @ColumnInfo(name = "userType")
-    private int userType;
+    @ColumnInfo(name = "id")
+    private String id;
+    @ColumnInfo(name = "name")
+    private String name;
+    @ColumnInfo(name = "avatar")
+    private String avatar;
+    @ColumnInfo(name = "type")
+    private int type;//用于区分用户、群、服务号、等等类型
 
     public UserInfo() {
-        userId = "";
+        id = "";
     }
 
     @Ignore
-    public UserInfo(String userId, String userName, String userAvatar) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userAvatar = userAvatar;
+    public UserInfo(@NonNull String id, String name, String avatar) {
+        this.id = id;
+        this.name = name;
+        this.avatar = avatar;
     }
 
-    public String getUserId() {
-        return ChatNull.compat(userId);
+    public String getId() {
+        return ChatNull.compat(id);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return ChatNull.compat(userName);
+    public String getName() {
+        return ChatNull.compat(name);
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUserAvatar() {
-        return ChatNull.compat(userAvatar);
+    public String getAvatar() {
+        return ChatNull.compat(avatar);
     }
 
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public int getUserType() {
-        return userType;
+    public int getType() {
+        return type;
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public MessageUser toMessageUser() {
@@ -87,10 +87,10 @@ public class UserInfo implements Serializable {
     public static UserInfo fromJSONObject(@Nullable JSONObject obj) {
         UserInfo user = new UserInfo();
         if (obj != null) {
-            user.setUserId(obj.optString("userId"));
-            user.setUserName(obj.optString("userName"));
-            user.setUserAvatar(obj.optString("userAvatar"));
-            user.setUserType(obj.optInt("userType"));
+            user.setId(obj.optString("id"));
+            user.setName(obj.optString("name"));
+            user.setAvatar(obj.optString("avatar"));
+            user.setType(obj.optInt("type"));
         }
         return user;
     }

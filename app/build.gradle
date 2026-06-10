@@ -55,5 +55,7 @@ dependencies {
     implementation Material
     implementation Constraintlayout
     implementation Multidex
+
     implementation project(':chat:kit_chat')
+    implementation project(':chat:kit_session')
 }
