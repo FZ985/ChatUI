@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
@@ -28,9 +28,11 @@ import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
  */
 public class ChatToolBar extends Toolbar {
 
-    private LinearLayout root;
+    private RelativeLayout root;
     private ImageView left;
     private TextView title;
+
+    private View line;
 
     public ChatToolBar(@NonNull Context context) {
         this(context, null);
@@ -46,6 +48,7 @@ public class ChatToolBar extends Toolbar {
         root = findViewById(R.id.root);
         left = findViewById(R.id.left);
         title = findViewById(R.id.title);
+        line = findViewById(R.id.tool_bar_line);
     }
 
     public void setLeftOnclick(ChatFun.Fun1<View> onclick) {
@@ -75,6 +78,22 @@ public class ChatToolBar extends Toolbar {
     public void setLeftIcon(@DrawableRes int res) {
         if (left != null) {
             left.setImageResource(res);
+        }
+    }
+
+    public void hideLeft() {
+        if (left != null) {
+            left.setVisibility(GONE);
+        }
+    }
+
+    public void showLine(boolean show) {
+        if (line != null) {
+            if (show) {
+                line.setVisibility(VISIBLE);
+            } else {
+                line.setVisibility(GONE);
+            }
         }
     }
 

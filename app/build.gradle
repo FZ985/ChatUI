@@ -57,5 +57,5 @@ dependencies {
     implementation Multidex
 
     implementation project(':chat:kit_chat')
-    implementation project(':chat:kit_session')
+    implementation project(':chat:kit_conversation')
 }

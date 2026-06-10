@@ -13,22 +13,17 @@ import io.chat.kit.model.ForwardSelectorBean;
 public class ChatLiveData {
 
 
-    private static ChatLiveData instance = null;
-
     public MediatorLiveData<ForwardSelectorBean> forwardLive = new MediatorLiveData<>();
 
     private ChatLiveData() {
     }
 
+    private static final class InstanceHolder {
+        private static final ChatLiveData instance = new ChatLiveData();
+    }
+
     public static ChatLiveData getInstance() {
-        if (instance == null) {
-            synchronized (ChatLiveData.class) {
-                if (instance == null) {
-                    instance = new ChatLiveData();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
 

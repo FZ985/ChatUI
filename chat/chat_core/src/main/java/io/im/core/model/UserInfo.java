@@ -79,7 +79,7 @@ public class UserInfo implements Serializable {
     }
 
     public MessageUser toMessageUser() {
-        String json = ChatLibUtil.toJson(this);
+        String json = toJson();
         return ChatLibUtil.gson.fromJson(json, MessageUser.class);
     }
 
@@ -101,5 +101,9 @@ public class UserInfo implements Serializable {
         } catch (JSONException e) {
             return new UserInfo();
         }
+    }
+
+    public String toJson() {
+        return ChatLibUtil.toJson(this);
     }
 }

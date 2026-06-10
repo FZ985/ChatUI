@@ -6,6 +6,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -41,6 +42,9 @@ public class Session implements Serializable {
 
     @ColumnInfo(name = "isDisturb")
     private int isDisturb;//是否免打扰
+
+    @Ignore
+    private boolean isLocalChange;//数据变动，更新UI
 
     public Session() {
 
@@ -111,4 +115,15 @@ public class Session implements Serializable {
         return user.getName();
     }
 
+    public boolean isLocalChange() {
+        return isLocalChange;
+    }
+
+    public void setLocalChange(boolean localChange) {
+        isLocalChange = localChange;
+    }
+
+    public void change() {
+        isLocalChange = true;
+    }
 }

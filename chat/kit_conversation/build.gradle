@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'io.chat.session'
+    namespace 'io.chat.conversation'
     compileSdk {
         version = release(appCompileSdk)
     }

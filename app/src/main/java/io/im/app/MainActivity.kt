@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import io.chat.conversation.ConversationRoute
 import io.chat.kit.ChatRoute
 import io.im.app.databinding.ActivityMainBinding
 import io.im.uicommon.UserTest
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.session.setOnClickListener {
-            UserTest.main(null)
+            ConversationRoute.goConversation(this)
         }
     }
 
