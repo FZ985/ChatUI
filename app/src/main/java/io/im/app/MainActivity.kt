@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             ChatRoute.goPrivateChat(this, UserTest.randomUser())
         }
 
-        binding.session.setOnClickListener {
+        binding.conversation.setOnClickListener {
             ConversationRoute.goConversation(this)
         }
     }
