@@ -28,7 +28,7 @@ public interface RevokeMessageDao {
     LiveData<List<ReMessage>> allMessageWith(String from, String to);
 
     @Insert
-    long insertMessage(ReMessage message);
+    void insertMessage(ReMessage message);
 
     @Query("DELETE FROM revoke_message WHERE `fromId`=:from or `toId`=:to")
     void deleteWith(String from, String to);
