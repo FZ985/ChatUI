@@ -21,6 +21,10 @@ public interface RevokeMessageDao {
 
 
     @Query("SELECT * FROM revoke_message WHERE `fromId`=:from or `toId`=:to")
+    List<ReMessage> allMessageListWith(String from, String to);
+
+
+    @Query("SELECT * FROM revoke_message WHERE `fromId`=:from or `toId`=:to")
     LiveData<List<ReMessage>> allMessageWith(String from, String to);
 
     @Insert
