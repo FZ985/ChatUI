@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/chat_dp10"
         android:textColor="@color/chat_color_999999"
         android:textDirection="locale"
         android:textSize="@dimen/chat_sp13"
@@ -30,21 +31,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/base_content_root" />
 
-    <ImageView
+    <io.im.uicommon.widgets.IAvatarView
         android:id="@+id/base_left_avatar"
         android:layout_width="@dimen/chat_dp38"
         android:layout_height="@dimen/chat_dp38"
         android:layout_marginStart="@dimen/chat_dp12"
         android:src="@drawable/kit_default_avatar"
+        app:iav_text_size="18"
         app:layout_constraintStart_toEndOf="@id/base_edit_iv"
         app:layout_constraintTop_toTopOf="@id/base_content_root" />
 
-    <ImageView
+    <io.im.uicommon.widgets.IAvatarView
         android:id="@+id/base_right_avatar"
         android:layout_width="@dimen/chat_dp38"
         android:layout_height="@dimen/chat_dp38"
         android:layout_marginRight="@dimen/chat_dp12"
         android:src="@drawable/kit_default_avatar"
+        app:iav_text_size="18"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/base_content_root" />
 
@@ -53,7 +56,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/chat_dp7"
-        android:layout_marginTop="@dimen/chat_dp10"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/base_right_avatar"
         app:layout_constraintStart_toEndOf="@id/base_left_avatar"
@@ -109,9 +111,9 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/bs_root"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/bs_root"
                 android:orientation="vertical">
 
                 <FrameLayout

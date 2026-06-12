@@ -1,6 +1,8 @@
 package io.im.core.model;
 
 
+import io.im.core.utils.ServeTime;
+
 /**
  * by DAD FZ
  * 2026/5/22
@@ -13,12 +15,12 @@ public class MessageIdGenerator {
     private static int sequence = 0;
 
     public synchronized static long nextId() {
-        long timestamp = System.currentTimeMillis();
+        long timestamp = ServeTime.currentTimeMillis();
         if (timestamp == lastTimestamp) {
             sequence++;
             if (sequence > 999) {
                 while (timestamp <= lastTimestamp) {
-                    timestamp = System.currentTimeMillis();
+                    timestamp = ServeTime.currentTimeMillis();
                 }
                 sequence = 0;
             }

@@ -5,4 +5,11 @@
 
     <color name="kit_ripple_color">#d9d9d9</color>
 
+    <color name="color_60cfa7">#60CFA7</color>
+    <color name="color_53c3f3">#53C3F3</color>
+    <color name="color_537ff4">#537FF4</color>
+    <color name="color_854fe2">#854FE2</color>
+    <color name="color_be65d9">#BE65D9</color>
+    <color name="color_e9749d">#E9749D</color>
+    <color name="color_f9b751">#F9B751</color>
 </resources>

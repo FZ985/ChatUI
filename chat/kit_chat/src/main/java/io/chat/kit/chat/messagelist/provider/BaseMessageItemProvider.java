@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,19 +13,21 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import io.im.uicommon.IMCenter;
 import io.chat.kit.R;
-import io.im.uicommon.helper.OptionsHelper;
 import io.chat.kit.helper.ReplyUIHelper;
 import io.chat.kit.model.UiMessage;
-import io.im.uicommon.utils.DateUtil;
-import io.im.uicommon.adapter.IViewProviderListener;
-import io.im.uicommon.adapter.ViewHolder;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.State;
 import io.im.core.utils.JLog;
+import io.im.uicommon.IMCenter;
+import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.adapter.ViewHolder;
+import io.im.uicommon.helper.OptionsHelper;
+import io.im.uicommon.utils.DateUtil;
+import io.im.uicommon.utils.KtExtKt;
+import io.im.uicommon.widgets.IAvatarView;
 
 /**
  * author : JFZ
@@ -60,9 +61,9 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         if (uiMessage != null && uiMessage.getMessage() != null && listener != null) {
             Message message = uiMessage.getMessage();
             boolean isSender = uiMessage.getMessage().getMessageDirection().equals(Message.MessageDirection.SEND);
-            holder.setVisible(R.id.base_edit_iv, uiMessage.isEdit());
-            holder.setVisible(R.id.base_edit, uiMessage.isEdit());
-            if (uiMessage.isEdit()) {
+            holder.setVisible(R.id.base_edit_iv, uiMessage.isEdit() && canEdit());
+            holder.setVisible(R.id.base_edit, uiMessage.isEdit() && canEdit());
+            if (uiMessage.isEdit() && canEdit()) {
                 holder.setSelected(R.id.base_edit_iv, uiMessage.isSelected());
                 holder.setOnClickListener(
                         R.id.base_edit,
@@ -296,8 +297,11 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             holder.setVisible(R.id.base_left_avatar, !isSender);
             holder.setVisible(R.id.base_right_avatar, isSender);
             //头像
-            ImageView headImage = holder.getView(isSender ? R.id.base_right_avatar : R.id.base_left_avatar);
-            IMCenter.getInstance().getOptions().getImageLoader().loadConversationAvatar(holder.getContext(), headImage, uiMessage.getMessage(), isSender);
+            IAvatarView headImage = holder.getView(isSender ? R.id.base_right_avatar : R.id.base_left_avatar);
+            headImage.setUserInfoByMessageUser(uiMessage.getMessage().getFromUser());
+            IMCenter.getInstance().getOptions().getImageLoader().loadChatAvatar(holder.getContext(), headImage, uiMessage.getMessage(), isSender);
+            OptionsHelper.updateImageSize(headImage, KtExtKt.dp(headImage, io.im.core.R.dimen.chat_dp38));
+
             holder.setOnClickListener(
                     R.id.base_left_avatar,
                     v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
@@ -343,6 +347,10 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
     }
 
     protected abstract ViewHolder onCreateContentViewHolder(ViewGroup parent, int viewType);
+
+    protected boolean canEdit() {
+        return true;
+    }
 
     protected abstract void bindContentViewHolder(
             ViewHolder parentHolder,

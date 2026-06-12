@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -280,6 +281,13 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
         }
     }
 
+    public void setRevokeMessageAgain(@NonNull String content) {
+        EditText editText = mFragment.getBinding().inputPanel.getEditText();
+        editText.setText(content);
+        editText.setSelection(content.length());
+        onClickBefore(editText);
+    }
+
     @Override
     public void onPause() {
 //        if (mFragment != null) {
@@ -289,7 +297,6 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     }
 
     public boolean closeExpand() {
-//        mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
         mHelper.resetState();
         return true;
     }

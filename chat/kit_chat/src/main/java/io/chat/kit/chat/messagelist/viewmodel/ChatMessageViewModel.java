@@ -31,15 +31,19 @@ import io.chat.kit.model.UiMessage;
 import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
+import io.im.core.MessageType;
 import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatLifecycle;
 import io.im.core.message.im.HQVoiceMessage;
+import io.im.core.message.im.RevokeMessage;
+import io.im.core.message.im.TextMessage;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.State;
 import io.im.core.utils.ChatExecutorHelper;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
+import io.im.uicommon.MessageOperate;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.event.DeleteMessageEvent;
 import io.im.uicommon.helper.ChatMsgCache;
@@ -81,9 +85,26 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         return mCall;
     }
 
+    public boolean filterMessage(Message message) {
+        if (message.getMessageType() == MessageType.CHAT_REVOKE) {
+            RevokeMessage messageContent = (RevokeMessage) message.getMessageContent();
+            Message revokeMessage = messageContent.getRevokeMessage();
+            if (revokeMessage != null) {
+                UiMessage uiMessage = findUIMessageById(revokeMessage.getMessageId());
+                if (uiMessage != null) {
+                    uiMessage.setMessage(message);
+                    refreshSingleMessage(uiMessage);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onSendMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
+        if (filterMessage(msg)) return;
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
             if (!Objects.equals(mCall.getUser().getId(), msg.getToUser().getId())) {
                 return;
@@ -366,10 +387,31 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             }
             if (!isProcess) {
                 if (clickType == MessageClickType.AUDIO_CLICK) {
+                    //语音点击
                     onAudioClick(data);
+                } else if (clickType == MessageClickType.REVOKE_EDIT) {
+                    //撤销重新编辑点击
+                    onRevokeClick(data);
                 } else {
                     Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    private void onRevokeClick(UiMessage data) {
+        MessageContent messageContent = data.getMessage().getMessageContent();
+        if (messageContent instanceof RevokeMessage) {
+            RevokeMessage revokeMessage = (RevokeMessage) messageContent;
+            Message message = revokeMessage.getRevokeMessage();
+            if (message == null) return;
+            try {
+                if (message.getMessageType() == MessageType.CHAT_TEXT) {
+                    TextMessage textBody = (TextMessage) message.getMessageContent();
+                    mCall.getIChatHelper().setRevokeMessageAgain(textBody.getContent());
+                }
+            } catch (Exception e) {
+                //
             }
         }
     }
@@ -385,6 +427,11 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         data.setSelected(isSelect);
         refreshSingleMessage(data);
         mCall.checkMultiSelectView();
+    }
+
+    //撤回消息
+    public void revokeMessage(Message message) {
+        MessageOperate.revokeMessage(mCall.getConversationType(), mCall.getUser(), message, null);
     }
 
     public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {

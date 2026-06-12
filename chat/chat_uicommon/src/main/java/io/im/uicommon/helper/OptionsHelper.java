@@ -1,7 +1,11 @@
 package io.im.uicommon.helper;
 
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Px;
 
 import io.im.uicommon.IMCenter;
 
@@ -22,4 +26,20 @@ public class OptionsHelper {
         textView.setTextSize(oldSize * type);
     }
 
+
+    public static void updateImageSize(View view, @Px int oldSize) {
+        updateImageSize(view, oldSize, oldSize);
+    }
+
+    public static void updateImageSize(View view, @Px int oldW, @Px int oldH) {
+        float type = IMCenter.getInstance().getOptions().getFontSize().getType();
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        if (lp != null) {
+            float newW = oldW * type;
+            float newH = oldH * type;
+            lp.width = (int) newW;
+            lp.height = (int) newH;
+            view.setLayoutParams(lp);
+        }
+    }
 }

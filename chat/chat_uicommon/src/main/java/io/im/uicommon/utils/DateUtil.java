@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.im.core.utils.JLog;
+import io.im.core.utils.ServeTime;
 import io.im.core.utils.language.ChatConfigurationManager;
 import io.im.core.utils.language.LangUtils;
 import io.im.uicommon.R;
@@ -79,7 +80,7 @@ public class DateUtil {
 
         Date date = new Date(dateMillis);
         int type = judgeDate(context, date);
-        long time = System.currentTimeMillis();
+        long time = ServeTime.currentTimeMillis();
         Locale locale = LangUtils.getAppLanguageLocal(context).toLocale();
         Calendar calendarCur = Calendar.getInstance(locale);
         Calendar calendardate = Calendar.getInstance(locale);

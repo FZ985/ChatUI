@@ -4,8 +4,9 @@ import android.app.Activity
 import android.content.ContextWrapper
 import android.content.res.Resources
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.DimenRes
+import io.im.uicommon.listener.FixViewClickListener
 
 
 /**
@@ -22,6 +23,8 @@ fun View.absY(): Float {
 val Number.dp
     get() = (this.toFloat() * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 
+fun View.dp(@DimenRes res: Int) = context.resources.getDimensionPixelSize(res)
+
 fun View.findActivity(): Activity? {
     var context = this.context
     while (context is ContextWrapper) {
@@ -37,3 +40,9 @@ fun View.decorViewOrRootView(): View? {
     }
     return rootView
 }
+
+fun View.doClick(call: (v: View) -> Unit) = setOnClickListener(object : FixViewClickListener() {
+    override fun onViewClick(v: View) {
+        call(v)
+    }
+})

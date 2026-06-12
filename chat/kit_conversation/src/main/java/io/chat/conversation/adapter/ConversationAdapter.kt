@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import io.im.core.model.Session
 import io.im.uicommon.adapter.BaseAdapter
+import io.im.uicommon.adapter.IViewProviderListener
+import io.im.uicommon.adapter.ProviderManager
 
 
 /**
@@ -12,15 +14,12 @@ import io.im.uicommon.adapter.BaseAdapter
  * 2026/6/10
  * desc：
  **/
-class ConversationAdapter : BaseAdapter<Session>() {
+class ConversationAdapter(listener: IViewProviderListener<Session>) : BaseAdapter<Session>(
+    listener,
+    ProviderManager<Session>().apply { addProvider(ConversationProvider()) }
+) {
 
     private val mDiffCallback = ConversationDiffCallBack()
-
-
-    init {
-        mProviderManager.addProvider(ConversationProvider())
-    }
-
 
     @SuppressLint("NotifyDataSetChanged")
     override fun setDataCollection(data: MutableList<Session>) {

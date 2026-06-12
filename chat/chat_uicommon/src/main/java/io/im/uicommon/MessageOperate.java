@@ -18,10 +18,12 @@ import io.im.core.listener.ChatFun;
 import io.im.core.listener.MessageCallback;
 import io.im.core.message.im.ForwardMessage;
 import io.im.core.message.im.HQVoiceMessage;
+import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatToast;
+import io.im.core.utils.ServeTime;
 import io.im.uicommon.bean.AudioDataBean;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.listener.MessageEventListener;
@@ -33,6 +35,16 @@ import io.im.uicommon.manager.MessageManager;
  * desc：消息操作
  **/
 public class MessageOperate {
+
+    //撤销消息
+    public static void revokeMessage(ConversationType conversationType,
+                                     UserInfo user, @NonNull Message oldMessage, @Nullable MessageCallback<Message> callback) {
+        RevokeMessage revokeMessage = RevokeMessage.obtain(oldMessage);
+        Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
+        //将原位置的消息id给到最新的message对象
+        message.setMessageId(oldMessage.getMessageId());
+        sendMessage(message, null, callback);
+    }
 
     //合并转发消息
     public static void sendMergeForwardMessage(ConversationType conversationType,
@@ -59,7 +71,7 @@ public class MessageOperate {
             for (int i = 0; i < messageList.size(); i++) {
                 Message m = messageList.get(i);
                 Message newMsg = Message.obtain(user, m.getConversationType(), m.getMessageType(), m.getMessageContent());
-                newMsg.setMessageTime(System.currentTimeMillis() + i);
+                newMsg.setMessageTime(ServeTime.currentTimeMillis() + i);
                 newMsg.setReplyMessage(m.getReplyMessage());
                 msgList.add(newMsg);
             }

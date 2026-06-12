@@ -4,17 +4,17 @@ package io.chat.kit.chat.messagelist.provider;
  * 消息各个点击事件标记类，所有 sdk 的消息，点击事件从 -1 开始定义方便与用户定义的区分
  */
 public class MessageClickType {
-    public static final int CONTENT_CLICK = -1;
+    public static final int CONTENT_CLICK = -1;//内容点击
 
-    public static final int CONTENT_LONG_CLICK = -2;
+    public static final int CONTENT_LONG_CLICK = -2;//内容长按
 
-    public static final int WARNING_CLICK = -3;
+    public static final int WARNING_CLICK = -3;//重发
 
-    public static final int USER_PORTRAIT_CLICK = -4;
+    public static final int USER_PORTRAIT_CLICK = -4;//头像点击
 
-    public static final int USER_PORTRAIT_LONG_CLICK = -5;
+    public static final int USER_PORTRAIT_LONG_CLICK = -5;//头像长按
 
-    public static final int EDIT_CLICK = -6;
+    public static final int EDIT_CLICK = -6;//编辑
 
     public static final int AUDIO_CLICK = -7;//语音播放
 
@@ -22,6 +22,7 @@ public class MessageClickType {
 
     public static final int REPLY_CONTENT_LONG_CLICK = -9;//回复长按
 
+    public static final int REVOKE_EDIT = -10;//撤销重新编辑
 
 //
 //

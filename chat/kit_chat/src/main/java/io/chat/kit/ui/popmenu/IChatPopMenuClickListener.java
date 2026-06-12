@@ -57,10 +57,10 @@ public interface IChatPopMenuClickListener {
         return false;
     }
 
-    // 点击撤回
-//  default boolean onRecall(ChatMessageBean messageInfo) {
-//    return false;
-//  }
+    //点击撤回
+    default boolean onRevoke(Message messageInfo) {
+        return false;
+    }
 
     // 点击语音转文字
 //  default boolean onTransferToText(ChatMessageBean messageInfo) {

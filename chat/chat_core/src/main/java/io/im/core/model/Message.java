@@ -22,6 +22,7 @@ import io.im.core.message.UnKnowMessage;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNull;
 import io.im.core.utils.JLog;
+import io.im.core.utils.ServeTime;
 
 /**
  * author : JFZ
@@ -336,7 +337,7 @@ public class Message implements Serializable {
     public static Message obtain(UserInfo toUser, ConversationType chatType, int messageType, MessageContent body) {
         Message message = new Message();
         message.setMessageId(message.buildMessageId());
-        message.setMessageTime(System.currentTimeMillis());
+        message.setMessageTime(ServeTime.currentTimeMillis());
         message.setFromUser(ChatSDK.getConnectUser().toMessageUser());
         message.setToUser(toUser.toMessageUser());
         message.setChatType(chatType.getValue());
@@ -359,6 +360,15 @@ public class Message implements Serializable {
 
     @NonNull
     public static Message parseMessageFromJson(String json) {
+        Message message = parseMessageFromJsonOrNull(json);
+        if (message != null) {
+            return message;
+        }
+        return new Message(new UnKnowMessage());
+    }
+
+    @Nullable
+    public static Message parseMessageFromJsonOrNull(String json) {
         if (!TextUtils.isEmpty(json)) {
             try {
                 Message message = new Message();
@@ -393,7 +403,7 @@ public class Message implements Serializable {
                 JLog.e("解析消息失败:" + e.getMessage());
             }
         }
-        return new Message(new UnKnowMessage());
+        return null;
     }
 
 

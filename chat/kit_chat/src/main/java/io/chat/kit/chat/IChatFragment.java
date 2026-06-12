@@ -40,6 +40,7 @@ import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatLibUtil;
+import io.im.core.utils.ServeTime;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
 import io.im.uicommon.adapter.IViewProviderListener;
@@ -47,6 +48,7 @@ import io.im.uicommon.base.ChatBaseFragment;
 import io.im.uicommon.helper.ChatDialog;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.helper.IMAlertHelper;
+import io.im.uicommon.utils.MessageCheck;
 import io.im.uicommon.widgets.FixedLinearLayoutManager;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
@@ -146,6 +148,25 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             ChatRoute.goForwardSelect(mActivity, userInfo, false);
             return true;
         }
+
+        @Override
+        public boolean onRevoke(Message messageInfo) {
+            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            if (listener != null && listener.onRevoke(messageInfo)) {
+                return true;
+            }
+            long revokeTime = ChatProvider.getOptions().revokeTime;
+            if (MessageCheck.checkRevokeMessage(messageInfo, revokeTime)) {
+                messageViewModel.revokeMessage(messageInfo);
+            } else {
+                IMAlertHelper.with(mActivity)
+                        .message(R.string.kit_message_revoke_tip)
+                        .messagePadding(new Rect(0, 30, 0, 30))
+                        .confirm(io.im.uicommon.R.string.im_alert_confirm, ChatDialog::dismiss)
+                        .show();
+            }
+            return true;
+        }
     };
 
     @Nullable
@@ -158,7 +179,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        thisFragmentId = ((System.currentTimeMillis() * 1000) + ChatLibUtil.randomNumber(10, 999)) + "";
+        thisFragmentId = ((ServeTime.currentTimeMillis() * 1000) + ChatLibUtil.randomNumber(10, 999)) + "";
         binding.refresh.setColorSchemeResources(io.im.core.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
         FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);

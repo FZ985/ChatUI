@@ -1,20 +1,19 @@
-package io.chat.conversation;
+package io.chat.conversation
 
+import android.content.Context
+import android.content.Intent
+import io.chat.conversation.ui.ConversationActivity
+import io.im.uicommon.helper.RouteHelper
 
-import android.content.Context;
-import android.content.Intent;
-
-import io.chat.conversation.ui.ConversationActivity;
-import io.im.uicommon.helper.RouteHelper;
 
 /**
  * by DAD FZ
- * 2026/6/10
+ * 2026/6/11
  * desc：
  **/
-public class ConversationRoute {
+object ConversationRoute {
 
-    public static void goConversation(Context context) {
-        RouteHelper.go(context, new Intent(context, ConversationActivity.class));
+    fun goConversation(context: Context) {
+        RouteHelper.go(context, Intent(context, ConversationActivity::class.java))
     }
 }

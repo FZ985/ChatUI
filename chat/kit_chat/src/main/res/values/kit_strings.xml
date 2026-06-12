@@ -6,6 +6,10 @@
     <string name="kit_send">发送</string>
 
     <string name="kit_message_unknown">当前版本暂不支持查看此消息</string>
+    <string name="kit_message_revoke">你撤回了一条消息</string>
+    <string name="kit_message_revoke_from">“%s” 撤回了一条消息</string>
+    <string name="kit_message_revoke_edit">重新编辑</string>
+    <string name="kit_message_revoke_tip">该消息超过撤回时间，不能被撤回。</string>
 
     <string name="plugin_picture">相册</string>
     <string name="plugin_capture">拍摄</string>
@@ -30,6 +34,7 @@
     <string name="chat_message_select_share_multi">逐条转发</string>
     <string name="chat_message_select_share_single">合并转发</string>
     <string name="chat_message_select_share_delete">删除</string>
+    <string name="chat_message_revoke">撤回</string>
 
     <string name="forward_t1">选择聊天</string>
     <string name="forward_t2">聊天记录</string>

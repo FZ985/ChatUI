@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.chat.kit.R;
+import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.ActionConstants;
 import io.chat.kit.ui.popmenu.IChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
@@ -22,6 +23,7 @@ import io.im.core.model.Message;
 import io.im.core.model.PluginAction;
 import io.im.core.utils.ChatNetworkUtil;
 import io.im.core.utils.ChatToast;
+import io.im.uicommon.utils.MessageCheck;
 
 /**
  * 聊天界面长按弹窗工厂类，根据长按的消息返回对应的弹窗中的内容
@@ -97,6 +99,8 @@ public class ChatPopActionFactory {
             actions.add(getForwardAction(context, message));
             //删除
             actions.add(getDeleteAction(context, message));
+            //撤回
+            addRevokeAction(context, actions, message);
             //多选
             actions.add(getMultiSelectAction(context, message));
             //回复
@@ -115,8 +119,7 @@ public class ChatPopActionFactory {
      * @param actions 弹窗操作列表
      * @param message 消息
      */
-    private void addCopyActionIfNeed(
-            Context context, List<PluginAction> actions, Message message) {
+    private void addCopyActionIfNeed(Context context, List<PluginAction> actions, Message message) {
         if (message.getMessageType() == MessageType.CHAT_TEXT
                 && message.getMessageContent() instanceof TextMessage) {
             TextMessage textMessage = (TextMessage) message.getMessageContent();
@@ -155,23 +158,27 @@ public class ChatPopActionFactory {
     }
 
     // 构建撤回按钮
-//    private PluginAction<ChatMessageBean> getRecallAction(Context context, ChatMessageBean message) {
-//        return new PluginAction<>(
-//                ActionConstants.POP_ACTION_RECALL,
-//                context.getString(R.string.chat_message_action_recall),
-//                R.drawable.ic_message_recall,
-//                (view, messageInfo) -> {
-//                    YunXinExt.postOperate();
-//                    if (!NetworkUtils.isConnected()) {
-//                        ToastX.showShortToast(R.string.chat_network_error_tip);
-//                        return;
-//                    }
-//                    if (actionListener != null) {
-//                        actionListener.get().onRecall(messageInfo);
-//                    }
-//                },
-//                message);
-//    }
+    private void addRevokeAction(Context context, List<PluginAction> actions, Message message) {
+        if (message.getMessageDirection() == Message.MessageDirection.SEND) {
+            long revokeTime = ChatProvider.getOptions().revokeTime;
+            if (MessageCheck.checkRevokeMessage(message, revokeTime)) {
+                actions.add(new PluginAction<>(
+                        ActionConstants.POP_ACTION_REVOKE,
+                        context.getString(R.string.chat_message_revoke),
+                        R.drawable.kit_message_menu_revoke,
+                        (view, messageInfo) -> {
+                            if (!ChatNetworkUtil.isConnection(context)) {
+                                ChatToast.toast(context, io.im.uicommon.R.string.chat_network_error_tip);
+                                return;
+                            }
+                            if (actionListener != null) {
+                                actionListener.get().onRevoke(messageInfo);
+                            }
+                        },
+                        message));
+            }
+        }
+    }
 
     // 构建语音转文字按钮
 //    private PluginAction<ChatMessageBean> getVoiceToTextAction(

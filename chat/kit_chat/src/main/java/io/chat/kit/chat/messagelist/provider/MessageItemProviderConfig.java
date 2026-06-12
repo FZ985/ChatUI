@@ -38,7 +38,7 @@ public class MessageItemProviderConfig {
     /**
      * 单聊会话中是否在消息旁边显示已读回执状态。 默认不显示
      */
-    public boolean showReadState = true;
+    public boolean showReadState = false;
 
     /**
      * 是否需要展示气泡

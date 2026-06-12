@@ -8,7 +8,7 @@
             <enum name="fast" value="150" />
             <enum name="fastest" value="100" />
         </attr>
-        <attr name="android11KeyboardFeature" format="boolean"/>
+        <attr name="android11KeyboardFeature" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="PanelView">
@@ -43,4 +43,10 @@
     <declare-styleable name="ChatMaxHeightLayout">
         <attr name="max_height" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="IAvatarView">
+        <attr name="iav_text_size" format="float" />
+        <attr name="iav_image_radius" format="dimension" />
+    </declare-styleable>
+
 </resources>

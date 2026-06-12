@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/revoke_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/kit_message_revoke"
+        android:textColor="@color/chat_color_999999"
+        android:textSize="@dimen/chat_sp13" />
+
+    <TextView
+        android:id="@+id/revoke_edit_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/chat_dp12"
+        android:gravity="center"
+        android:text="@string/kit_message_revoke_edit"
+        android:textColor="@color/chat_link_blue"
+        android:textSize="@dimen/chat_sp13"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

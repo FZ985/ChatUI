@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.TextView;
 
+import io.im.core.utils.ServeTime;
 import io.im.uicommon.listener.ILinkClickListener;
 
 
@@ -57,7 +58,7 @@ public class LinkTextViewMovementMethod extends LinkMovementMethod {
 
             if (link.length != 0) {
                 if (action == MotionEvent.ACTION_UP) {
-                    long actionUpTime = System.currentTimeMillis();
+                    long actionUpTime = ServeTime.currentTimeMillis();
                     if (actionUpTime - mLastActionDownTime
                             > ViewConfiguration.getLongPressTimeout()) {
                         return true;
@@ -67,7 +68,7 @@ public class LinkTextViewMovementMethod extends LinkMovementMethod {
                     if (mListener != null && mListener.onLinkClick(url)) return true;
                     else link[0].onClick(widget);
                 } else {
-                    mLastActionDownTime = System.currentTimeMillis();
+                    mLastActionDownTime = ServeTime.currentTimeMillis();
                 }
                 return true;
             } else {

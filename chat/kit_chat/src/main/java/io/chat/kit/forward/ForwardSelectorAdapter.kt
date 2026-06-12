@@ -1,5 +1,6 @@
 package io.chat.kit.forward
 
+import android.annotation.SuppressLint
 import io.im.core.model.UserInfo
 import io.im.uicommon.adapter.BaseAdapter
 
@@ -16,6 +17,7 @@ class ForwardSelectorAdapter : BaseAdapter<UserInfo>() {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun setDataCollection(data: List<UserInfo>) {
         super.setDataCollection(data)
         notifyDataSetChanged()

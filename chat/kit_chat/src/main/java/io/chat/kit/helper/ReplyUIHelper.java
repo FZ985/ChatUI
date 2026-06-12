@@ -41,7 +41,7 @@ public class ReplyUIHelper {
             sb.append(spannable);
             binding.defReplyTv.setText(sb);
             replyContentView.setOnClickListener(v -> listener.onViewClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
-            replyContentView.setOnLongClickListener(v -> listener.onViewLongClick(v, MessageClickType.REPLY_CONTENT_CLICK, position, uiMessage));
+            replyContentView.setOnLongClickListener(v -> listener.onViewLongClick(v, MessageClickType.REPLY_CONTENT_LONG_CLICK, position, uiMessage));
         }
     }
 }

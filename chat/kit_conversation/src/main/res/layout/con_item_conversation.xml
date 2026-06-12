@@ -1,33 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/con_root"
-    android:background="@drawable/kit_bg_white_ripple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/kit_bg_white_ripple">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/chat_dp48"
-        android:layout_height="@dimen/chat_dp48"
-        android:layout_marginStart="@dimen/chat_dp12"
-        android:layout_marginTop="@dimen/chat_dp10"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/kit_ic_default_avatar" />
+        <io.im.uicommon.widgets.IAvatarView
+            android:id="@+id/image"
+            android:layout_width="@dimen/chat_dp48"
+            android:layout_height="@dimen/chat_dp48"
+            android:layout_marginStart="@dimen/chat_dp12"
+            android:layout_marginTop="@dimen/chat_dp12"
+            app:iav_text_size="20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="@dimen/chat_dp0_8"
-        android:layout_marginStart="@dimen/chat_dp10"
-        android:layout_marginTop="@dimen/chat_dp10"
-        android:layout_marginEnd="@dimen/chat_dp12"
-        android:alpha="0.5"
-        android:background="@color/chat_skin_line"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/image" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:layout_marginEnd="@dimen/chat_dp12"
+            android:includeFontPadding="false"
+            android:textColor="@color/chat_color_999999"
+            android:textSize="@dimen/chat_sp11"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/image"
+            tools:text="昨天" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/chat_dp12"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@color/chat_skin_Text"
+            android:textSize="@dimen/chat_sp16"
+            app:layout_constraintEnd_toStartOf="@id/time"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="@id/image"
+            tools:text="服务号" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/chat_dp12"
+            android:layout_marginBottom="@dimen/chat_dp2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/name">
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="库克终极绝唱!15亿苹果设备用AI重生"
+                android:textColor="@color/chat_color_999999"
+                android:textSize="@dimen/chat_sp12" />
+
+            <ImageView
+                android:id="@+id/disturb"
+                android:layout_width="@dimen/chat_dp14"
+                android:layout_height="@dimen/chat_dp14"
+                android:src="@drawable/con_vec_disturb" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/chat_dp0_8"
+            android:layout_marginTop="@dimen/chat_dp12"
+            android:layout_marginEnd="@dimen/chat_dp12"
+            android:alpha="0.5"
+            android:background="@color/chat_skin_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

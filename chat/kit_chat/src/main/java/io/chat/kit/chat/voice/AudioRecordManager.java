@@ -27,6 +27,7 @@ import io.chat.kit.R;
 import io.im.core.utils.JLog;
 import io.im.uicommon.bean.AudioDataBean;
 import io.im.uicommon.utils.SavePathUtils;
+import io.im.core.utils.ServeTime;
 
 public class AudioRecordManager implements Handler.Callback {
     private static final String TAG = "AudioRecordManager";
@@ -349,7 +350,7 @@ public class AudioRecordManager implements Handler.Callback {
                     throw new IOException(msg);
                 }
             }
-            mAudioPath = Uri.fromFile(new File(savePath, System.currentTimeMillis() + "temp.aac"));
+            mAudioPath = Uri.fromFile(new File(savePath, ServeTime.currentTimeMillis() + "temp.aac"));
             mMediaRecorder.setOutputFile(mAudioPath.getPath());
             mMediaRecorder.prepare();
             mMediaRecorder.start();

@@ -7,11 +7,12 @@
     android:background="@drawable/kit_bg_white_ripple"
     android:paddingHorizontal="@dimen/chat_dp12">
 
-    <ImageView
+    <io.im.uicommon.widgets.IAvatarView
         android:id="@+id/image"
         android:layout_width="@dimen/chat_dp40"
         android:layout_height="@dimen/chat_dp40"
         android:layout_marginTop="@dimen/chat_dp8"
+        app:iav_text_size="19"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/kit_ic_default_avatar" />

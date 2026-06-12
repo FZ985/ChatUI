@@ -1,11 +1,11 @@
 package io.im.uicommon.listener;
 
 import android.content.Context;
-import android.widget.ImageView;
 
 import io.im.core.model.Message;
 import io.im.core.model.Session;
 import io.im.core.model.UserInfo;
+import io.im.uicommon.widgets.IAvatarView;
 
 /**
  * author : JFZ
@@ -14,10 +14,10 @@ import io.im.core.model.UserInfo;
  */
 public interface ImageLoader {
 
-    void loadConversationAvatar(Context context, ImageView view, Message message, boolean isSender);
+    void loadChatAvatar(Context context, IAvatarView view, Message message, boolean isSender);
 
-    void loadForwardSelectorAvatar(Context context, ImageView view, UserInfo userInfo);
+    void loadForwardSelectorAvatar(Context context, IAvatarView view, UserInfo userInfo);
 
-    void loadConversationAvatar(Context context, ImageView view, Session session);
+    void loadConversationAvatar(Context context, IAvatarView view, Session session);
 
 }
