@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import io.im.core.database.dao.MessageDao;
+import io.im.core.database.dao.RevokeMessageDao;
 import io.im.core.database.dao.SessionDao;
 import io.im.core.database.dao.UserDao;
 import io.im.core.database.db.MessageDB;
@@ -34,6 +35,10 @@ public class DbManager extends AndroidViewModel {
 
     public SessionDao sessionDao() {
         return MessageDB.getInstance(getApplication()).sessionDao();
+    }
+
+    public RevokeMessageDao revokeMessageDao() {
+        return MessageDB.getInstance(getApplication()).revokeMessageDao();
     }
 
     public void clearAllDB() {

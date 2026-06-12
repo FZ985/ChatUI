@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
 import io.chat.kit.helper.IChatHelper;
@@ -41,5 +42,8 @@ public interface ChatExtCall {
     IChatHelper getIChatHelper();
 
     void checkMultiSelectView();
+
+    @NonNull
+    LifecycleOwner getLifecycleOwner();
 
 }

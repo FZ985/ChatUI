@@ -7,8 +7,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import io.im.core.database.dao.MessageDao;
+import io.im.core.database.dao.RevokeMessageDao;
 import io.im.core.database.dao.SessionDao;
 import io.im.core.model.Message;
+import io.im.core.model.ReMessage;
 import io.im.core.model.Session;
 
 
@@ -17,7 +19,7 @@ import io.im.core.model.Session;
  * date : 2023/12/21 10:25
  * description :
  */
-@Database(entities = {Message.class, Session.class}, version = 5)
+@Database(entities = {Message.class, ReMessage.class, Session.class}, version = 1)
 public abstract class MessageDB extends RoomDatabase {
     private static MessageDB rsDataBase = null;
 
@@ -37,4 +39,6 @@ public abstract class MessageDB extends RoomDatabase {
     public abstract MessageDao dao();
 
     public abstract SessionDao sessionDao();
+
+    public abstract RevokeMessageDao revokeMessageDao();
 }

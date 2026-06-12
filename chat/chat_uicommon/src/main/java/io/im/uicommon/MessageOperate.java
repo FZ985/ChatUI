@@ -43,7 +43,7 @@ public class MessageOperate {
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
         message.setMessageId(oldMessage.getMessageId());
-        sendMessage(message, null, callback);
+        sendMessage(message, null, true, false, callback);
     }
 
     //合并转发消息
@@ -107,15 +107,15 @@ public class MessageOperate {
 
     //发送消息
     public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable MessageCallback<Message> callback) {
-        sendMessage(message, replayMessage, true, callback);
+        sendMessage(message, replayMessage, true, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, @Nullable MessageCallback<Message> callback) {
+    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
         if (replyMessage != null) {
             message.setReplyMessage(replyMessage.toJson());
         }
-        if (postEvent) {
+        if (postEvent && postAttach) {
             postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ATTACH, message));
         }
         MessageManager.getInstance().sendMessage(message, new MessageCallback<Message>() {

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -36,6 +37,7 @@ import io.chat.kit.helper.IChatHelper;
 import io.chat.kit.model.UiMessage;
 import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
+import io.im.core.listener.ChatFun;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
@@ -66,6 +68,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     private final IChatListAdapter adapter = new IChatListAdapter(this);
 
     private ConversationType conversationType = ConversationType.PRIVATE;
+
     private UserInfo userInfo;
 
     private final IChatHelper helper = new IChatHelper();
@@ -87,6 +90,8 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             }
         }
     };
+
+    public ChatFun.Fun onLoaded = null;
 
     private final IChatPopMenuClickListener menuClickListener = new IChatPopMenuClickListener() {
         @Override
@@ -243,6 +248,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         }
         ChatPopActionFactory.getInstance().setActionListener(menuClickListener);
         uiListener();
+        if (onLoaded != null) {
+            onLoaded.apply();
+        }
     }
 
     private void uiListener() {
@@ -296,7 +304,10 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     @Override
     public void onRefresh() {
-        binding.refresh.postDelayed(() -> binding.refresh.setRefreshing(false), 500);
+        binding.refresh.postDelayed(() -> {
+            binding.refresh.setRefreshing(false);
+            messageViewModel.refreshAllMessage();
+        }, 500);
     }
 
     @Override
@@ -469,5 +480,11 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public IChatHelper getIChatHelper() {
         return helper;
+    }
+
+    @NonNull
+    @Override
+    public LifecycleOwner getLifecycleOwner() {
+        return this;
     }
 }

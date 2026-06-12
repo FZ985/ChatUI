@@ -4,6 +4,7 @@ package io.chat.kit.chat.messagelist.viewmodel;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,6 +40,7 @@ import io.im.core.message.im.RevokeMessage;
 import io.im.core.message.im.TextMessage;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
+import io.im.core.model.ReMessage;
 import io.im.core.model.State;
 import io.im.core.utils.ChatExecutorHelper;
 import io.im.core.utils.JLog;
@@ -49,6 +51,7 @@ import io.im.uicommon.event.DeleteMessageEvent;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.ui.web.IWebActivity;
+import io.im.uicommon.utils.MessageCheck;
 import io.im.uicommon.utils.SavePathUtils;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
@@ -71,6 +74,10 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     private boolean isDestroy;
 
+    private boolean isPause = false;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     public ChatMessageViewModel(@NonNull Application application) {
         super(application);
     }
@@ -79,6 +86,66 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         this.mCall = extCall;
         isDestroy = false;
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
+
+        //撤回消息监听
+        ChatSDK.getDbManager().revokeMessageDao()
+                .allMessageWith(ChatSDK.getConnectUser().getId(), extCall.getUser().getId())
+                .observe(extCall.getLifecycleOwner(), reMessages -> {
+                    if (!reMessages.isEmpty()) {
+                        List<ReMessage> mRevokeMessages = new ArrayList<>();
+                        List<ReMessage> mDelRevokeMessages = new ArrayList<>();
+                        long time = ChatProvider.getOptions().revokeTime;
+                        for (ReMessage reMessage : reMessages) {
+                            Message message = reMessage.getMessage();
+                            if (message != null) {
+                                long lastRevokeTime = MessageCheck.lastRevokeTime(message, time);
+                                if (lastRevokeTime > 0) {
+                                    mRevokeMessages.add(reMessage);
+                                } else {
+                                    mDelRevokeMessages.add(reMessage);
+                                }
+                            } else {
+                                mDelRevokeMessages.add(reMessage);
+                            }
+                        }
+                        if (!mDelRevokeMessages.isEmpty()) {
+                            refreshAllMessage();
+                            ChatExecutorHelper.getInstance().diskIO().execute(() -> ChatSDK.getDbManager().revokeMessageDao().deleteMessagesWithList(mDelRevokeMessages));
+                        } else {
+                            postRevokeMessage(mRevokeMessages);
+                        }
+                    }
+                });
+    }
+
+    //递归轮训撤回消息，更改列表UI
+    private void postRevokeMessage(List<ReMessage> revokeMessages) {
+        if (isDestroy) return;
+        handler.removeCallbacksAndMessages(null);
+        if (!revokeMessages.isEmpty()) {
+            ReMessage reMessage = revokeMessages.get(0);
+            Message message = reMessage.getMessage();
+            if (message != null) {
+                long time = ChatProvider.getOptions().revokeTime;
+                long lastRevokeTime = MessageCheck.lastRevokeTime(message, time);
+                if (lastRevokeTime > 0) {
+                    handler.postDelayed(() -> {
+                        if (isDestroy) return;
+                        UiMessage uiMessage = findUIMessageById(message.getMessageId());
+                        if (uiMessage != null) {
+                            refreshSingleMessage(uiMessage);
+                        }
+                        ChatExecutorHelper.getInstance().diskIO().execute(() -> ChatSDK.getDbManager().revokeMessageDao().deleteMessages(reMessage));
+                    }, lastRevokeTime);
+                } else {
+                    revokeMessages.remove(0);
+                    postRevokeMessage(revokeMessages);
+                }
+            } else {
+                revokeMessages.remove(0);
+                postRevokeMessage(revokeMessages);
+            }
+        }
     }
 
     public ChatExtCall getChatExtCall() {
@@ -94,6 +161,15 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 if (uiMessage != null) {
                     uiMessage.setMessage(message);
                     refreshSingleMessage(uiMessage);
+
+                    //如果是文本撤回消息，临时保存到本地
+                    if (revokeMessage.isMessageType(MessageType.CHAT_TEXT)) {
+                        ChatExecutorHelper.getInstance().diskIO().execute(() -> {
+                            ChatSDK.getDbManager()
+                                    .revokeMessageDao()
+                                    .insertMessage(ReMessage.obtain(revokeMessage.getToUser().getId(), message));
+                        });
+                    }
                 }
             }
             return true;
@@ -348,17 +424,18 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     @Override
     public void onResume() {
-        ChatLifecycle.super.onResume();
+        isPause = false;
     }
 
     @Override
     public void onPause() {
-        ChatLifecycle.super.onPause();
+        isPause = true;
     }
 
     @Override
     public void onDestroy() {
         isDestroy = true;
+        handler.removeCallbacksAndMessages(null);
         ChatMsgCache.clear();
         IMCenter.getInstance().getOptions().removeMessageEventListener(this);
     }

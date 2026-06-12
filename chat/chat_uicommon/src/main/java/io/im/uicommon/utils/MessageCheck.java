@@ -12,7 +12,14 @@ import io.im.core.utils.ServeTime;
 public class MessageCheck {
 
     public static boolean checkRevokeMessage(Message message, long revokeTime) {
-        long canRevokeTime = ServeTime.currentTimeMillis() - message.getMessageTime();
+        long currentTime = ServeTime.currentTimeMillis();
+        long canRevokeTime = currentTime - message.getMessageTime();
         return canRevokeTime <= revokeTime;
+    }
+
+
+    //剩余的撤回消息时长
+    public static long lastRevokeTime(Message message, long revokeTime) {
+        return revokeTime - (ServeTime.currentTimeMillis() - message.getMessageTime());
     }
 }

@@ -406,6 +406,10 @@ public class Message implements Serializable {
         return null;
     }
 
+    public boolean isMessageType(int type) {
+        return getMessageType() == type;
+    }
+
 
     public String toJson() {
         return ChatLibUtil.toJson(this);

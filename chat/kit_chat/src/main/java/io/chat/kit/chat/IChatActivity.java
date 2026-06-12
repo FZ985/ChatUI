@@ -36,19 +36,18 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
     @Override
     public void onInitPage(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         List<ChatBaseFragment> fragments = new ArrayList<>();
-        fragments.add(new IChatFragment());
+        IChatFragment chatFragment = new IChatFragment();
+        fragments.add(chatFragment);
         getBinding().pager.setAdapter(adapter = new ChatFragmentPageAdapter(getSupportFragmentManager(), fragments));
-//        StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
 
         uiMode = getResources().getConfiguration().uiMode;
 
-        getBinding().pager.postDelayed(() -> {
+        chatFragment.onLoaded = () -> {
             UserInfo userInfo = (UserInfo) getIntent().getSerializableExtra(ChatRoute.User);
             MessageOperate.sendMessage(IMTest.message(userInfo).get(10).getMessage(), null, null);
             MessageOperate.sendMessage(IMTest.message(userInfo).get(1).getMessage(), null, null);
             MessageOperate.sendMessage(IMTest.message(userInfo).get(2).getMessage(), null, null);
-        }, 350);
-
+        };
     }
 
     @Override
@@ -56,7 +55,6 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         super.onConfigurationChanged(newConfig);
         int newUiMode = newConfig.uiMode;
         if (newUiMode != uiMode) {
-//            StatusBarHelper.setStatusBarColor(this, Color.TRANSPARENT);
             uiMode = newUiMode;
             recreate();
         }

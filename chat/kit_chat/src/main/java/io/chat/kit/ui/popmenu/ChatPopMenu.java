@@ -109,7 +109,7 @@ public class ChatPopMenu {
 
     private void showWindow(Context context, View anchorView, boolean isSender) {
         if (popupWindow == null) return;
-        log("size:" + chatPopMenuActionList.size()+","+isSender);
+//        log("size:" + chatPopMenuActionList.size()+","+isSender);
         int columnNum = Math.min(chatPopMenuActionList.size(), DEFAULT_COLUMN_NUM);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, columnNum);
         binding.menuRecycler.setLayoutManager(gridLayoutManager);
@@ -121,7 +121,7 @@ public class ChatPopMenu {
 
         int popupWidth = binding.getRoot().getMeasuredWidth();
         int popupHeight = binding.getRoot().getMeasuredHeight();
-        log("popupWidth:" + popupWidth + "," + popupHeight);
+//        log("popupWidth:" + popupWidth + "," + popupHeight);
         // 获取 anchorView 屏幕坐标
         int[] location = new int[2];
         anchorView.getLocationOnScreen(location);
@@ -158,7 +158,7 @@ public class ChatPopMenu {
 
         int finalY;
 
-        log("showAbove:" + showAbove);
+//        log("showAbove:" + showAbove);
 
         // anchor 中心点在 popup 内的位置
         float triangleOffset;
