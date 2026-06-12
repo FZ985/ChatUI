@@ -92,7 +92,7 @@ public class UserTest {
     public static UserInfo randomUser() {
         //随机头像
         String avatar = AVATARS[RANDOM.nextInt(AVATARS.length)];
-        return new UserInfo(String.valueOf(ChatLibUtil.randomColor()), randomName(), avatar);
+        return new UserInfo(String.valueOf(Math.abs(ChatLibUtil.randomColor())), randomName(), avatar);
     }
 
     public static List<UserInfo> randomUserList() {
