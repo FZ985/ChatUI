@@ -38,12 +38,12 @@ public class MessageOperate {
 
     //撤销消息
     public static void revokeMessage(ConversationType conversationType,
-                                     UserInfo user, @NonNull Message oldMessage, @Nullable MessageCallback<Message> callback) {
+                                     UserInfo user, @NonNull Message oldMessage) {
         RevokeMessage revokeMessage = RevokeMessage.obtain(oldMessage);
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
         message.setMessageId(oldMessage.getMessageId());
-        sendMessage(message, null, true, false, callback);
+        sendMessage(message, null, true, false,null);
     }
 
     //合并转发消息

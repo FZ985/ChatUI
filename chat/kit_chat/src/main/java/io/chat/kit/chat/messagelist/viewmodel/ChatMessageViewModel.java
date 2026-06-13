@@ -125,11 +125,11 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     @Override
     public void onSendMessage(ChatMessageEvent event) {
         Message msg = event.getMessage();
-        if (filterMessage(msg)) return;
         if (Objects.equals(mCall.getConversationType().getValue(), msg.getConversationType().getValue()) && msg.getMessageId() > 0) {
             if (!Objects.equals(mCall.getUser().getId(), msg.getToUser().getId())) {
                 return;
             }
+            if (filterMessage(msg)) return;
             UiMessage uiMessage = findUIMessageById(msg.getMessageId());
             boolean isAdd = uiMessage == null;
             if (isAdd) {
@@ -419,7 +419,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                     onAudioClick(data);
                 } else if (clickType == MessageClickType.REVOKE_EDIT) {
                     //撤销重新编辑点击
-                    onRevokeClick(data);
+                    onRevokeClick(data, position);
                 } else {
                     Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
                 }
@@ -427,7 +427,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         }
     }
 
-    private void onRevokeClick(UiMessage data) {
+    private void onRevokeClick(UiMessage data, int index) {
         MessageContent messageContent = data.getMessage().getMessageContent();
         if (messageContent instanceof RevokeMessage) {
             RevokeMessage revokeMessage = (RevokeMessage) messageContent;
@@ -436,7 +436,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             try {
                 if (message.getMessageType() == MessageType.CHAT_TEXT) {
                     TextMessage textBody = (TextMessage) message.getMessageContent();
-                    mCall.getIChatHelper().setRevokeMessageAgain(textBody.getContent());
+                    mCall.getIChatHelper().setRevokeMessageAgain(textBody.getContent(), message.getInnerReplyMessage(), index);
                 }
             } catch (Exception e) {
                 //
@@ -459,7 +459,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     //撤回消息
     public void revokeMessage(Message message) {
-        MessageOperate.revokeMessage(mCall.getConversationType(), mCall.getUser(), message, null);
+        MessageOperate.revokeMessage(mCall.getConversationType(), mCall.getUser(), message);
     }
 
     private void handlerRevokeList(List<ReMessage> reMessages) {

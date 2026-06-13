@@ -281,7 +281,8 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
         }
     }
 
-    public void setRevokeMessageAgain(@NonNull String content) {
+    public void setRevokeMessageAgain(@NonNull String content, @Nullable Message replyMessage, int index) {
+        setReplyMessage(replyMessage, index);
         EditText editText = mFragment.getBinding().inputPanel.getEditText();
         editText.setText(content);
         editText.setSelection(content.length());
