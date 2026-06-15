@@ -107,7 +107,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                     uiMessage.setMessage(message);
                     refreshSingleMessage(uiMessage);
 
-                    //如果是文本撤回消息，临时保存到本地
+                    //如果是文本撤回消息，临时保存到本地，通过liveData来监听变化，到期删除
                     if (revokeMessage.isMessageType(MessageType.CHAT_TEXT)) {
                         ChatExecutorHelper.getInstance().diskIO().execute(() -> {
                             ChatSDK.getDbManager()
