@@ -138,6 +138,9 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 uiMessage.setMessage(msg);
             }
             switch (event.getEvent()) {
+                case ChatMessageEvent.CANCEL:
+                case ChatMessageEvent.PROGRESS:
+                    break;
                 case ChatMessageEvent.ATTACH:
                     uiMessage.setState(State.PROGRESS);
                     break;

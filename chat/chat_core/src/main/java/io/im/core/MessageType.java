@@ -15,7 +15,7 @@ import io.im.core.model.MessageContent;
  * date : 2023/12/21 09:01
  * description : 消息类型
  */
-public class MessageType {
+public final class MessageType {
 
     public static final int UNKNOWN = -1;//未知
 
