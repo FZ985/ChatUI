@@ -133,8 +133,7 @@ public class Message implements Serializable {
                 } else {
                     content = MessageType.getMessageContent(getMessageType());
                 }
-                content.parseJsonToContent(bodyObj);
-                setMessageContent(content);
+                setMessageContent(content.parseJsonToContent(bodyObj));
             } catch (JSONException e) {
                 setMessageContent(new UnKnowMessage());
             }
@@ -415,6 +414,7 @@ public class Message implements Serializable {
         return ChatLibUtil.toJson(this);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return toJson();
