@@ -23,6 +23,7 @@ public class MessageUser implements Serializable {
     private String name;
     private String avatar;
     private int type;
+    private String remark;
 
     public MessageUser() {
     }
@@ -66,6 +67,14 @@ public class MessageUser implements Serializable {
         this.type = type;
     }
 
+    public String getRemark() {
+        return ChatNull.compat(remark);
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public UserInfo toUserInfo() {
         String json = ChatLibUtil.toJson(this);
         return ChatLibUtil.gson.fromJson(json, UserInfo.class);
@@ -78,6 +87,7 @@ public class MessageUser implements Serializable {
             user.setName(obj.optString("name"));
             user.setAvatar(obj.optString("avatar"));
             user.setType(obj.optInt("type"));
+            user.setRemark(obj.optString("remark"));
         }
         return user;
     }

@@ -34,6 +34,8 @@ public class UserInfo implements Serializable {
     private String avatar;
     @ColumnInfo(name = "type")
     private int type;//用于区分用户、群、服务号、等等类型
+    @ColumnInfo(name = "remark")
+    private String remark;//备注
 
     public UserInfo() {
         id = "";
@@ -78,6 +80,14 @@ public class UserInfo implements Serializable {
         this.type = type;
     }
 
+    public String getRemark() {
+        return ChatNull.compat(remark);
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public MessageUser toMessageUser() {
         String json = toJson();
         return ChatLibUtil.gson.fromJson(json, MessageUser.class);
@@ -91,6 +101,7 @@ public class UserInfo implements Serializable {
             user.setName(obj.optString("name"));
             user.setAvatar(obj.optString("avatar"));
             user.setType(obj.optInt("type"));
+            user.setRemark(obj.optString("remark"));
         }
         return user;
     }
