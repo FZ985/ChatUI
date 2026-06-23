@@ -112,10 +112,10 @@ public class DateUtil {
                     if (month == monthCur && weekInMonth == weekInMonthCur) { // 同月同周
                         formatDate = getWeekDay(context, calendardate.get(Calendar.DAY_OF_WEEK));
                     } else { // 不同月
-                        formatDate = formatDate(context, date, "M/d");
+                        formatDate = formatDate(context, date, "M月d日");
                     }
                 } else {
-                    formatDate = formatDate(context, date, "yyyy/M/d");
+                    formatDate = formatDate(context, date, "yyyy年M月d日");
                 }
                 if (showTime) {
                     formatDate = formatDate + " " + getTimeString(dateMillis, context);

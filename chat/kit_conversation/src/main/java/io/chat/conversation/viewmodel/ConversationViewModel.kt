@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import io.chat.conversation.model.UiSession
+import io.chat.conversation.utils.ConversationUtil
 import io.chat.kit.ChatRoute
 import io.im.core.core.ChatSDK
 import io.im.core.model.Message
@@ -20,6 +21,7 @@ import io.im.uicommon.UserTest
 import io.im.uicommon.event.ChatMessageEvent
 import io.im.uicommon.listener.MessageEventListener
 import io.im.uicommon.utils.DateUtil
+import java.util.Collections
 
 
 /**
@@ -146,7 +148,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
                 if (isAdd) {
                     sendSessionEvent(uiSession)
                 } else {
-                    refreshSingleMessage(uiSession)
+                    refreshAllMessage()
                 }
             }
         }
@@ -191,6 +193,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun excListLiveData() {
+        Collections.sort(mSessions, ConversationUtil.getConversationComparator())
         if (Looper.getMainLooper().thread == Thread.currentThread()) {
             mSessionLiveData.value = mSessions
         } else {

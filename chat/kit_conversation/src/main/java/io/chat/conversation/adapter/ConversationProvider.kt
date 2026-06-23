@@ -50,6 +50,12 @@ class ConversationProvider : IViewProvider<UiSession> {
         list: List<UiSession>,
         listener: IViewProviderListener<UiSession>?
     ) {
+        val conRoot = holder.getView<ConstraintLayout>(R.id.con_root)
+        if (item.isTop) {
+            conRoot.setBackgroundResource(R.drawable.con_bg_white_ripple_stick_top)
+        } else {
+            conRoot.setBackgroundResource(io.im.uicommon.R.drawable.kit_bg_white_ripple)
+        }
         //头像
         val image = holder.getView<IAvatarView>(R.id.image)
         image.setUserInfo(item.user)
