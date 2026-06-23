@@ -39,7 +39,7 @@ public class ChatSDK {
     private static boolean isBackground = false;
 
     public static boolean isInitialized() {
-        return mContext != null && !TextUtils.isEmpty(getConnectUser().getId()) && isOnLine();
+        return mContext != null && !TextUtils.isEmpty(getAccountId()) && isOnLine();
     }
 
     public static Context getContext() {
@@ -138,6 +138,10 @@ public class ChatSDK {
         SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
         String json = sp.getString("user", "{}");
         return ChatLibUtil.gson.fromJson(json, UserInfo.class);
+    }
+
+    public static String getAccountId() {
+        return getConnectUser().getId();
     }
 
     public static boolean isOnLine() {

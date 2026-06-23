@@ -89,6 +89,10 @@ public class IMCenter {
         return ChatSDK.getConnectUser();
     }
 
+    public static String getAccountId() {
+        return ChatSDK.getAccountId();
+    }
+
     public static boolean isOnLine() {
         return ChatSDK.isOnLine();
     }

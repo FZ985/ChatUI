@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import io.chat.conversation.R
 import io.chat.conversation.adapter.ConversationAdapter
 import io.chat.conversation.databinding.ConFragmentConversationBinding
+import io.chat.conversation.model.UiSession
 import io.chat.conversation.viewmodel.ConversationViewModel
-import io.im.core.model.Session
 import io.im.core.utils.ChatNull
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.base.ChatBaseFragment
@@ -22,7 +22,7 @@ import io.im.uicommon.widgets.FixedLinearLayoutManager
  * 2026/6/10
  * desc：
  **/
-class ConversationFragment : ChatBaseFragment(), IViewProviderListener<Session> {
+class ConversationFragment : ChatBaseFragment(), IViewProviderListener<UiSession> {
 
     private val binding: ConFragmentConversationBinding by lazy {
         ConFragmentConversationBinding.inflate(layoutInflater)
@@ -34,7 +34,7 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<Session> 
         ViewModelProvider(this)[ConversationViewModel::class.java]
     }
 
-    private val mListObserver = Observer<MutableList<Session>> {
+    private val mListObserver = Observer<MutableList<UiSession>> {
         adapter.setDataCollection(ChatNull.compatList(it))
     }
 
@@ -63,7 +63,7 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<Session> 
         view: View,
         clickType: Int,
         position: Int,
-        data: Session
+        data: UiSession
     ) {
         viewmodel.onViewClick(view, clickType, position, data)
     }
@@ -72,7 +72,7 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<Session> 
         view: View,
         clickType: Int,
         position: Int,
-        data: Session
+        data: UiSession
     ): Boolean {
         return viewmodel.onViewLongClick(view, clickType, position, data)
     }

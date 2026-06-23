@@ -15,6 +15,7 @@ import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.UserInfo;
+import io.im.uicommon.UserTest;
 
 /**
  * author : JFZ
@@ -23,8 +24,14 @@ import io.im.core.model.UserInfo;
  */
 public class IMTest {
 
-    public final static UserInfo loginUser = io.im.uicommon.UserTest.randomUser();
+    public final static UserInfo loginUser = loginUser();
 
+
+    private static UserInfo loginUser() {
+        UserInfo userInfo = UserTest.randomUser();
+        userInfo.setId("888888");
+        return userInfo;
+    }
 
     public static List<UiMessage> message(UserInfo toUser) {
         List<UiMessage> list = new ArrayList<>();
@@ -50,10 +57,10 @@ public class IMTest {
     }
 
     private static Message getSendMsg(UserInfo toUser, int msgType, MessageContent content) {
-        return Message.obtain(toUser, ConversationType.PRIVATE, msgType, content);
+        return Message.obtain(toUser, ConversationType.TYPE_P2P, msgType, content);
     }
 
     private static Message getReceiveMsg(int msgType, MessageContent content) {
-        return Message.obtain(loginUser, ConversationType.PRIVATE, msgType, content);
+        return Message.obtain(loginUser, ConversationType.TYPE_P2P, msgType, content);
     }
 }

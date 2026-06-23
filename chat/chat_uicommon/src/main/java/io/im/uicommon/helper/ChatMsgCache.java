@@ -62,7 +62,7 @@ public class ChatMsgCache {
                     if (o1 == null || o2 == null) {
                         return 0;
                     }
-                    return (int) (o1.getMessageTime() - o2.getMessageTime());
+                    return (int) (o1.getCreateTime() - o2.getCreateTime());
                 });
         return list;
     }

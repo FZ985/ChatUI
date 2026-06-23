@@ -43,14 +43,14 @@ public class MessageOperate {
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
         message.setMessageId(oldMessage.getMessageId());
-        sendMessage(message, null, true, false,null);
+        sendMessage(message, null, true, false, null);
     }
 
     //合并转发消息
     public static void sendMergeForwardMessage(ConversationType conversationType,
                                                UserInfo user, List<Message> messageList, List<UserInfo> users, @Nullable MessageCallback<Message> callback) {
         ForwardMessage forward = ForwardMessage.obtain(
-                ChatSDK.getConnectUser().getName(),
+                IMCenter.getLoginUser().getName(),
                 user.getName(),
                 messageList);
         for (UserInfo u : users) {
@@ -71,7 +71,7 @@ public class MessageOperate {
             for (int i = 0; i < messageList.size(); i++) {
                 Message m = messageList.get(i);
                 Message newMsg = Message.obtain(user, m.getConversationType(), m.getMessageType(), m.getMessageContent());
-                newMsg.setMessageTime(ServeTime.currentTimeMillis() + i);
+                newMsg.setCreateTime(ServeTime.currentTimeMillis() + i);
                 newMsg.setReplyMessage(m.getReplyMessage());
                 msgList.add(newMsg);
             }

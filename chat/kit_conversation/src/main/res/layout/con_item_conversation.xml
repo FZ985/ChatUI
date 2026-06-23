@@ -23,6 +23,23 @@
             tools:ignore="ContentDescription" />
 
         <TextView
+            android:id="@+id/un_read_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp6"
+            android:layout_marginEnd="@dimen/chat_dpm_5"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/chat_white"
+            android:textSize="@dimen/chat_sp13"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/con_read_count_rect"
+            tools:layout_height="@dimen/chat_dp15"
+            tools:layout_width="@dimen/chat_dp15"
+            tools:text="···" />
+
+        <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +56,7 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/chat_dp12"
+            android:layout_marginHorizontal="@dimen/chat_dp13"
             android:layout_marginTop="@dimen/chat_dp2"
             android:ellipsize="end"
             android:includeFontPadding="false"

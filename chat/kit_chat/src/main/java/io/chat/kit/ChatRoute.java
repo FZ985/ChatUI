@@ -33,7 +33,7 @@ public class ChatRoute {
         RouteHelper.go(context, new Intent(context, IChatActivity.class)
                 .putExtra(User, user)
                 .putExtra(InputStyle, io.chat.kit.config.enums.InputStyle.All.getType())
-                .putExtra(ConversationType, io.im.core.model.ConversationType.PRIVATE.getValue()));
+                .putExtra(ConversationType, io.im.core.model.ConversationType.TYPE_P2P.getValue()));
     }
 
 

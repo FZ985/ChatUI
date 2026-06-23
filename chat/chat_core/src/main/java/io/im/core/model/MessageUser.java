@@ -16,6 +16,7 @@ import io.im.core.utils.ChatNull;
  * author : JFZ
  * date : 2024/1/26 16:34
  * description :
+ * UserInfo的转换类，
  */
 @Keep
 public class MessageUser implements Serializable {
@@ -76,8 +77,12 @@ public class MessageUser implements Serializable {
     }
 
     public UserInfo toUserInfo() {
-        String json = ChatLibUtil.toJson(this);
+        String json = toJson();
         return ChatLibUtil.gson.fromJson(json, UserInfo.class);
+    }
+
+    public String toJson() {
+        return ChatLibUtil.toJson(this);
     }
 
     public static MessageUser fromJSONObject(@Nullable JSONObject obj) {

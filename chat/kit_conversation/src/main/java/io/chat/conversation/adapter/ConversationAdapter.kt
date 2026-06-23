@@ -3,7 +3,7 @@ package io.chat.conversation.adapter
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import io.im.core.model.Session
+import io.chat.conversation.model.UiSession
 import io.im.uicommon.adapter.BaseAdapter
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.adapter.ProviderManager
@@ -14,15 +14,15 @@ import io.im.uicommon.adapter.ProviderManager
  * 2026/6/10
  * desc：
  **/
-class ConversationAdapter(listener: IViewProviderListener<Session>) : BaseAdapter<Session>(
+class ConversationAdapter(listener: IViewProviderListener<UiSession>) : BaseAdapter<UiSession>(
     listener,
-    ProviderManager<Session>().apply { addProvider(ConversationProvider()) }
+    ProviderManager<UiSession>().apply { addProvider(ConversationProvider()) }
 ) {
 
     private val mDiffCallback = ConversationDiffCallBack()
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun setDataCollection(data: MutableList<Session>) {
+    override fun setDataCollection(data: MutableList<UiSession>) {
         // 当有空布局的时候，需要全部刷新
         if ((mDataList.isEmpty() && data.isNotEmpty())
             || (mDataList.isNotEmpty() && data.isEmpty())
@@ -58,7 +58,7 @@ class ConversationAdapter(listener: IViewProviderListener<Session>) : BaseAdapte
     }
 
     inner class ConversationDiffCallBack : DiffUtil.Callback() {
-        private var newList: MutableList<Session> = mutableListOf()
+        private var newList: MutableList<UiSession> = mutableListOf()
 
         override fun getOldListSize(): Int {
             if (mDataList != null) {
@@ -73,19 +73,19 @@ class ConversationAdapter(listener: IViewProviderListener<Session>) : BaseAdapte
         }
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mDataList[oldItemPosition].sid == newList[newItemPosition].sid
+            return mDataList[oldItemPosition].session.sid == newList[newItemPosition].session.sid
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val newItem = newList[newItemPosition]
-            if (newItem.isLocalChange) {
+            if (newItem.isChange) {
                 return false
             }
             return true
         }
 
 
-        fun setNewList(newList: MutableList<Session>) {
+        fun setNewList(newList: MutableList<UiSession>) {
             this.newList = newList
         }
     }

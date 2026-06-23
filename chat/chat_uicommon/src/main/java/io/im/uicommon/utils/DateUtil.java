@@ -25,6 +25,8 @@ public class DateUtil {
 
     private static final String SPACE_CHAR = " ";
 
+    public static final long DAY = 24 * 60 * 60 * 1000;
+
     private static final int OTHER = 2014;
     private static final int TODAY = 6;
     private static final int YESTERDAY = 15;
@@ -71,7 +73,7 @@ public class DateUtil {
         return getDateTimeString(dateMillis, true, context);
     }
 
-    private static String getDateTimeString(long dateMillis, boolean showTime, Context context) {
+    public static String getDateTimeString(long dateMillis, boolean showTime, Context context) {
         if (dateMillis <= 0) {
             return "";
         }
@@ -193,7 +195,7 @@ public class DateUtil {
         }
         return weekDay;
     }
-    
+
     private static String getTime12HourDes(long dateMillis, Context context) {
         Calendar calendarTime = Calendar.getInstance(LangUtils.getAppLanguageLocal(context).toLocale());
         calendarTime.setTimeInMillis(dateMillis);

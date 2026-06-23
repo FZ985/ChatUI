@@ -33,7 +33,7 @@ public class UserInfo implements Serializable {
     @ColumnInfo(name = "avatar")
     private String avatar;
     @ColumnInfo(name = "type")
-    private int type;//用于区分用户、群、服务号、等等类型
+    private int type;//用于区分用户、群、服务号、等等类型,对应ConversationType
     @ColumnInfo(name = "remark")
     private String remark;//备注
 

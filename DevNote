@@ -1,0 +1,38 @@
+26.06.23
+迷你碰碰：
+视频反馈在nfc碰设备写入数据时，提示"data is null";
+分析：
+设备写入数据需要写入两条records记录来打开微信小程序，
+一条uri数据，一条aar微信报名数据；两台哦数据同时写入才能自动打开微信小程序；
+首先排除两条数据没有为空，所以在创建message对象是没有问题的；
+最后大概猜测是调用write写入函数时抛出的异常；
+设备型号为华为畅想系列，系统为鸿蒙，那么是系统机型兼容问题；
+部分机型对第二条aar有兼容问题；
+
+迷你碰碰总结：
+data is null异常信息是底层NFC Service抛出来的IllegalArgumentException/NullPointerException，
+针对上述的猜测对其进行调试，首先创建aar records时对其进行try/catch，捕获到异常将不添加aar；
+然后对创建的message对象中的toByteArray进行try/catch，因为最终高写入时底层会调用次函数，那我们可以提前调用进行校验，
+捕获到异常时移除对aar的创建，然后创建单条message；
+如果写入成功但是不写入aar数据，那么nfc碰碰将不会自动打开小程序，需要手动打开；
+(重新打包后进行测试还未得到结果反馈，所以不确定是不是aar引起的)
+
+
+
+简游MX：
+开启游戏，伪装打开翻转返回，在聊天界面熄屏然后翻转，重新打开app，webview加载游戏url页面会放大；
+分析：
+activity管理fragment中的事务管理状态，事务管理可能存在旧fragment；
+webview在界面不可见loadUrl时对宽高的测量有问题；
+
+简游MX总结：
+1、以定义变量的方式对fragment进行管理，执行对应生命周期来释放，不在以匿名创建的形式；
+2、在fragment onResume即界面可见时在进行加载url；
+
+
+
+401,Unauthorized
+200..299
+
+
+

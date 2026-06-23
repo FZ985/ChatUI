@@ -298,6 +298,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     }
 
     public boolean closeExpand() {
+        mExtensionViewModel.getInputModeLiveData().setValue(ChatInputMode.NormalMode);
         mHelper.resetState();
         return true;
     }

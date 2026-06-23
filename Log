@@ -1,1 +1,8 @@
-用户添加备注字段
+会话列表添加未读数逻辑，添加列表排序规则;
+Message中将messageTime改为createTime，并添加updateTime;
+添加会话id、accountId生成与转换工具类;
+修改聊天界面键盘关闭，输入框组件按钮状态错乱问题;
+Session中添加createTime和updateTime;
+创建UiSession包裹Session用于UI操作;
+扩展登录user函数直接获取登录account，不用在getUser;
+添加会话列表本地保存逻辑；

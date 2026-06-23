@@ -6,13 +6,17 @@ package io.im.core.model;
  * description :
  */
 public enum ConversationType {
-    PRIVATE(1, "private"),
-    GROUP(2, "group");
+    //未知
+    TYPE_UNKNOWN(0, "UNKNOWN"),
+    //单聊
+    TYPE_P2P(1, "P2P"),
+    //群聊
+    TYPE_GROUP(2, "GROUP");
 
     private final int value;
     private final String name;
 
-    private ConversationType(int value, String name) {
+    ConversationType(int value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -36,6 +40,6 @@ public enum ConversationType {
             }
         }
 
-        return PRIVATE;
+        return TYPE_P2P;
     }
 }

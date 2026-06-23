@@ -89,7 +89,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
         //撤回消息监听
         ChatSDK.getDbManager().revokeMessageDao()
-                .allMessageWith(ChatSDK.getConnectUser().getId(), extCall.getUser().getId())
+                .allMessageWith(IMCenter.getAccountId(), extCall.getUser().getId())
                 .observe(extCall.getLifecycleOwner(), this::handlerRevokeList);
     }
 
@@ -375,7 +375,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         if (isPause) {
             isPause = false;
             ChatExecutorHelper.getInstance().diskIO().execute(() -> {
-                List<ReMessage> reMessages = ChatSDK.getDbManager().revokeMessageDao().allMessageListWith(ChatSDK.getConnectUser().getId(), mCall.getUser().getId());
+                List<ReMessage> reMessages = ChatSDK.getDbManager().revokeMessageDao().allMessageListWith(IMCenter.getAccountId(), mCall.getUser().getId());
                 handler.post(() -> handlerRevokeList(reMessages));
             });
         }
@@ -728,7 +728,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         for (int i = position; i < mUiMessages.size(); i++) {
             UiMessage item = mUiMessages.get(i);
             if (item.getMessage().getMessageContent() instanceof HQVoiceMessage) {
-                if (!TextUtils.equals(item.getMessage().getFromUser().getId(), ChatSDK.getConnectUser().getId())) {
+                if (!TextUtils.equals(item.getMessage().getFromUser().getId(), IMCenter.getAccountId())) {
                     onAudioClick(item);
                     break;
                 }

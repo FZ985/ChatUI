@@ -67,7 +67,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     private final IChatListAdapter adapter = new IChatListAdapter(this);
 
-    private ConversationType conversationType = ConversationType.PRIVATE;
+    private ConversationType conversationType = ConversationType.TYPE_P2P;
 
     private UserInfo userInfo;
 
@@ -229,7 +229,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         });
 
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(ChatRoute.User);
-        conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.PRIVATE.getValue()));
+        conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.TYPE_P2P.getValue()));
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
 

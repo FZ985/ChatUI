@@ -37,8 +37,11 @@ public class Message implements Serializable {
     @ColumnInfo(name = "messageId")
     private long messageId;
 
-    @ColumnInfo(name = "messageTime")
-    private long messageTime;
+    @ColumnInfo(name = "createTime")
+    private long createTime;
+
+    @ColumnInfo(name = "updateTime")
+    private long updateTime;
 
     @Embedded(prefix = "from_")
     private MessageUser fromUser;
@@ -100,12 +103,21 @@ public class Message implements Serializable {
         this.messageType = messageType;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getMessageBody() {
@@ -166,7 +178,7 @@ public class Message implements Serializable {
 
     public MessageDirection getMessageDirection() {
         if (messageDirection == null) {
-            if (ChatSDK.getConnectUser().getId().equals(getFromUser().getId())) {
+            if (ChatSDK.getAccountId().equals(getFromUser().getId())) {
                 setMessageDirection(MessageDirection.SEND);
             } else {
                 setMessageDirection(MessageDirection.RECEIVE);
@@ -336,7 +348,7 @@ public class Message implements Serializable {
     public static Message obtain(UserInfo toUser, ConversationType chatType, int messageType, MessageContent body) {
         Message message = new Message();
         message.setMessageId(message.buildMessageId());
-        message.setMessageTime(ServeTime.currentTimeMillis());
+        message.setCreateTime(ServeTime.currentTimeMillis());
         message.setFromUser(ChatSDK.getConnectUser().toMessageUser());
         message.setToUser(toUser.toMessageUser());
         message.setChatType(chatType.getValue());
@@ -376,8 +388,11 @@ public class Message implements Serializable {
                 long messageId = obj.optLong("messageId");
                 message.setMessageId(messageId);
 
-                long messageTime = obj.optLong("messageTime");
-                message.setMessageTime(messageTime);
+                long createTime = obj.optLong("createTime");
+                message.setCreateTime(createTime);
+
+                long updateTime = obj.optLong("updateTime");
+                message.setUpdateTime(updateTime);
 
                 JSONObject fromUserObj = obj.optJSONObject("fromUser");
                 message.setFromUser(MessageUser.fromJSONObject(fromUserObj));
@@ -385,7 +400,7 @@ public class Message implements Serializable {
                 JSONObject toUserObj = obj.optJSONObject("toUser");
                 message.setToUser(MessageUser.fromJSONObject(toUserObj));
 
-                message.setChatType(obj.optInt("chatType", ConversationType.PRIVATE.getValue()));
+                message.setChatType(obj.optInt("chatType", ConversationType.TYPE_P2P.getValue()));
 
                 message.setMessageType(obj.optInt("messageType"));
 
@@ -425,7 +440,7 @@ public class Message implements Serializable {
         if (o instanceof Message) {
             Message that = (Message) o;
             return getMessageId() == that.getMessageId()
-                    && getMessageTime() == that.getMessageTime()
+                    && getCreateTime() == that.getCreateTime()
                     && getMessageType() == that.getMessageType()
                     && getChatType() == that.getChatType();
         }

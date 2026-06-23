@@ -58,7 +58,7 @@ class IForwardSelectorActivity : ChatBaseActivity<ForwardActivitySelectorBinding
                 if (isMerge) {
                     //合并发送
                     MessageOperate.sendMergeForwardMessage(
-                        ConversationType.PRIVATE,
+                        ConversationType.TYPE_P2P,
                         user,
                         messages,
                         userList,

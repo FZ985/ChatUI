@@ -109,7 +109,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
     private void initTime(ViewHolder holder, int position, List<UiMessage> data, Message message) {
         TextView base_time = holder.getView(R.id.base_time);
         if (mConfig.showTime) {
-            String time = DateUtil.getConversationFormatDate(message.getMessageTime(), holder.getContext());
+            String time = DateUtil.getConversationFormatDate(message.getCreateTime(), holder.getContext());
             base_time.setText(time);
             OptionsHelper.updateTextSize(base_time, 13);
             try {
@@ -117,8 +117,8 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 if (pre.getMessage() != null
                         && DateUtil.isShowChatTime(
                         holder.getContext(),
-                        message.getMessageTime(),
-                        pre.getMessage().getMessageTime(),
+                        message.getCreateTime(),
+                        pre.getMessage().getCreateTime(),
                         180)) {
                     base_time.setVisibility(View.VISIBLE);
                 } else {
@@ -318,7 +318,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                     R.id.base_right_avatar,
                     v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
 
-            if (mConfig.showNickName && uiMessage.getMessage().getConversationType() == ConversationType.PRIVATE) {
+            if (mConfig.showNickName && uiMessage.getMessage().getConversationType() == ConversationType.TYPE_P2P) {
                 if (isSender) {
                     holder.setVisible(R.id.base_title, false);
                 } else {

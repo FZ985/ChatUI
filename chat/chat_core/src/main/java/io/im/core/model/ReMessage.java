@@ -74,7 +74,7 @@ public class ReMessage implements Serializable {
 
     public static ReMessage obtain(String toId, @NonNull Message message) {
         ReMessage reMessage = new ReMessage();
-        reMessage.setFromId(ChatSDK.getConnectUser().getId());
+        reMessage.setFromId(ChatSDK.getAccountId());
         reMessage.setToId(toId);
         reMessage.setContent(message.toJson());
         return reMessage;

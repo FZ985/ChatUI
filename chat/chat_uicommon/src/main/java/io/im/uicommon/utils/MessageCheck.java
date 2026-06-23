@@ -13,13 +13,13 @@ public class MessageCheck {
 
     public static boolean checkRevokeMessage(Message message, long revokeTime) {
         long currentTime = ServeTime.currentTimeMillis();
-        long canRevokeTime = currentTime - message.getMessageTime();
+        long canRevokeTime = currentTime - message.getCreateTime();
         return canRevokeTime <= revokeTime;
     }
 
 
     //剩余的撤回消息时长
     public static long lastRevokeTime(Message message, long revokeTime) {
-        return revokeTime - (ServeTime.currentTimeMillis() - message.getMessageTime());
+        return revokeTime - (ServeTime.currentTimeMillis() - message.getCreateTime());
     }
 }
