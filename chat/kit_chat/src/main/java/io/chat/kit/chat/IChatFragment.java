@@ -42,6 +42,7 @@ import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatLibUtil;
+import io.im.core.utils.JLog;
 import io.im.core.utils.ServeTime;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
@@ -229,6 +230,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         });
 
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(ChatRoute.User);
+        JLog.e("----user:"+userInfo.toJson());
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.TYPE_P2P.getValue()));
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);

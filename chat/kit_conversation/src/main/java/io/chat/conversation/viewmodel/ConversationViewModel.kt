@@ -147,20 +147,20 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
 
     private fun insertOrUpdateConversation(message: Message) {
         val myAccount = IMCenter.getAccountId()
-        val friendAccount =
-            if (message.fromUser.id == myAccount) message.toUser.id else message.fromUser.id
+        val toUser = if (message.fromUser.id == myAccount) message.toUser else message.fromUser
+        val friendAccount = toUser.id
         ChatExecutorHelper.getInstance().diskIO().execute {
             val sid = ConversationIdUtil.conversationId(friendAccount, message.conversationType)
             var session = ChatSDK.getDbManager().sessionDao().getSessionBySid(sid)
             if (session != null) {
                 session.updateTime = message.updateTime
-                session.session = message.fromUser.toJson()
+                session.session = toUser.toJson()
                 session.type = message.conversationType.value
                 session.lastMessage = message.toJson()
                 ChatSDK.getDbManager().sessionDao().update(session)
             } else {
                 session = Session.obtain(
-                    message.fromUser.toUserInfo(),
+                    toUser.toUserInfo(),
                     message.conversationType,
                     message
                 )

@@ -23,6 +23,8 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
         call: ChatFun.Fun1<MutableList<Message>>
     ) {
         ChatExecutorHelper.getInstance().diskIO().execute {
+            val count = ChatSDK.getDbManager().messageDao().count
+            JLog.e("count===:"+count)
             val list = ChatSDK.getDbManager().messageDao()
                 .getP2PFirstPageMessageByFromTo(IMCenter.getAccountId(), user.id, mPageSize)
             Collections.reverse(list)
