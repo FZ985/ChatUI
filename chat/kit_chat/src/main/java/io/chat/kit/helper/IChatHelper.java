@@ -108,10 +108,10 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
             mHelper = new PanelSwitchHelper.Builder(mFragment)
                     .setWindowInsetsRootView(mFragment.getBinding().getRoot())
                     .addKeyboardStateListener((visible, height) -> {
-                        log("系统键盘是否可见 : " + visible + " 高度为：" + height);
+//                        log("系统键盘是否可见 : " + visible + " 高度为：" + height);
                     })
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
-                        log("输入框是否获得焦点 : " + hasFocus);
+//                        log("输入框是否获得焦点 : " + hasFocus);
                         if (hasFocus) {
                             scrollToBottom(replyIndex);
                         }
@@ -255,7 +255,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 //点击 发送按钮
                 mExtensionViewModel.onSendClick(replyMessage);
             }
-            log("点击了View : " + view);
+//            log("点击了View : " + view);
         }
     }
 

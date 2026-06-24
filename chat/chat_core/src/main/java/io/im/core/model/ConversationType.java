@@ -11,7 +11,7 @@ public enum ConversationType {
     //单聊
     TYPE_P2P(1, "P2P"),
     //群聊
-    TYPE_GROUP(2, "GROUP");
+    TYPE_TEAM(2, "TEAM");
 
     private final int value;
     private final String name;

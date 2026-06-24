@@ -1,5 +1,6 @@
 package io.chat.conversation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import io.chat.conversation.adapter.ConversationAdapter
 import io.chat.conversation.databinding.ConFragmentConversationBinding
 import io.chat.conversation.model.UiSession
 import io.chat.conversation.viewmodel.ConversationViewModel
+import io.chat.kit.event.PageEvent
+import io.chat.kit.event.ScrollToTopEvent
 import io.im.core.utils.ChatNull
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.base.ChatBaseFragment
@@ -38,6 +41,13 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<UiSession
         adapter.setDataCollection(ChatNull.compatList(it))
     }
 
+    private val mPageObserver = Observer<PageEvent> { pageEvent ->
+        if (isDetached) return@Observer
+        if (pageEvent is ScrollToTopEvent) {
+            binding.recycler.scrollToPosition(adapter.headersCount)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,6 +67,7 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<UiSession
         binding.recycler.adapter = adapter
 
         viewmodel.getSessionLiveData().observeForever(mListObserver)
+        viewmodel.getPageEventLiveData().observeForever(mPageObserver)
     }
 
     override fun onViewClick(
@@ -77,8 +88,30 @@ class ConversationFragment : ChatBaseFragment(), IViewProviderListener<UiSession
         return viewmodel.onViewLongClick(view, clickType, position, data)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewmodel.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewmodel.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewmodel.onStop()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewmodel.onActivityResult(requestCode, resultCode, data)
+    }
+
     override fun onDestroyView() {
+        viewmodel.onDestroy()
         viewmodel.getSessionLiveData().removeObserver(mListObserver)
+        viewmodel.getPageEventLiveData().removeObserver(mPageObserver)
         super.onDestroyView()
     }
 

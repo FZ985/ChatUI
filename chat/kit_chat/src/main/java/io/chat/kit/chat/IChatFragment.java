@@ -304,10 +304,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     @Override
     public void onRefresh() {
-        binding.refresh.postDelayed(() -> {
-            binding.refresh.setRefreshing(false);
-            messageViewModel.refreshAllMessage();
-        }, 500);
+        messageViewModel.loadMessage(false);
     }
 
     @Override

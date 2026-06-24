@@ -95,9 +95,9 @@ public class UserTest {
         return new UserInfo(String.valueOf(Math.abs(ChatLibUtil.randomColor())), randomName(), avatar);
     }
 
-    public static List<UserInfo> randomUserList() {
+    public static List<UserInfo> randomUserList(int size) {
         List<UserInfo> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < size; i++) {
             list.add(randomUser());
         }
         return list;

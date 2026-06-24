@@ -4,8 +4,10 @@ package io.im.app;
 import android.app.Application;
 import android.content.Context;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import io.chat.kit.IMTest;
+import io.im.core.model.UserInfo;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.config.Options;
 
@@ -39,7 +41,16 @@ public class ImDebug {
 //        IMCenter.getInstance().connect(request);
 
         //模拟IM登录
-        IMCenter.login(IMTest.loginUser);
+        IMCenter.login(getLoginUser());
+    }
+
+
+    private static UserInfo getLoginUser() {
+        UserInfo user = IMCenter.getLoginUser();
+        if (TextUtils.isEmpty(user.getId())) {
+            return IMTest.loginUser;
+        }
+        return user;
     }
 
 

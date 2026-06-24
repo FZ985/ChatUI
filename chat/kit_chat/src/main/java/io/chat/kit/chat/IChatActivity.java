@@ -38,12 +38,12 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
 
         uiMode = getResources().getConfiguration().uiMode;
 
-        chatFragment.onLoaded = () -> {
+//        chatFragment.onLoaded = () -> {
 //            UserInfo userInfo = (UserInfo) getIntent().getSerializableExtra(ChatRoute.User);
 //            MessageOperate.sendMessage(IMTest.message(userInfo).get(10).getMessage(), null, null);
 //            MessageOperate.sendMessage(IMTest.message(userInfo).get(1).getMessage(), null, null);
 //            MessageOperate.sendMessage(IMTest.message(userInfo).get(2).getMessage(), null, null);
-        };
+//        };
     }
 
     @Override

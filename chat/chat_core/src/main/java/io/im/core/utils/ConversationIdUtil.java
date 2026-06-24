@@ -62,7 +62,7 @@ public final class ConversationIdUtil {
      * @return 会话id
      */
     public static String teamConversationId(String teamId) {
-        return conversationId(teamId, ConversationType.TYPE_GROUP);
+        return conversationId(teamId, ConversationType.TYPE_TEAM);
     }
 
     /**

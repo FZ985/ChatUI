@@ -8,7 +8,10 @@ import androidx.lifecycle.MediatorLiveData
 import io.chat.conversation.model.UiSession
 import io.chat.conversation.utils.ConversationUtil
 import io.chat.kit.ChatRoute
+import io.chat.kit.event.PageEvent
+import io.chat.kit.event.ScrollToTopEvent
 import io.im.core.core.ChatSDK
+import io.im.core.listener.ChatLifecycle
 import io.im.core.model.Message
 import io.im.core.model.Session
 import io.im.core.utils.ChatExecutorHelper
@@ -20,6 +23,7 @@ import io.im.uicommon.IMCenter
 import io.im.uicommon.UserTest
 import io.im.uicommon.event.ChatMessageEvent
 import io.im.uicommon.listener.MessageEventListener
+import io.im.uicommon.listener.OnLocalMessageOperateListener
 import io.im.uicommon.utils.DateUtil
 import java.util.Collections
 
@@ -30,14 +34,16 @@ import java.util.Collections
  * desc：
  **/
 class ConversationViewModel(application: Application) : AndroidViewModel(application),
-    MessageEventListener {
+    MessageEventListener, OnLocalMessageOperateListener, ChatLifecycle {
 
     private val mSessionLiveData = MediatorLiveData<MutableList<UiSession>>()
+    private val mPageEventLiveData = MediatorLiveData<PageEvent>()
 
     private val mSessions = mutableListOf<UiSession>()
 
     init {
         IMCenter.getInstance().getOptions().addMessageEventListener(this)
+        IMCenter.getInstance().getOptions().localMessageOperateListeners.add(this)
 
         ChatExecutorHelper.getInstance().diskIO().execute {
             val list = ChatSDK.getDbManager().sessionDao().allSession()
@@ -63,7 +69,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     //创建模拟数据
     private fun buildTestDataSession(): MutableList<UiSession> {
         val list = mutableListOf<UiSession>()
-        val users = UserTest.randomUserList()
+        val users = UserTest.randomUserList(400)
         users.forEachIndexed { index, user ->
             list.add(mapUISession(Session().apply {
                 sid = ConversationIdUtil.p2pConversationId(user.id)
@@ -81,6 +87,31 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     private fun mapUISession(session: Session): UiSession {
         val uiSession = UiSession(session)
         return uiSession
+    }
+
+    //本地删除后的最新消息
+    override fun onDeletedAfterLastMessage(
+        sid: String,
+        message: Message?
+    ) {
+        ChatExecutorHelper.getInstance().diskIO().execute {
+            val sessionResult = ChatSDK.getDbManager().sessionDao().getSessionBySid(sid)
+            sessionResult?.let { session ->
+                if (message != null) {
+                    session.updateTime = message.updateTime
+                    session.lastMessage = message.toJson()
+                } else {
+                    session.updateTime = ServeTime.currentTimeMillis()
+                    session.lastMessage = ""
+                }
+                ChatSDK.getDbManager().sessionDao().update(session)
+                val uiSession = findUISessionById(sid)
+                uiSession?.let {
+                    uiSession.session = session
+                    refreshSingleMessage(it)
+                }
+            }
+        }
     }
 
     fun onViewClick(
@@ -108,7 +139,6 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
 
     override fun onSendMessage(event: ChatMessageEvent) {
         insertOrUpdateConversation(event.message)
-
     }
 
     override fun onReceiveMessage(event: ChatMessageEvent) {
@@ -150,6 +180,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
                 } else {
                     refreshAllMessage()
                 }
+                executePageEvent(ScrollToTopEvent())
             }
         }
     }
@@ -201,7 +232,24 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun executePageEvent(pageEvent: PageEvent) {
+        if (Looper.getMainLooper().getThread().equals(Thread.currentThread())) {
+            mPageEventLiveData.setValue(pageEvent);
+        } else {
+            mPageEventLiveData.postValue(pageEvent);
+        }
+    }
+
     fun getSessionLiveData(): MediatorLiveData<MutableList<UiSession>> {
         return mSessionLiveData
+    }
+
+    fun getPageEventLiveData(): MediatorLiveData<PageEvent> {
+        return mPageEventLiveData
+    }
+
+    override fun onDestroy() {
+        IMCenter.getInstance().getOptions().localMessageOperateListeners.remove(this)
+        super.onDestroy()
     }
 }

@@ -25,10 +25,14 @@ import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.provider.MessageClickType;
 import io.chat.kit.chat.voice.AudioPlayManager;
 import io.chat.kit.event.PageEvent;
+import io.chat.kit.event.RefreshEvent;
 import io.chat.kit.event.ScrollToEndEvent;
 import io.chat.kit.listener.IAudioPlayListener;
 import io.chat.kit.listener.IMessageViewModelProcessor;
 import io.chat.kit.model.UiMessage;
+import io.chat.kit.processor.ChatMessageProcessor;
+import io.chat.kit.processor.P2PChatMessageProcessor;
+import io.chat.kit.processor.TeamChatMessageProcessor;
 import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
@@ -38,6 +42,7 @@ import io.im.core.listener.ChatLifecycle;
 import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.message.im.RevokeMessage;
 import io.im.core.message.im.TextMessage;
+import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.ReMessage;
@@ -78,6 +83,8 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    private ChatMessageProcessor chatProcessor;
+
     public ChatMessageViewModel(@NonNull Application application) {
         super(application);
     }
@@ -86,11 +93,52 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         this.mCall = extCall;
         isDestroy = false;
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
+        if (extCall.getConversationType() == ConversationType.TYPE_P2P) {
+            chatProcessor = new P2PChatMessageProcessor();
+        }
+        if (extCall.getConversationType() == ConversationType.TYPE_TEAM) {
+            chatProcessor = new TeamChatMessageProcessor();
+        }
 
         //撤回消息监听
         ChatSDK.getDbManager().revokeMessageDao()
                 .allMessageWith(IMCenter.getAccountId(), extCall.getUser().getId())
                 .observe(extCall.getLifecycleOwner(), this::handlerRevokeList);
+
+        //加载消息
+        loadMessage(true);
+    }
+
+    public void loadMessage(boolean isFirst) {
+        if (chatProcessor == null) {
+            executePageEvent(new RefreshEvent());
+            return;
+        }
+        if (isFirst) {
+            chatProcessor.getFirstMessage(mCall.getUser(), messages -> {
+                if (mUiMessages.isEmpty() && !messages.isEmpty()) {
+                    for (Message m : messages) {
+                        mUiMessages.add(mapUIMessage(m));
+                    }
+                }
+                refreshAllMessage();
+                executePageEvent(new ScrollToEndEvent());
+            });
+        } else {
+            chatProcessor.loadMoreMessage(mCall.getUser(), messages -> {
+                if (messages.isEmpty()) {
+                    executePageEvent(new RefreshEvent());
+                    return;
+                }
+                List<UiMessage> uList = new ArrayList<>();
+                for (Message m : messages) {
+                    uList.add(mapUIMessage(m));
+                }
+                mUiMessages.addAll(0, uList);
+                executePageEvent(new RefreshEvent());
+                refreshAllMessage();
+            });
+        }
     }
 
     public ChatExtCall getChatExtCall() {
@@ -113,6 +161,10 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                             ChatSDK.getDbManager()
                                     .revokeMessageDao()
                                     .insertMessage(ReMessage.obtain(revokeMessage.getToUser().getId(), message));
+
+                            if (chatProcessor != null) {
+                                chatProcessor.updateMessage(message, null);
+                            }
                         });
                     }
                 }
@@ -229,6 +281,9 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         if (event.getEvent() == DeleteMessageEvent.SUCCESS) {
             List<Message> messages = event.getMessages();
             removeMessage(messages);
+            if (chatProcessor != null) {
+                chatProcessor.deleteMessages(mCall.getUser(), messages);
+            }
             if (isEdit()) {
                 setEdit(false);
             }
@@ -368,6 +423,11 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         mUiMessages.add(uiMessage);
         refreshAllMessage();
         executePageEvent(new ScrollToEndEvent());
+        if (chatProcessor != null) {
+            chatProcessor.insertMessage(uiMessage.getMessage(), index -> {
+                JLog.e("====插入游标：" + index);
+            });
+        }
     }
 
     @Override

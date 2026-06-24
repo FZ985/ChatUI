@@ -44,7 +44,7 @@ class IForwardSelectorActivity : ChatBaseActivity<ForwardActivitySelectorBinding
         binding.recycler.layoutManager = FixedLinearLayoutManager(this)
         binding.recycler.adapter = adapter
 
-        adapter.setDataCollection(UserTest.randomUserList())
+        adapter.setDataCollection(UserTest.randomUserList(50))
 
         adapter.setItemClickListener(object : BaseAdapter.OnItemClickListener {
             override fun onItemClick(

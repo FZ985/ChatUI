@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.im.core.model.Message;
 import io.im.uicommon.config.enums.FontSize;
 import io.im.uicommon.listener.IPermissionProxy;
 import io.im.uicommon.listener.ImageLoader;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.listener.MessageInterceptListener;
+import io.im.uicommon.listener.OnLocalMessageOperateListener;
 
 /**
  * author : JFZ
@@ -111,6 +113,27 @@ public final class Options {
         this.rc_play_audio_continuous = rc_play_audio_continuous;
     }
 
+
+    //本地消息回调地址---------------------------------------------------------------------------
+    public final List<OnLocalMessageOperateListener> localMessageOperateListeners = new ArrayList<>();
+    private final OnLocalMessageOperateListener innerOnLocalMessageOperateListener = new OnLocalMessageOperateListener() {
+        @Override
+        public void onDeletedAfterLastMessage(String sid, Message message) {
+            try {
+                for (OnLocalMessageOperateListener listener : localMessageOperateListeners) {
+                    if (listener != null) {
+                        listener.onDeletedAfterLastMessage(sid, message);
+                    }
+                }
+            } catch (Exception e) {
+                //
+            }
+        }
+    };
+
+    public OnLocalMessageOperateListener getOnLocalMessageOperateListener() {
+        return innerOnLocalMessageOperateListener;
+    }
 
     //---------------------------------------------------------------------------
 }
