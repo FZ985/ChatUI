@@ -16,6 +16,7 @@
 
     <!--   文字颜色 -->
     <color name="chat_skin_Text">@color/chat_color_1A1A1A</color>
+    <color name="chat_skin_text_7f">#7F7F7F</color>
 
     <!--    线的颜色 -->
     <color name="chat_skin_line">@color/chat_Grey_300</color>

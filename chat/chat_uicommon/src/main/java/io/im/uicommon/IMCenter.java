@@ -23,26 +23,25 @@ import io.im.uicommon.config.Options;
  * date : 2024/1/26 10:51
  * description :
  */
-public class IMCenter {
+public final class IMCenter {
 
     private static final Options defaultOptions = new Options();
     private static Options options;
     private final static String TAG = "IMCenter";
 
-    private final OnSocketMessageListener _innerMessageReceiveListener = new OnSocketMessageListener() {
-        @Override
-        public void onMessage(@NonNull Message message, int code) {
-
-        }
-
-        @Override
-        public void onMessageError(@Nullable Message message, ErrorResult error) {
-            getOptions().getConnectService().getConnectListener().onConnected(error);
-        }
-    };
-
     private IMCenter() {
+        OnSocketMessageListener _innerMessageReceiveListener = new OnSocketMessageListener() {
+            @Override
+            public void onMessage(@NonNull Message message, int code) {
 
+            }
+
+            @Override
+            public void onMessageError(@Nullable Message message, ErrorResult error) {
+                getOptions().getConnectService().getConnectListener().onConnected(error);
+            }
+        };
+        IMClientCore.getInstance().setOnSocketMessageListener(_innerMessageReceiveListener);
     }
 
     public static IMCenter getInstance() {
@@ -70,7 +69,6 @@ public class IMCenter {
     }
 
     public void connect(ConnectRequest request) {
-        IMClientCore.getInstance().setOnSocketMessageListener(_innerMessageReceiveListener);
         ChatSDK.connect(request);
     }
 

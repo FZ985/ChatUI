@@ -2,7 +2,7 @@ ext {
     appNamespace = "io.im.app"
     appApplicationId = "io.im.app.chat"
     appCompileSdk = 35
-    appMinSdk = 23
+    appMinSdk = 24
     appTargetSdk = 35
     appVersionCode = 1
     appVersionName = "1.0.0"

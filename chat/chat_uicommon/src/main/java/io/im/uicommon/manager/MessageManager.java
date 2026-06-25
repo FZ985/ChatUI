@@ -9,12 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.im.core.MessageType;
+import io.im.core.core.ChatSDK;
 import io.im.core.core.IMClientCore;
 import io.im.core.core.socket.ErrorResult;
 import io.im.core.core.socket.SocketCode;
 import io.im.core.listener.MessageCallback;
 import io.im.core.listener.OnSocketMessageListener;
 import io.im.core.model.Message;
+import io.im.core.model.MessageUser;
+import io.im.core.model.Session;
+import io.im.core.utils.ChatExecutorHelper;
+import io.im.core.utils.ConversationIdUtil;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
@@ -80,11 +85,15 @@ public class MessageManager {
 //            ResendManager.getInstance().removeResendMessage(message.getMessageId());
             if (callback != null) {
                 callback.onSuccess(message);
+                if (!MessageType.isAppType(message.getMessageType())) {
+                    checkSession(message);
+                }
             } else {
                 if (MessageType.isAppType(message.getMessageType())) {
                     MessageOperate.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
                 } else {
                     MessageOperate.postSendEvent(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    checkSession(message);
                 }
             }
             removeCallback(message);
@@ -151,6 +160,25 @@ public class MessageManager {
     //移除socket消息监听
     public void removeOnSocketMessageListener(OnSocketMessageListener listener) {
         socketMessageListeners.remove(listener);
+    }
+
+    //验证会话并创建
+    private void checkSession(Message message) {
+        String myAccount = IMCenter.getAccountId();
+        MessageUser toUser = message.getFromUser().getId().equals(myAccount) ? message.getToUser() : message.getFromUser();
+        String friendAccount = toUser.getId();
+        ChatExecutorHelper.getInstance().diskIO().execute(() -> {
+            String sid = ConversationIdUtil.conversationId(friendAccount, message.getConversationType());
+            var session = ChatSDK.getDbManager().sessionDao().getSessionBySid(sid);
+            if (session == null) {
+                session = Session.obtain(
+                        toUser.toUserInfo(),
+                        message.getConversationType(),
+                        message
+                );
+                ChatSDK.getDbManager().sessionDao().insertSession(session);
+            }
+        });
     }
 
 }

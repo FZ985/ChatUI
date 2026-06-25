@@ -31,6 +31,7 @@ public class UiSession extends UiBaseBean implements Serializable {
 
     public UiSession(@NonNull Session session) {
         this.session = session;
+        change();
     }
 
     @NonNull
@@ -40,6 +41,7 @@ public class UiSession extends UiBaseBean implements Serializable {
 
     public void setSession(@NonNull Session session) {
         this.session = session;
+        isTop = null;
         change();
     }
 

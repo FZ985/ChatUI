@@ -45,7 +45,7 @@ public class ImDebug {
     }
 
 
-    private static UserInfo getLoginUser() {
+    public static UserInfo getLoginUser() {
         UserInfo user = IMCenter.getLoginUser();
         if (TextUtils.isEmpty(user.getId())) {
             return IMTest.loginUser;

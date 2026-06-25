@@ -1,7 +1,9 @@
 package io.chat.kit.processor
 
+import io.chat.kit.repo.ChatRepo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatFun
+import io.im.core.listener.FetchCallback
 import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.UserInfo
@@ -106,15 +108,14 @@ class TeamChatMessageProcessor : ChatMessageProcessor() {
     }
 
     override fun clearMessage(user: UserInfo) {
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val index = ChatSDK.getDbManager().messageDao()
-                .clearTeamMessages(user.id, ConversationType.TYPE_TEAM.value)
-            val sid = ConversationIdUtil.teamConversationId(user.id)
-            IMCenter.getInstance().options.onLocalMessageOperateListener.onDeletedAfterLastMessage(
-                sid,
-                null
-            )
-            JLog.e("===delete===message:$index")
-        }
+        ChatRepo.clearMessage(user.id, ConversationType.TYPE_TEAM, object : FetchCallback<Void> {
+            override fun onError(errorCode: Int, errorMsg: String?) {
+
+            }
+
+            override fun onSuccess(data: Void?) {
+
+            }
+        })
     }
 }

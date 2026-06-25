@@ -1,3 +1,12 @@
+去除会话viewmodel中的模拟数据，以真实逻辑去渲染；
+新增会话列表仿iOS侧滑置顶、取消置顶、删除功能；
+新增会话列表添加head功能；
+编写置顶、删除逻辑；
+创建ConversationRepo、ChatRepo，本地与网络操作，对外公开，统一管理；
+
+
+
+
 会话列表添加未读数逻辑，添加列表排序规则;
 Message中将messageTime改为createTime，并添加updateTime;
 添加会话id、accountId生成与转换工具类;

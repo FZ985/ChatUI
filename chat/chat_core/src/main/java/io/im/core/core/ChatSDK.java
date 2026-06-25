@@ -95,7 +95,9 @@ public class ChatSDK {
                 public void onReceive(Context context, Intent intent) {
                     if (intent != null) {
                         String action = intent.getAction();
+                        JLog.e("======111111:"+action);
                         if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                        JLog.e("======2222222");
                             boolean connection = ChatNetworkUtil.isConnection(context);
                             ErrorResult result = new ErrorResult(connection ? SocketCode.NETWORK_SUCCESS : SocketCode.NETWORK_ERROR,
                                     connection ? "网络连接成功" : "当前无法连接网络，可检查网络设置是否正常。");

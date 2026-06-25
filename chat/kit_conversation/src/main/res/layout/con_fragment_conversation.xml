@@ -15,10 +15,10 @@
         android:layout_height="@dimen/kit_toolbar_height"
         android:background="@color/chat_skin_bg_leve2" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <io.im.uicommon.widgets.swiperecycler.SwipeRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:overScrollMode="never"
         android:scrollbars="none" />
 </LinearLayout>

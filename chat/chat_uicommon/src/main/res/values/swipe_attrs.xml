@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+
+    <declare-styleable name="SwipeMenuLayout">
+        <attr name="leftViewId" format="reference|integer" />
+        <attr name="rightViewId" format="reference|integer" />
+        <attr name="contentViewId" format="reference|integer" />
+    </declare-styleable>
+
+</resources>

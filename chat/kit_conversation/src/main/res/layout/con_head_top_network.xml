@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/chat_skin_bg_leve2"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/chat_dp12"
+        android:paddingBottom="@dimen/chat_dp10">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/conversation_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_dp34"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/common_search"
+            android:textColor="@color/chat_skin_text_7f"
+            android:textSize="@dimen/chat_sp14"
+            app:backgroundTint="@color/chat_skin_grey_EDEDED_to"
+            app:cornerRadius="@dimen/chat_dp4"
+            app:icon="@drawable/common_vector_search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/chat_dp5"
+            app:iconSize="@dimen/chat_dp15"
+            app:iconTint="@color/chat_skin_text_7f"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@color/chat_transparent" />
+    </LinearLayout>
+
+    <io.im.uicommon.widgets.TipErrorView
+        android:id="@+id/conversation_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</LinearLayout>

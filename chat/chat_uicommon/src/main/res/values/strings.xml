@@ -32,6 +32,11 @@
     <string name="im_alert_agree">同意</string>
     <string name="im_alert_tip_confirm">确认删除？</string>
     <string name="im_alert_next_say">下次再说</string>
+    <string name="im_alert_known">我知道了</string>
 
+    <string name="common_search">搜索</string>
+
+    <string name="conversation_stick_top">置顶</string>
+    <string name="conversation_stick_top_cancel">取消置顶</string>
 
 </resources>

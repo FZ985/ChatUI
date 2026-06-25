@@ -7,6 +7,7 @@ import io.chat.conversation.model.UiSession
 import io.im.uicommon.adapter.BaseAdapter
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.adapter.ProviderManager
+import io.im.uicommon.widgets.swiperecycler.SwipeRecyclerView
 
 
 /**
@@ -22,7 +23,7 @@ class ConversationAdapter(listener: IViewProviderListener<UiSession>) : BaseAdap
     private val mDiffCallback = ConversationDiffCallBack()
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun setDataCollection(data: MutableList<UiSession>) {
+    fun setDataCollection(recycler: SwipeRecyclerView, data: MutableList<UiSession>) {
         // 当有空布局的时候，需要全部刷新
         if ((mDataList.isEmpty() && data.isNotEmpty())
             || (mDataList.isNotEmpty() && data.isEmpty())
@@ -36,22 +37,21 @@ class ConversationAdapter(listener: IViewProviderListener<UiSession>) : BaseAdap
             diffResult.dispatchUpdatesTo(
                 object : ListUpdateCallback {
                     override fun onInserted(position: Int, count: Int) {
-                        notifyItemRangeInserted(headersCount + position, count)
+                        notifyItemRangeInserted(position, count)
                     }
 
                     override fun onRemoved(position: Int, count: Int) {
-                        notifyItemRangeRemoved(headersCount + position, count)
+                        notifyItemRangeRemoved(position, count)
                     }
 
                     override fun onMoved(fromPosition: Int, toPosition: Int) {
                         notifyItemMoved(
-                            headersCount + fromPosition,
-                            headersCount + toPosition
+                            fromPosition, toPosition
                         )
                     }
 
                     override fun onChanged(position: Int, count: Int, payload: Any?) {
-                        notifyItemRangeChanged(headersCount + position, count, null)
+                        notifyItemRangeChanged(position, count, null)
                     }
                 })
         }

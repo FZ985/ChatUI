@@ -116,7 +116,6 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         }
         if (isFirst) {
             chatProcessor.getFirstMessage(mCall.getUser(), messages -> {
-                JLog.e("===messages:"+messages.size());
                 if (mUiMessages.isEmpty() && !messages.isEmpty()) {
                     for (Message m : messages) {
                         mUiMessages.add(mapUIMessage(m));

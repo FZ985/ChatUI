@@ -1,12 +1,14 @@
 package io.chat.kit.processor
 
+import io.chat.kit.repo.ChatRepo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatFun
+import io.im.core.listener.FetchCallback
+import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.UserInfo
 import io.im.core.utils.ChatExecutorHelper
 import io.im.core.utils.ConversationIdUtil
-import io.im.core.utils.JLog
 import io.im.uicommon.IMCenter
 import java.util.Collections
 
@@ -23,8 +25,6 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
         call: ChatFun.Fun1<MutableList<Message>>
     ) {
         ChatExecutorHelper.getInstance().diskIO().execute {
-            val count = ChatSDK.getDbManager().messageDao().count
-            JLog.e("count===:"+count)
             val list = ChatSDK.getDbManager().messageDao()
                 .getP2PFirstPageMessageByFromTo(IMCenter.getAccountId(), user.id, mPageSize)
             Collections.reverse(list)
@@ -99,20 +99,19 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
                 sid,
                 lastMessage
             )
-            JLog.e("===delete===message:$index")
+//            JLog.e("===delete===message:$index")
         }
     }
 
     override fun clearMessage(user: UserInfo) {
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val index = ChatSDK.getDbManager().messageDao()
-                .clearP2PMessages(IMCenter.getAccountId(), user.id)
-            val sid = ConversationIdUtil.p2pConversationId(user.id)
-            IMCenter.getInstance().options.onLocalMessageOperateListener.onDeletedAfterLastMessage(
-                sid,
-                null
-            )
-            JLog.e("===clear===message:$index")
-        }
+        ChatRepo.clearMessage(user.id, ConversationType.TYPE_P2P, object : FetchCallback<Void> {
+            override fun onError(errorCode: Int, errorMsg: String?) {
+
+            }
+
+            override fun onSuccess(data: Void?) {
+
+            }
+        })
     }
 }

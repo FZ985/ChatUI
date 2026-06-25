@@ -5,26 +5,27 @@ import android.os.Looper
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import io.chat.conversation.model.UiSession
 import io.chat.conversation.utils.ConversationUtil
 import io.chat.kit.ChatRoute
 import io.chat.kit.event.PageEvent
 import io.chat.kit.event.ScrollToTopEvent
+import io.chat.kit.repo.ConversationRepo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatLifecycle
+import io.im.core.listener.FetchCallback
+import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.Session
 import io.im.core.utils.ChatExecutorHelper
-import io.im.core.utils.ChatLibUtil
-import io.im.core.utils.ChatToast
 import io.im.core.utils.ConversationIdUtil
+import io.im.core.utils.JLog
 import io.im.core.utils.ServeTime
 import io.im.uicommon.IMCenter
-import io.im.uicommon.UserTest
 import io.im.uicommon.event.ChatMessageEvent
 import io.im.uicommon.listener.MessageEventListener
 import io.im.uicommon.listener.OnLocalMessageOperateListener
-import io.im.uicommon.utils.DateUtil
 import java.util.Collections
 
 
@@ -41,48 +42,26 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
 
     private val mSessions = mutableListOf<UiSession>()
 
+    private val sessionObserver = Observer<MutableList<Session>> { newList ->
+        //去除交集，添加到列表中
+        val sidSet = mSessions.map { it.session.sid }.toHashSet()
+        val appendList = newList.filter {
+            sidSet.add(it.sid)
+        }
+        if (appendList.isNotEmpty()) {
+            JLog.e("=====appendListappendListappendListappendList")
+            appendList.forEach {
+                mSessions.add(mapUISession(it))
+            }
+            refreshAllMessage()
+        }
+    }
+
     init {
         IMCenter.getInstance().getOptions().addMessageEventListener(this)
         IMCenter.getInstance().getOptions().localMessageOperateListeners.add(this)
-
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val list = ChatSDK.getDbManager().sessionDao().allSession()
-            ChatExecutorHelper.getInstance().mainThread().execute {
-                if (mSessions.isEmpty() && list.isNotEmpty()) {
-                    list.forEach {
-                        mSessions.add(mapUISession(it))
-                    }
-                } else {
-                    //模拟数据
-                    val moniList = buildTestDataSession()
-                    mSessions.addAll(moniList)
-                    ChatExecutorHelper.getInstance().diskIO().execute {
-                        ChatSDK.getDbManager().sessionDao()
-                            .insertSessionList(moniList.map { it.session }.toMutableList())
-                    }
-                }
-                refreshAllMessage()
-            }
-        }
+        ChatSDK.getDbManager().sessionDao().allSessionLiveData().observeForever(sessionObserver)
     }
-
-    //创建模拟数据
-    private fun buildTestDataSession(): MutableList<UiSession> {
-        val list = mutableListOf<UiSession>()
-        val users = UserTest.randomUserList(400)
-        users.forEachIndexed { index, user ->
-            list.add(mapUISession(Session().apply {
-                sid = ConversationIdUtil.p2pConversationId(user.id)
-                session = user.toJson()
-                isTop = if (index < 3) 1 else 0
-                unreadCount = ChatLibUtil.randomNumber(1, 200)
-                createTime =
-                    if (index < 4) ServeTime.currentTimeMillis() + (index * 1000 * 60) else ServeTime.currentTimeMillis() - (index * DateUtil.DAY)
-            }))
-        }
-        return list
-    }
-
 
     private fun mapUISession(session: Session): UiSession {
         val uiSession = UiSession(session)
@@ -129,7 +108,6 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         position: Int,
         data: UiSession
     ): Boolean {
-        ChatToast.toast(view.context, "long click")
         return true
     }
 
@@ -166,7 +144,6 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
                 )
                 ChatSDK.getDbManager().sessionDao().insertSession(session)
             }
-
             var uiSession = findUISessionById(sid)
             val isAdd = uiSession == null
             if (isAdd) {
@@ -233,10 +210,10 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun executePageEvent(pageEvent: PageEvent) {
-        if (Looper.getMainLooper().getThread().equals(Thread.currentThread())) {
-            mPageEventLiveData.setValue(pageEvent);
+        if (Looper.getMainLooper().thread == Thread.currentThread()) {
+            mPageEventLiveData.value = pageEvent
         } else {
-            mPageEventLiveData.postValue(pageEvent);
+            mPageEventLiveData.postValue(pageEvent)
         }
     }
 
@@ -249,7 +226,46 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     }
 
     override fun onDestroy() {
+        ChatSDK.getDbManager().sessionDao().allSessionLiveData().removeObserver(sessionObserver)
         IMCenter.getInstance().getOptions().localMessageOperateListeners.remove(this)
         super.onDestroy()
+    }
+
+    fun operateDelete(uiSession: UiSession) {
+        ConversationRepo.deleteConversation(
+            uiSession.session.sid,
+            true,
+            ConversationType.setValue(uiSession.session.type),
+            object : FetchCallback<Void> {
+                override fun onError(errorCode: Int, errorMsg: String?) {
+
+                }
+
+                override fun onSuccess(data: Void?) {
+                    mSessions.remove(uiSession)
+                    refreshAllMessage()
+                }
+            })
+    }
+
+    fun operateStickTop(uiSession: UiSession) {
+        ConversationRepo.setStickTop(
+            uiSession.session.sid,
+            !uiSession.isTop,
+            object : FetchCallback<Session> {
+                override fun onError(errorCode: Int, errorMsg: String?) {
+
+                }
+
+                override fun onSuccess(data: Session?) {
+                    data?.let { d ->
+                        val uiSession = findUISessionById(uiSession.session.sid)
+                        uiSession?.let {
+                            it.session = d
+                            refreshAllMessage()
+                        }
+                    }
+                }
+            })
     }
 }

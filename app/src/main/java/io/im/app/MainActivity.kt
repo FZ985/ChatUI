@@ -1,5 +1,6 @@
 package io.im.app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.chat.conversation.ConversationRoute
 import io.chat.kit.ChatRoute
 import io.im.app.databinding.ActivityMainBinding
@@ -40,6 +45,22 @@ class MainActivity : AppCompatActivity() {
         binding.conversation.setOnClickListener {
             ConversationRoute.goConversation(this)
         }
+
+        refreshLoginUI()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun refreshLoginUI() {
+        val user = ImDebug.getLoginUser()
+        Glide.with(this)
+            .load(user.avatar)
+            .error(io.im.uicommon.R.mipmap.kit_ic_default_avatar)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .transform(CenterCrop(), CircleCrop())
+            .into(binding.loginHead)
+
+        binding.loginName.text = user.name
+        binding.loginId.text = "ID:" + "${user.id}"
     }
 
     private fun jumpToAppStoreDetailUpdate() {

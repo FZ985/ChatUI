@@ -12,9 +12,16 @@
     <color name="color_be65d9">#BE65D9</color>
     <color name="color_e9749d">#E9749D</color>
     <color name="color_f9b751">#F9B751</color>
+    <color name="color_F3963B">#F3963B</color>
+    <color name="color_FC3C30">#FC3C30</color>
+    <color name="color_FFDADD">#FFDADD</color>
 
+
+    <color name="chat_skin_grey_EDEDED_to">#EDEDED</color>
 
     <color name="kit_red_E0493E">#E0493E</color>
     <color name="kit_red_FF4A34">#FF4A34</color>
     <color name="kit_red_FF3B30">#FF3B30</color>
+
+    <color name="swipe_recycler_color_text_gray">#FF777777</color>
 </resources>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="conversation_title">会话</string>
+    <string name="conversation_tip_delete">将清空聊天记录，同时不显示此聊天。你还可以通过搜索找回此聊天</string>
 </resources>

@@ -100,6 +100,8 @@ class ConversationProvider : IViewProvider<UiSession> {
             listener?.onViewLongClick(it, MessageClickType.CONTENT_LONG_CLICK, position, item)
                 ?: true
         }
+
+        item.isChange = false
     }
 
     private fun getContent(context: Context, session: Session): Spannable {

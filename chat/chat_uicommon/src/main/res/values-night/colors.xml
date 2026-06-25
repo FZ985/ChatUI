@@ -5,4 +5,7 @@
 
 
     <color name="kit_ripple_color">#33ffffff</color>
+
+    <color name="chat_skin_grey_EDEDED_to">@color/chat_color_333333</color>
+
 </resources>

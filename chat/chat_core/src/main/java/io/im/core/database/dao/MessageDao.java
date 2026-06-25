@@ -19,9 +19,6 @@ import io.im.core.model.Message;
 @Dao
 public interface MessageDao {
 
-    @Query("SELECT COUNT(*) FROM message")
-    int getCount();
-
     //查询单聊指定会话的最新消息
     @Query("SELECT * FROM message WHERE ((from_id = :fromId AND to_id = :toId) OR (from_id = :toId AND to_id = :fromId)) ORDER BY messageId DESC LIMIT 1")
     Message getLatestP2PMessage(String fromId, String toId);

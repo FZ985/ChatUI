@@ -4,8 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
+
+    <ImageView
+        android:id="@+id/login_head"
+        android:layout_width="@dimen/chat_dp65"
+        android:layout_height="@dimen/chat_dp65"
+        android:layout_marginTop="@dimen/chat_dp20"
+        tools:src="@mipmap/kit_ic_default_avatar" />
+
+    <TextView
+        android:id="@+id/login_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/chat_dp10"
+        android:includeFontPadding="false"
+        android:textColor="@color/chat_skin_Text"
+        android:textSize="@dimen/chat_sp16"
+        android:textStyle="bold"
+        tools:text="九九九" />
+
+    <TextView
+        android:id="@+id/login_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/chat_dp5"
+        android:includeFontPadding="false"
+        android:textColor="@color/chat_color_444444"
+        android:textSize="@dimen/chat_sp12"
+        tools:text="ID:888888" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/go_chat"
