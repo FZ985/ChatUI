@@ -20,7 +20,6 @@ import io.im.core.model.Message
 import io.im.core.model.Session
 import io.im.core.utils.ChatExecutorHelper
 import io.im.core.utils.ConversationIdUtil
-import io.im.core.utils.JLog
 import io.im.core.utils.ServeTime
 import io.im.uicommon.IMCenter
 import io.im.uicommon.event.ChatMessageEvent
@@ -49,7 +48,6 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
             sidSet.add(it.sid)
         }
         if (appendList.isNotEmpty()) {
-            JLog.e("=====appendListappendListappendListappendList")
             appendList.forEach {
                 mSessions.add(mapUISession(it))
             }
