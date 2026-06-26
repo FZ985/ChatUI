@@ -24,13 +24,15 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 
 import io.chat.kit.R;
+import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.model.UiMessage;
-import io.im.uicommon.adapter.IViewProviderListener;
-import io.im.uicommon.adapter.ViewHolder;
 import io.im.core.message.im.ImageMessage;
 import io.im.core.model.MessageContent;
+import io.im.core.model.State;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNull;
+import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.adapter.ViewHolder;
 
 /**
  * author : JFZ
@@ -67,6 +69,18 @@ public class IImageMessageProvider extends BaseMessageItemProvider<ImageMessage>
         } else {
             thumbUri = ChatNull.compat(message.getUrl());
         }
+
+        if (isSender && (uiMessage.getState() == State.PROGRESS
+                || uiMessage.getState() == State.ERROR)
+                && ResendManager.getInstance().needResend(uiMessage.getMessageId())) {
+            contentHolder.setVisible(R.id.rl_progress, true);
+            contentHolder.setVisible(R.id.msg_layer, true);
+            contentHolder.setText(R.id.tv_progress, uiMessage.getProgress() + "%");
+        } else {
+            contentHolder.setVisible(R.id.rl_progress, false);
+            contentHolder.setVisible(R.id.msg_layer, false);
+        }
+
         int width = message.getWidth();
         int height = message.getHeight();
         if (width != 0 && height != 0) {

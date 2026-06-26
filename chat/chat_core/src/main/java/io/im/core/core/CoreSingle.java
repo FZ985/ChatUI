@@ -23,6 +23,7 @@ import io.im.core.core.socket.SocketCode;
 import io.im.core.core.socket.WebSocketResult;
 import io.im.core.model.Message;
 import io.im.core.utils.ChatLibUtil;
+import io.im.core.utils.ChatNetworkUtil;
 import io.im.core.utils.JLog;
 
 
@@ -153,18 +154,22 @@ public class CoreSingle {
         try {
             String msgJson = message.toJson();
             JSONObject jo = new JSONObject(msgJson);
-            jo.put("code", 200);
+            if (ChatNetworkUtil.isConnection(ChatSDK.getContext())) {
+                jo.put("code", SocketCode.success);
+            } else {
+                jo.put("code", SocketCode.NETWORK_ERROR);
+            }
             String data = new WebSocketResult(SocketCode.SOCKET_MESSAGE, jo.toString()).toJson();
             callback.onResult(CoreConstant.SocketResponse, data);
 
             testHandler.postDelayed(() -> {
                 try {
                     Message flipMessage = message.flipFromTo();
-                    flipMessage.setReplyMessage("");
+                    flipMessage.setReferMessage("");
                     flipMessage.setMessageId(flipMessage.buildMessageId());
                     String receiveJson = flipMessage.toJson();
                     JSONObject receiveObj = new JSONObject(receiveJson);
-                    receiveObj.put("code", 200);
+                    receiveObj.put("code", SocketCode.success);
                     String receiveData = new WebSocketResult(SocketCode.SOCKET_MESSAGE, receiveObj.toString()).toJson();
                     callback.onResult(CoreConstant.SocketResponse, receiveData);
                 } catch (Exception e) {

@@ -1,6 +1,5 @@
 package io.chat.kit.processor
 
-import io.chat.kit.repo.ChatRepo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatFun
 import io.im.core.listener.FetchCallback
@@ -8,6 +7,7 @@ import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.UserInfo
 import io.im.core.utils.ChatExecutorHelper
+import io.im.uicommon.repo.ChatRepo
 import java.util.Collections
 
 
@@ -58,25 +58,6 @@ class TeamChatMessageProcessor : ChatMessageProcessor() {
                 call.apply(list)
             }
         }
-    }
-
-    override fun deleteMessage(user: UserInfo, message: Message) {
-        deleteMessages(user, mutableListOf(message))
-    }
-
-    override fun deleteMessages(user: UserInfo, messages: MutableList<Message>) {
-        ChatRepo.deleteMessages(
-            messages,
-            user.id,
-            ConversationType.TYPE_TEAM,
-            object : FetchCallback<Int> {
-                override fun onError(errorCode: Int, errorMsg: String?) {
-
-                }
-
-                override fun onSuccess(data: Int?) {
-                }
-            })
     }
 
     override fun clearMessage(user: UserInfo) {

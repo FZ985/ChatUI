@@ -4,13 +4,14 @@ package io.chat.kit.processor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import io.chat.kit.repo.ChatRepo;
 import io.im.core.listener.ChatFun;
 import io.im.core.listener.FetchCallback;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
+import io.im.uicommon.repo.ChatRepo;
 
 /**
  * by DAD FZ
@@ -27,7 +28,7 @@ public abstract class ChatMessageProcessor {
     public abstract void loadMoreMessage(@NonNull UserInfo user, @NonNull ChatFun.Fun1<List<Message>> call);
 
     public void insertMessage(@NonNull Message message, @NonNull ChatFun.Fun1<Long> call) {
-        ChatRepo.insertLocalMessage(message, new FetchCallback<Long>() {
+        ChatRepo.insertLocalMessage(message, new FetchCallback<>() {
             @Override
             public void onError(int errorCode, @Nullable String errorMsg) {
 
@@ -58,9 +59,28 @@ public abstract class ChatMessageProcessor {
         });
     }
 
-    public abstract void deleteMessage(@NonNull UserInfo user, @NonNull Message message);
+    public void deleteMessage(@NonNull UserInfo user, @NonNull Message message) {
+        List<Message> list = new ArrayList<>();
+        list.add(message);
+        deleteMessages(user, list);
+    }
 
-    public abstract void deleteMessages(@NonNull UserInfo user, @NonNull List<Message> messages);
+    public void deleteMessages(@NonNull UserInfo user, @NonNull List<Message> messages) {
+        ChatRepo.deleteMessages(
+                messages,
+                user.getId(),
+                new FetchCallback<>() {
+                    @Override
+                    public void onError(int errorCode, @Nullable String errorMsg) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@Nullable Integer data) {
+
+                    }
+                });
+    }
 
     public abstract void clearMessage(@NonNull UserInfo user);
 }

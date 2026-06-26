@@ -14,7 +14,8 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.chat.kit.R;
-import io.chat.kit.helper.ReplyUIHelper;
+import io.im.uicommon.resend.ResendManager;
+import io.chat.kit.helper.ReferUIHelper;
 import io.chat.kit.model.UiMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
@@ -38,7 +39,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
     protected MessageItemProviderConfig mConfig = new MessageItemProviderConfig();
 
-    private final ReplyUIHelper replyUIHelper = new ReplyUIHelper();
+    private final ReferUIHelper referUIHelper = new ReferUIHelper();
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -71,7 +72,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             }
             initTime(holder, position, list, message);
             initContent(holder, isSender, uiMessage, position, listener, list);
-            initReply(holder, isSender, uiMessage, position, listener, list);
+            initRefer(holder, isSender, uiMessage, position, listener, list);
             initStatus(holder, uiMessage, position, listener, message, isSender, list);
             initUserInfo(holder, uiMessage, position, listener, isSender);
 
@@ -204,11 +205,11 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 });
     }
 
-    //初始化回复内容
-    private void initReply(final ViewHolder holder, boolean isSender, final UiMessage uiMessage, final int position,
+    //初始化引用内容
+    private void initRefer(final ViewHolder holder, boolean isSender, final UiMessage uiMessage, final int position,
                            final IViewProviderListener<UiMessage> listener, final List<UiMessage> list) {
-        FrameLayout replyContentView = holder.getView(R.id.base_reply_content);
-        if (uiMessage.getMessage() != null && uiMessage.getMessage().getInnerReplyMessage() != null) {
+        FrameLayout referContentView = holder.getView(R.id.base_refer_content);
+        if (uiMessage.getMessage() != null && uiMessage.getMessage().getInnerReferMessage() != null) {
             T msgContent = null;
             try {
                 msgContent = (T) uiMessage.getMessage().getMessageContent();
@@ -216,24 +217,24 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 log("bindViewHolder Message cast Exception, e:" + e.getMessage());
             }
             if (msgContent != null) {
-                replyContentView.setVisibility(View.VISIBLE);
-                bindReplyContent(replyContentView, uiMessage, position, isSender, list, listener);
+                referContentView.setVisibility(View.VISIBLE);
+                bindReferContent(referContentView, uiMessage, position, isSender, list, listener);
             } else {
-                replyContentView.setVisibility(View.GONE);
+                referContentView.setVisibility(View.GONE);
             }
         } else {
-            replyContentView.setVisibility(View.GONE);
+            referContentView.setVisibility(View.GONE);
         }
     }
 
-    protected void bindReplyContent(
-            FrameLayout replyContentView,
+    protected void bindReferContent(
+            FrameLayout referContentView,
             UiMessage uiMessage,
             int position,
             boolean isSender,
             List<UiMessage> list,
             IViewProviderListener<UiMessage> listener) {
-        replyUIHelper.bindReplyContent(replyContentView, uiMessage, isSender, position, list, listener);
+        referUIHelper.bindReferContent(referContentView, uiMessage, isSender, position, list, listener);
     }
 
     //初始化状态
@@ -245,7 +246,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             Message message,
             boolean isSender,
             List<UiMessage> list) {
-        if (mConfig.showWarning) {
+        if (mConfig.showWarning && ResendManager.getInstance().needResend(uiMessage.getMessage().getMessageId())) {
             if (isSender && uiMessage.getState() == State.ERROR) {
                 holder.setVisible(R.id.base_warning, true);
                 holder.setOnClickListener(

@@ -9,22 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.im.core.MessageType;
-import io.im.core.core.ChatSDK;
 import io.im.core.core.IMClientCore;
 import io.im.core.core.socket.ErrorResult;
 import io.im.core.core.socket.SocketCode;
 import io.im.core.listener.MessageCallback;
 import io.im.core.listener.OnSocketMessageListener;
 import io.im.core.model.Message;
-import io.im.core.model.MessageUser;
-import io.im.core.model.Session;
-import io.im.core.utils.ChatExecutorHelper;
-import io.im.core.utils.ConversationIdUtil;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.listener.MessageInterceptListener;
+import io.im.uicommon.repo.ConversationRepo;
+import io.im.uicommon.resend.ResendManager;
 
 
 /**
@@ -82,7 +79,7 @@ public class MessageManager {
         message = transformMessage(message);
         MessageCallback<Message> callback = callbackMap.get(message.getMessageId());
         if (errorCode == SocketCode.success) {
-//            ResendManager.getInstance().removeResendMessage(message.getMessageId());
+            ResendManager.getInstance().removeResendMessage(message.getMessageId());
             if (callback != null) {
                 callback.onSuccess(message);
                 if (!MessageType.isAppType(message.getMessageType())) {
@@ -98,7 +95,10 @@ public class MessageManager {
             }
             removeCallback(message);
         } else {
-//            ResendManager.getInstance().addResendMessage(message, false);
+            if (!MessageType.isAppType(message.getMessageType())) {
+                //只缓存聊天消息，其他非聊天消息不缓存
+                ResendManager.getInstance().addResendMessage(message, false);
+            }
             if (callback != null) {
                 callback.onError(message, errorCode);
             } else {
@@ -164,21 +164,7 @@ public class MessageManager {
 
     //验证会话并创建
     private void checkSession(Message message) {
-        String myAccount = IMCenter.getAccountId();
-        MessageUser toUser = message.getFromUser().getId().equals(myAccount) ? message.getToUser() : message.getFromUser();
-        String friendAccount = toUser.getId();
-        ChatExecutorHelper.getInstance().diskIO().execute(() -> {
-            String sid = ConversationIdUtil.conversationId(friendAccount, message.getConversationType());
-            var session = ChatSDK.getDbManager().sessionDao().getSessionBySid(sid);
-            if (session == null) {
-                session = Session.obtain(
-                        toUser.toUserInfo(),
-                        message.getConversationType(),
-                        message
-                );
-                ChatSDK.getDbManager().sessionDao().insertSession(session);
-            }
-        });
+        ConversationRepo.createConversation(message, false, null);
     }
 
 }

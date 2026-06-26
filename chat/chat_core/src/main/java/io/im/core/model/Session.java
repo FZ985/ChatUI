@@ -114,6 +114,10 @@ public class Session implements Serializable {
         this.isDisturb = isDisturb;
     }
 
+    public boolean isMute() {
+        return getIsDisturb() == 1;
+    }
+
     public UserInfo getUser() {
         return UserInfo.fromJson(getSession());
     }

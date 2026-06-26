@@ -9,25 +9,32 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.im.core.MessageType;
 import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatFun;
+import io.im.core.listener.FetchCallback;
 import io.im.core.listener.MessageCallback;
 import io.im.core.message.im.ForwardMessage;
 import io.im.core.message.im.HQVoiceMessage;
+import io.im.core.message.im.MediaMessage;
 import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
+import io.im.core.model.State;
 import io.im.core.model.UserInfo;
 import io.im.core.utils.ChatToast;
 import io.im.core.utils.ServeTime;
 import io.im.uicommon.bean.AudioDataBean;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.listener.UploadDownloadProcessor;
 import io.im.uicommon.manager.MessageManager;
+import io.im.uicommon.repo.ChatRepo;
+import io.im.uicommon.resend.ResendManager;
 
 /**
  * by DAD FZ
@@ -72,7 +79,7 @@ public class MessageOperate {
                 Message m = messageList.get(i);
                 Message newMsg = Message.obtain(user, m.getConversationType(), m.getMessageType(), m.getMessageContent());
                 newMsg.setCreateTime(ServeTime.currentTimeMillis() + i);
-                newMsg.setReplyMessage(m.getReplyMessage());
+                newMsg.setReferMessage(m.getReferMessage());
                 msgList.add(newMsg);
             }
             sendForwardMessage(msgList, new ArrayList<>(), new ArrayList<>(), callback);
@@ -85,7 +92,7 @@ public class MessageOperate {
                                            @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
         if (!messageList.isEmpty()) {
             Message message = messageList.get(0);
-            sendMessage(message, null, new MessageCallback<Message>() {
+            sendMessage(message, null, new MessageCallback<>() {
                 @Override
                 public void onSuccess(Message message) {
                     successMessage.add(message);
@@ -106,19 +113,19 @@ public class MessageOperate {
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replayMessage, @Nullable MessageCallback<Message> callback) {
-        sendMessage(message, replayMessage, true, true, callback);
+    public static void sendMessage(Message message, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
+        sendMessage(message, referMessage, true, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message replyMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
-        if (replyMessage != null) {
-            message.setReplyMessage(replyMessage.toJson());
+    public static void sendMessage(Message message, @Nullable Message referMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
+        if (referMessage != null) {
+            message.setReferMessage(referMessage.toJson());
         }
         if (postEvent && postAttach) {
             postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ATTACH, message));
         }
-        MessageManager.getInstance().sendMessage(message, new MessageCallback<Message>() {
+        MessageManager.getInstance().sendMessage(message, new MessageCallback<>() {
             @Override
             public void onSuccess(Message message) {
                 if (postEvent) {
@@ -151,43 +158,35 @@ public class MessageOperate {
 
 
     //删除消息
-    public static void deleteMessage(Message message, @Nullable MessageCallback<Message> callback) {
+    public static void deleteMessage(Message message, @NonNull String toId, @Nullable MessageCallback<Message> callback) {
         List<Message> messageList = new ArrayList<>();
         messageList.add(message);
-        deleteMessage(messageList, callback);
+        deleteMessage(messageList, toId, callback);
     }
 
     //删除消息
-    public static void deleteMessage(List<Message> messageList, @Nullable MessageCallback<Message> callback) {
-        postDeleteMessage(new io.im.uicommon.event.DeleteMessageEvent(io.im.uicommon.event.DeleteMessageEvent.SUCCESS, messageList));
+    public static void deleteMessage(List<Message> messageList, @NonNull String toId, @Nullable MessageCallback<Message> callback) {
+        ChatRepo.deleteMessages(messageList, toId, new FetchCallback<>() {
+            @Override
+            public void onError(int errorCode, @Nullable String errorMsg) {
+
+            }
+
+            @Override
+            public void onSuccess(@Nullable Integer data) {
+                postDeleteMessage(new io.im.uicommon.event.DeleteMessageEvent(io.im.uicommon.event.DeleteMessageEvent.SUCCESS, messageList));
+            }
+        });
     }
 
     //发送语音消息
-    public static void sendVoiceMessage(UserInfo toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message replyMessage, @Nullable MessageCallback<Message> callback) {
+    public static void sendVoiceMessage(UserInfo toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
         HQVoiceMessage voiceBody = HQVoiceMessage.obtain(voiceData.getUrl(), voiceData.getPath(), voiceData.getDuration());
         Message message = Message.obtain(toUser, conversationType, MessageType.CHAT_VOICE, voiceBody);
         postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
-        sendMessage(message, replyMessage, callback);
+        sendMessage(message, referMessage, callback);
     }
 
-//    //发送阅读消息
-//    public void sendReadMessage(Message message, MessageCallback callback) {
-//        message.setType(MessageType.READ_MESSAGE);
-//        sendMessage(message, callback);
-//    }
-//
-//    public void sendReadMessage(UserInfo user, Conversation.ConversationType type) {
-//        Message message = Message.obtain(user, type, MessageType.READ_MESSAGE, ReadMsgMessage.empty());
-//        sendMessage(message, null);
-//    }
-//
-//    //发送撤回消息
-//    public void sendRevokeMessage(Message message, MessageCallback callback) {
-//        message.setType(MessageType.REVOKE_705);
-//        sendMessage(message, callback);
-//    }
-//
-//
 //    //发送订单消息
 //    public void sendOrderMessage(UserInfo user, Conversation.ConversationType type, OrderMessage body, MessageCallback callback) {
 //        Message message = Message.obtain(user, type, MessageType.ORDER, body);
@@ -233,84 +232,40 @@ public class MessageOperate {
 //    }
 //
 //
-//    //上传并发送消息
-//    public void uploadAndSendMediaMessage(Message message, File file) {
-//        List<MessageEventListener> eventListeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-//        for (MessageEventListener listener : eventListeners) {
-//            listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.PROGRESS, message, 0));
-//        }
-//        UploadModel.get().uploadFile(file, (url) -> {
-//            MediaMessage body = (MediaMessage) message.getBody();
-//            for (MessageEventListener listener : eventListeners) {
-//                body.setContent(url);
-//                message.setBody(body);
-//                MessageManager.getInstance().sendMessage(message, new MessageCallback() {
-//                    @Override
-//                    public void onSuccess(Message message1) {
-//                        message1.setStatus(State.SUCCESS);
-//                        listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.SUCCESS, message1));
-//                    }
-//
-//                    @Override
-//                    public void onError(Message message1, int errorCode) {
-//                        message1.setStatus(State.ERROR);
-//                        listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.ERROR, message1));
-//                    }
-//                });
-//            }
-//        }, () -> {
-//            ResendManager.getInstance().addResendMessage(message, false);
-//            for (MessageEventListener listener : eventListeners) {
-//                message.setStatus(State.ERROR);
-//                listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.ERROR, message));
-//            }
-//        }, (progress) -> {
-//            for (MessageEventListener listener : eventListeners) {
-//                message.setStatus(State.PROGRESS);
-//                listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.PROGRESS, message, progress));
-//            }
-//        });
-//    }
-//
-//    //上传并发送消息
-//    public void uploadAndSendMediaMessage(Message message, Picker picker) {
-//        List<MessageEventListener> eventListeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-//        for (MessageEventListener listener : eventListeners) {
-//            listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.PROGRESS, message, 0));
-//        }
-//        MediaMessage body = (MediaMessage) message.getBody();
-//        UploadModel.get().upload(ChatSDK.getContext(), picker, (p, url) -> {
-//            for (MessageEventListener listener : eventListeners) {
-//                body.setContent(url);
-//                message.setBody(body);
-//                MessageManager.getInstance().sendMessage(message, new MessageCallback() {
-//                    @Override
-//                    public void onSuccess(Message message) {
-//                        message.setStatus(State.SUCCESS);
-//                        listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.SUCCESS, message));
-//                    }
-//
-//                    @Override
-//                    public void onError(Message message, int errorCode) {
-//                        message.setStatus(State.ERROR);
-//                        listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.ERROR, message));
-//                    }
-//                });
-//            }
-//        }, p -> {
-//            ResendManager.getInstance().addResendMessage(message, false);
-//            for (MessageEventListener listener : eventListeners) {
-//                message.setStatus(State.ERROR);
-//                listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.ERROR, message));
-//            }
-//        }, (p, progress) -> {
-//            for (MessageEventListener listener : eventListeners) {
-//                message.setStatus(State.PROGRESS);
-//                listener.onSendMediaMessage(new SendMediaEvent(SendMediaEvent.PROGRESS, message, progress));
-//            }
-//        });
-//    }
 
+    //上传并发送消息
+    public static void uploadAndSendMediaMessage(Message message, File file) {
+        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
+        UploadDownloadProcessor uploadProcessor = IMCenter.getInstance().getOptions().uploadDownloadProcessor;
+        if (uploadProcessor != null) {
+            uploadProcessor.upload(file, url -> {
+                MediaMessage body = (MediaMessage) message.getMessageContent();
+                body.setUrl(url);
+                message.setMessageBody(body.toJson());
+                message.setMessageContent(body);
+                sendMessage(message, null, false, false, new MessageCallback<>() {
+                    @Override
+                    public void onSuccess(Message message) {
+                        message.setSendStatus(State.SUCCESS);
+                        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    }
+
+                    @Override
+                    public void onError(Message message, int errorCode) {
+                        message.setSendStatus(State.ERROR);
+                        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                    }
+                });
+            }, errorMessage -> {
+                ResendManager.getInstance().addResendMessage(message, false);
+                message.setSendStatus(State.ERROR);
+                postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+            }, progress -> {
+                message.setSendStatus(State.PROGRESS);
+                postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, progress.intValue()));
+            });
+        }
+    }
 
     //分发发送事件
     public static void postSendEvent(io.im.uicommon.event.ChatMessageEvent event) {

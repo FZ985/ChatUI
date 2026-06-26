@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import io.chat.conversation.R
 import io.chat.conversation.model.UiSession
 import io.chat.conversation.utils.ConUIHelper
@@ -79,6 +80,7 @@ class ConversationProvider : IViewProvider<UiSession> {
         //免打扰
         val disturb = holder.getView<ImageView>(R.id.disturb)
         OptionsHelper.updateImageSize(disturb, disturb.dp(io.im.core.R.dimen.chat_dp14))
+        disturb.isVisible = item.session.isMute
 
         //内容
         val content = holder.getView<TextView>(R.id.content)
@@ -89,6 +91,7 @@ class ConversationProvider : IViewProvider<UiSession> {
         val readCount = holder.getView<TextView>(R.id.un_read_count)
         OptionsHelper.updateTextSize(readCount, 13)
         ConUIHelper.updateConversationCount(readCount, item)
+
         //点击
         val root = holder.getView<ConstraintLayout>(R.id.con_root)
         root.doClick {

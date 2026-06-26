@@ -7,10 +7,10 @@
     android:paddingTop="@dimen/chat_dp5">
 
     <TextView
-        android:id="@+id/def_reply_tv"
+        android:id="@+id/def_refer_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/kit_bg_default_reply"
+        android:background="@drawable/kit_bg_default_refer"
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:maxWidth="@dimen/chat_dp220"

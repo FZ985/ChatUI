@@ -11,7 +11,6 @@ import io.chat.conversation.utils.ConversationUtil
 import io.chat.kit.ChatRoute
 import io.chat.kit.event.PageEvent
 import io.chat.kit.event.ScrollToTopEvent
-import io.chat.kit.repo.ConversationRepo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatLifecycle
 import io.im.core.listener.FetchCallback
@@ -19,12 +18,12 @@ import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.Session
 import io.im.core.utils.ChatExecutorHelper
-import io.im.core.utils.ConversationIdUtil
 import io.im.core.utils.ServeTime
 import io.im.uicommon.IMCenter
 import io.im.uicommon.event.ChatMessageEvent
 import io.im.uicommon.listener.MessageEventListener
 import io.im.uicommon.listener.OnLocalMessageOperateListener
+import io.im.uicommon.repo.ConversationRepo
 import java.util.Collections
 
 
@@ -38,7 +37,6 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
 
     private val mSessionLiveData = MediatorLiveData<MutableList<UiSession>>()
     private val mPageEventLiveData = MediatorLiveData<PageEvent>()
-
     private val mSessions = mutableListOf<UiSession>()
 
     private val sessionObserver = Observer<MutableList<Session>> { newList ->
@@ -122,42 +120,29 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun insertOrUpdateConversation(message: Message) {
-        val myAccount = IMCenter.getAccountId()
-        val toUser = if (message.fromUser.id == myAccount) message.toUser else message.fromUser
-        val friendAccount = toUser.id
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val sid = ConversationIdUtil.conversationId(friendAccount, message.conversationType)
-            var session = ChatSDK.getDbManager().sessionDao().getSessionBySid(sid)
-            if (session != null) {
-                session.updateTime = message.updateTime
-                session.session = toUser.toJson()
-                session.type = message.conversationType.value
-                session.lastMessage = message.toJson()
-                ChatSDK.getDbManager().sessionDao().update(session)
-            } else {
-                session = Session.obtain(
-                    toUser.toUserInfo(),
-                    message.conversationType,
-                    message
-                )
-                ChatSDK.getDbManager().sessionDao().insertSession(session)
+        ConversationRepo.createConversation(message, true, object : FetchCallback<Session> {
+            override fun onError(errorCode: Int, errorMsg: String?) {
+
             }
-            var uiSession = findUISessionById(sid)
-            val isAdd = uiSession == null
-            if (isAdd) {
-                uiSession = mapUISession(session)
-            } else {
-                uiSession.session = session
-            }
-            ChatExecutorHelper.getInstance().mainThread().execute {
-                if (isAdd) {
-                    sendSessionEvent(uiSession)
-                } else {
-                    refreshAllMessage()
+
+            override fun onSuccess(data: Session?) {
+                data?.let { session ->
+                    var uiSession = findUISessionById(session.sid)
+                    val isAdd = uiSession == null
+                    if (isAdd) {
+                        uiSession = mapUISession(session)
+                    } else {
+                        uiSession.session = session
+                    }
+                    if (isAdd) {
+                        sendSessionEvent(uiSession)
+                    } else {
+                        refreshAllMessage()
+                    }
+                    executePageEvent(ScrollToTopEvent())
                 }
-                executePageEvent(ScrollToTopEvent())
             }
-        }
+        })
     }
 
     private fun sendSessionEvent(uiSession: UiSession) {

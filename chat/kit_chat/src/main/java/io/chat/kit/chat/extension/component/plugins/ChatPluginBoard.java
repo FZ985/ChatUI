@@ -58,10 +58,10 @@ public class ChatPluginBoard extends FrameLayout {
         binding = ChatPanelPluginBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
     }
 
-    public void initPlugin(IChatFragment fragment, @Nullable Message replyMessage) {
+    public void initPlugin(IChatFragment fragment, @Nullable Message referMessage) {
         if (pluginModules != null && !pluginModules.isEmpty()) {
             if (mPagerAdapter != null) {
-                mPagerAdapter.setReplyMessage(replyMessage);
+                mPagerAdapter.setReferMessage(referMessage);
             }
             return;
         }
@@ -85,7 +85,7 @@ public class ChatPluginBoard extends FrameLayout {
         int pages;
         int items;
         @Nullable
-        Message replyMessage;
+        Message referMessage;
 
         ChatBaseFragment fragment;
 
@@ -107,7 +107,7 @@ public class ChatPluginBoard extends FrameLayout {
         public void onBindViewHolder(@NonNull PluginPagerViewHolder holder, int position) {
             GridView gridView = holder.gridView;
             gridView.setNumColumns(DEFAULT_SHOW_COLUMN);
-            gridView.setAdapter(new PluginItemAdapter(position * mPluginCountPerPage, items, fragment, replyMessage));
+            gridView.setAdapter(new PluginItemAdapter(position * mPluginCountPerPage, items, fragment, referMessage));
         }
 
         @Override
@@ -117,8 +117,8 @@ public class ChatPluginBoard extends FrameLayout {
 
 
         @SuppressLint("NotifyDataSetChanged")
-        public void setReplyMessage(@Nullable Message replyMessage) {
-            this.replyMessage = replyMessage;
+        public void setReferMessage(@Nullable Message referMessage) {
+            this.referMessage = referMessage;
             notifyDataSetChanged();
         }
 
@@ -138,14 +138,14 @@ public class ChatPluginBoard extends FrameLayout {
         Pair<Integer, Integer> cellSize;
 
         @Nullable
-        Message replyMessage;
+        Message referMessage;
 
         ChatBaseFragment fragment;
 
-        public PluginItemAdapter(int index, int count, ChatBaseFragment fragment, @Nullable Message replyMessage) {
+        public PluginItemAdapter(int index, int count, ChatBaseFragment fragment, @Nullable Message referMessage) {
             this.count = Math.min(mPluginCountPerPage, count - index);
             this.index = index;
-            this.replyMessage = replyMessage;
+            this.referMessage = referMessage;
             this.fragment = fragment;
             cellSize = new Pair<>(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
@@ -212,10 +212,10 @@ public class ChatPluginBoard extends FrameLayout {
             holder.imageView.setImageDrawable(plugin.obtainDrawable(context));
             holder.textView.setText(plugin.obtainTitle(context));
             holder.imageView.setOnClickListener(v -> {
-                plugin.onPluginClick(fragment, v, replyMessage);
+                plugin.onPluginClick(fragment, v, referMessage);
             });
             holder.imageView.setOnLongClickListener(v -> {
-                return plugin.onPluginLongClick(fragment, v, replyMessage);
+                return plugin.onPluginLongClick(fragment, v, referMessage);
             });
             return convertView;
         }

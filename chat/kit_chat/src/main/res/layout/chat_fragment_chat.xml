@@ -48,10 +48,10 @@
             </io.im.uicommon.widgets.ChatRefreshLayout>
 
             <LinearLayout
-                android:id="@+id/reply_ll"
+                android:id="@+id/refer_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/chat_conversation_reply"
+                android:background="@color/chat_conversation_refer"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/chat_dp1"
                 android:paddingEnd="@dimen/chat_dp12"
@@ -59,7 +59,7 @@
                 tools:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/reply_close"
+                    android:id="@+id/refer_close"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/chat_dp26"
                     android:paddingVertical="@dimen/chat_dp5"
@@ -68,7 +68,7 @@
                     android:src="@drawable/kit_vec_close_24" />
 
                 <TextView
-                    android:id="@+id/reply_tv"
+                    android:id="@+id/refer_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

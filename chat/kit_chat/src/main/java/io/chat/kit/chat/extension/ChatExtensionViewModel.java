@@ -163,7 +163,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         return mInputModeLiveData;
     }
 
-    public void onSendClick(@Nullable Message replyMessage) {
+    public void onSendClick(@Nullable Message referMessage) {
         if (editText == null) return;
         if (TextUtils.isEmpty(editText.getText())
                 || TextUtils.isEmpty(editText.getText().toString().trim())) {
@@ -183,7 +183,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         TextMessage textMessage = TextMessage.obtain(text);
         Message message = Message.obtain(fragment.getUser(), fragment.getConversationType(), MessageType.CHAT_TEXT, textMessage);
         message.setSendStatus(Message.SentStatus.SENDING.getValue());
-        MessageOperate.sendMessage(message, replyMessage, null);
+        MessageOperate.sendMessage(message, referMessage, null);
 
     }
 }

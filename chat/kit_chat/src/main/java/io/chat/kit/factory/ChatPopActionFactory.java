@@ -103,8 +103,8 @@ public class ChatPopActionFactory {
             addRevokeAction(context, actions, message);
             //多选
             actions.add(getMultiSelectAction(context, message));
-            //回复
-            actions.add(getReplyAction(context, message));
+            //引用
+            actions.add(getReferAction(context, message));
 
         }
         if (customPopMenu != null && customPopMenu.get() != null) {
@@ -129,15 +129,15 @@ public class ChatPopActionFactory {
         }
     }
 
-    // 构建回复按钮
-    private PluginAction<Message> getReplyAction(Context context, Message message) {
+    // 构建引用按钮
+    private PluginAction<Message> getReferAction(Context context, Message message) {
         return new PluginAction<>(
-                ActionConstants.POP_ACTION_REPLY,
-                context.getString(R.string.chat_message_action_reply),
-                R.drawable.kit_message_menu_reply,
+                ActionConstants.POP_ACTION_REFER,
+                context.getString(R.string.chat_message_action_refer),
+                R.drawable.kit_message_menu_refer,
                 (view, messageInfo) -> {
                     if (actionListener != null) {
-                        actionListener.get().onReply(messageInfo);
+                        actionListener.get().onRefer(messageInfo);
                     }
                 },
                 message);

@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.provider.MessageClickType;
+import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.chat.voice.AudioPlayManager;
 import io.chat.kit.event.PageEvent;
 import io.chat.kit.event.RefreshEvent;
@@ -281,9 +282,6 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         if (event.getEvent() == DeleteMessageEvent.SUCCESS) {
             List<Message> messages = event.getMessages();
             removeMessage(messages);
-            if (chatProcessor != null) {
-                chatProcessor.deleteMessages(mCall.getUser(), messages);
-            }
             if (isEdit()) {
                 setEdit(false);
             }
@@ -465,8 +463,8 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     public void onViewClick(View view, int clickType, int position, UiMessage data) {
         if (clickType == MessageClickType.EDIT_CLICK) {
             checkSelectMessage(data);
-        } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
-            Toast.makeText(view.getContext(), "点击回复", Toast.LENGTH_SHORT).show();
+        } else if (clickType == MessageClickType.REFER_CONTENT_CLICK) {
+            Toast.makeText(view.getContext(), "点击引用", Toast.LENGTH_SHORT).show();
         } else {
             if (popMenu != null && !popMenu.isShowing()) {
                 SelectableTextHelper.getInstance().dismiss();
@@ -483,11 +481,24 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 } else if (clickType == MessageClickType.REVOKE_EDIT) {
                     //撤销重新编辑点击
                     onRevokeClick(data, position);
+                } else if (clickType == MessageClickType.WARNING_CLICK) {
+                    onWarnClick(data);
                 } else {
                     Toast.makeText(view.getContext(), "click", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+    }
+
+    //警告点击
+    public void onWarnClick(final UiMessage uiMessage) {
+        final Message msg = uiMessage.getMessage();
+        int position = findUIMessageIndexById(msg.getMessageId());
+        if (position >= 0) {
+            mUiMessages.remove(position);
+            mUiMessageLiveData.setValue(mUiMessages);
+        }
+        ResendManager.getInstance().addResendMessage(msg, true);
     }
 
     private void onRevokeClick(UiMessage data, int index) {
@@ -499,7 +510,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             try {
                 if (message.getMessageType() == MessageType.CHAT_TEXT) {
                     TextMessage textBody = (TextMessage) message.getMessageContent();
-                    mCall.getIChatHelper().setRevokeMessageAgain(textBody.getContent(), message.getInnerReplyMessage(), index);
+                    mCall.getIChatHelper().setRevokeMessageAgain(textBody.getContent(), message.getInnerReferMessage(), index);
                 }
             } catch (Exception e) {
                 //
@@ -591,8 +602,8 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         if (!isProcess) {
             if (clickType == MessageClickType.CONTENT_LONG_CLICK) {
                 return onItemMessageLongClick(view, clickType, position, data);
-            } else if (clickType == MessageClickType.REPLY_CONTENT_CLICK) {
-                Toast.makeText(view.getContext(), "长按点击回复", Toast.LENGTH_SHORT).show();
+            } else if (clickType == MessageClickType.REFER_CONTENT_CLICK) {
+                Toast.makeText(view.getContext(), "长按点击引用", Toast.LENGTH_SHORT).show();
                 return true;
             }
             return false;

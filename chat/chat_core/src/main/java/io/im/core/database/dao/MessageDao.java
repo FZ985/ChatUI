@@ -49,9 +49,9 @@ public interface MessageDao {
     @Update
     void updateMessage(Message message);
 
-    //删除单聊指定消息
-    @Query("DELETE FROM message WHERE messageId IN (:messageIds) AND ((from_id = :fromId AND to_id = :toId) OR (from_id = :toId AND to_id = :fromId))")
-    int deleteP2PMessages(String fromId, String toId, List<Long> messageIds);
+    //删除指定消息
+    @Query("DELETE FROM message WHERE messageId IN (:messageIds)")
+    int deleteMessages(List<Long> messageIds);
 
     //清空单聊会话消息
     @Query("DELETE FROM message WHERE ((from_id = :fromId AND to_id = :toId) OR (from_id = :toId AND to_id = :fromId))")

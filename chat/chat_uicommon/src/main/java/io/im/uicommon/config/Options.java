@@ -12,6 +12,7 @@ import io.im.uicommon.listener.ImageLoader;
 import io.im.uicommon.listener.MessageEventListener;
 import io.im.uicommon.listener.MessageInterceptListener;
 import io.im.uicommon.listener.OnLocalMessageOperateListener;
+import io.im.uicommon.listener.UploadDownloadProcessor;
 
 /**
  * author : JFZ
@@ -19,6 +20,9 @@ import io.im.uicommon.listener.OnLocalMessageOperateListener;
  * description :
  */
 public final class Options {
+
+    //上传、下载文件处理器
+    public UploadDownloadProcessor uploadDownloadProcessor;
 
     private static final ConnectService connectService = new ConnectService();
 

@@ -94,7 +94,10 @@
                 android:id="@+id/disturb"
                 android:layout_width="@dimen/chat_dp14"
                 android:layout_height="@dimen/chat_dp14"
-                android:src="@drawable/con_vec_disturb" />
+                android:src="@drawable/con_vec_disturb"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <View

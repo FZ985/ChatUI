@@ -1,7 +1,10 @@
 优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
 messageDao新增更新更新用户昵称、头像语句；
 messageDao新增更新更新用户备注语句；
-
+会话列表添加网络监听；
+优化删除消息逻辑；
+添加消息重发功能；
+将reply命名改为refer命名；
 
 
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/msg_image_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -16,7 +17,31 @@
         android:id="@+id/msg_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/kit_message_image_layer"
         android:visibility="gone"
-        android:background="@drawable/kit_message_image_layer" />
+        tools:visibility="visible" />
 
+    <LinearLayout
+        android:id="@+id/rl_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/rc_progress"
+            android:layout_width="@dimen/chat_dp20"
+            android:layout_height="@dimen/chat_dp20"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_dp2"
+            android:text="0%"
+            android:textColor="@color/chat_white"
+            android:textSize="@dimen/chat_sp12" />
+    </LinearLayout>
 </RelativeLayout>

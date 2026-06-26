@@ -58,8 +58,8 @@ public class Message implements Serializable {
     @ColumnInfo(name = "messageBody")
     private String messageBody;//消息内容
 
-    @ColumnInfo(name = "replyMessage")
-    private String replyMessage;//引用的消息，Message结构
+    @ColumnInfo(name = "referMessage")
+    private String referMessage;//引用的消息，Message结构
 
     @ColumnInfo(name = "readStatus")
     private int readStatus;//阅读状态
@@ -77,7 +77,7 @@ public class Message implements Serializable {
     private MessageContent messageContent;
 
     @Ignore
-    private Message innerReplyMessage;//内部引用消息的对象转换
+    private Message innerReferMessage;//内部引用消息的对象转换
 
     public Message() {
     }
@@ -152,20 +152,20 @@ public class Message implements Serializable {
         }
     }
 
-    public String getReplyMessage() {
-        return ChatNull.compat(replyMessage);
+    public String getReferMessage() {
+        return ChatNull.compat(referMessage);
     }
 
-    public void setReplyMessage(String replyMessage) {
-        this.replyMessage = replyMessage;
+    public void setReferMessage(String referMessage) {
+        this.referMessage = referMessage;
     }
 
     @Nullable
-    public Message getInnerReplyMessage() {
-        if (innerReplyMessage == null && !TextUtils.isEmpty(getReplyMessage())) {
-            innerReplyMessage = Message.parseMessageFromJson(getReplyMessage());
+    public Message getInnerReferMessage() {
+        if (innerReferMessage == null && !TextUtils.isEmpty(getReferMessage())) {
+            innerReferMessage = Message.parseMessageFromJson(getReferMessage());
         }
-        return innerReplyMessage;
+        return innerReferMessage;
     }
 
     public MessageContent getMessageContent() {
@@ -410,7 +410,7 @@ public class Message implements Serializable {
 
                 message.setSendStatus(obj.optInt("sendStatus", SentStatus.SENDING.getValue()));
 
-                message.setReplyMessage(obj.optString("replyMessage", ""));
+                message.setReferMessage(obj.optString("referMessage", ""));
 
                 return message;
             } catch (JSONException e) {

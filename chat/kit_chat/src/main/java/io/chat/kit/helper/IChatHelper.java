@@ -63,9 +63,9 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     private ChatExtensionViewModel mExtensionViewModel;
 
     @Nullable
-    private Message replyMessage;
+    private Message referMessage;
 
-    private int replyIndex = -1;
+    private int referIndex = -1;
 
     public void bindConversation(Context context, IChatFragment fragment) {
         if (fragment == null || context == null) return;
@@ -94,7 +94,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
             }
         });
 
-        mFragment.getBinding().inputPanel.setSendVoiceCall(result -> MessageOperate.sendVoiceMessage(fragment.getUser(), fragment.getConversationType(), result, replyMessage, null));
+        mFragment.getBinding().inputPanel.setSendVoiceCall(result -> MessageOperate.sendVoiceMessage(fragment.getUser(), fragment.getConversationType(), result, referMessage, null));
 
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
     }
@@ -113,7 +113,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
 //                        log("输入框是否获得焦点 : " + hasFocus);
                         if (hasFocus) {
-                            scrollToBottom(replyIndex);
+                            scrollToBottom(referIndex);
                         }
                         mFragment.getBinding().inputPanel.onEditTextFocus(hasFocus);
                     })
@@ -167,7 +167,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                                     emoticonBoard.initEmoji(mFragment);
                                 } else if (panelView.getId() == R.id.panel_addition) {
                                     ChatPluginBoard pluginBoard = mFragment.getBinding().panelAddition.findViewById(R.id.plugin_board);
-                                    pluginBoard.initPlugin(mFragment, replyMessage);
+                                    pluginBoard.initPlugin(mFragment, referMessage);
                                 }
                             }
                         }
@@ -253,36 +253,36 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 }
             } else if (id == R.id.send) {
                 //点击 发送按钮
-                mExtensionViewModel.onSendClick(replyMessage);
+                mExtensionViewModel.onSendClick(referMessage);
             }
 //            log("点击了View : " + view);
         }
     }
 
-    public void setReplyMessage(@Nullable Message replyMessage, int index) {
-        this.replyMessage = replyMessage;
-        this.replyIndex = index;
+    public void setReferMessage(@Nullable Message referMessage, int index) {
+        this.referMessage = referMessage;
+        this.referIndex = index;
         if (mFragment != null) {
-            if (replyMessage != null) {
-                mFragment.getBinding().replyLl.setVisibility(View.VISIBLE);
-                mFragment.getBinding().replyClose.setOnClickListener(v -> setReplyMessage(null, -1));
+            if (referMessage != null) {
+                mFragment.getBinding().referLl.setVisibility(View.VISIBLE);
+                mFragment.getBinding().referClose.setOnClickListener(v -> setReferMessage(null, -1));
 
-                MessageUser user = replyMessage.getFromUser();
-                Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), replyMessage.getMessageContent());
+                MessageUser user = referMessage.getFromUser();
+                Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), referMessage.getMessageContent());
                 SpannableStringBuilder sb = new SpannableStringBuilder(user.getName() + "：");
                 sb.append(spannable);
-                mFragment.getBinding().replyTv.setText(sb);
-                io.im.uicommon.helper.OptionsHelper.updateTextSize(mFragment.getBinding().replyTv, 13);
+                mFragment.getBinding().referTv.setText(sb);
+                io.im.uicommon.helper.OptionsHelper.updateTextSize(mFragment.getBinding().referTv, 13);
 
                 mFragment.getBinding().inputPanel.postDelayed(() -> mFragment.getBinding().inputPanel.getEditText().performClick(), 150);
             } else {
-                mFragment.getBinding().replyLl.setVisibility(View.GONE);
+                mFragment.getBinding().referLl.setVisibility(View.GONE);
             }
         }
     }
 
-    public void setRevokeMessageAgain(@NonNull String content, @Nullable Message replyMessage, int index) {
-        setReplyMessage(replyMessage, index);
+    public void setRevokeMessageAgain(@NonNull String content, @Nullable Message referMessage, int index) {
+        setReferMessage(referMessage, index);
         EditText editText = mFragment.getBinding().inputPanel.getEditText();
         editText.setText(content);
         editText.setSelection(content.length());
@@ -306,7 +306,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     @Override
     public void onSendMessage(ChatMessageEvent event) {
         //发送完成后刷新引用布局
-        setReplyMessage(null, -1);
+        setReferMessage(null, -1);
     }
 
     @Override

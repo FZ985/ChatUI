@@ -22,8 +22,8 @@ public interface IChatPopMenuClickListener {
         return false;
     }
 
-    // 点击回复
-    default boolean onReply(Message messageInfo) {
+    // 点击引用
+    default boolean onRefer(Message messageInfo) {
         return false;
     }
 

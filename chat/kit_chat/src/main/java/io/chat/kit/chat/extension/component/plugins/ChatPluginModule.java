@@ -38,9 +38,9 @@ public interface ChatPluginModule {
      *
      * @param fragment     插件所在页面
      * @param v            view
-     * @param replyMessage 回复消息
+     * @param referMessage 引用消息
      */
-    default void onPluginClick(ChatBaseFragment fragment, View v, @Nullable Message replyMessage) {
+    default void onPluginClick(ChatBaseFragment fragment, View v, @Nullable Message referMessage) {
     }
 
     /**
@@ -48,10 +48,10 @@ public interface ChatPluginModule {
      *
      * @param fragment     插件所在页面
      * @param v            view
-     * @param replyMessage 回复消息
+     * @param referMessage 引用消息
      * @return true，false
      */
-    default boolean onPluginLongClick(ChatBaseFragment fragment, View v, @Nullable Message replyMessage) {
+    default boolean onPluginLongClick(ChatBaseFragment fragment, View v, @Nullable Message referMessage) {
         return false;
     }
 

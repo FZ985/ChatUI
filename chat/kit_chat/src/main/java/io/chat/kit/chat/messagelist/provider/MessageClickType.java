@@ -18,9 +18,9 @@ public class MessageClickType {
 
     public static final int AUDIO_CLICK = -7;//语音播放
 
-    public static final int REPLY_CONTENT_CLICK = -8;//回复点击
+    public static final int REFER_CONTENT_CLICK = -8;//引用点击
 
-    public static final int REPLY_CONTENT_LONG_CLICK = -9;//回复长按
+    public static final int REFER_CONTENT_LONG_CLICK = -9;//引用长按
 
     public static final int REVOKE_EDIT = -10;//撤销重新编辑
 

@@ -119,12 +119,12 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         }
 
         @Override
-        public boolean onReply(Message messageInfo) {
+        public boolean onRefer(Message messageInfo) {
             IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
-            if (listener != null && listener.onReply(messageInfo)) {
+            if (listener != null && listener.onRefer(messageInfo)) {
                 return true;
             }
-            helper.setReplyMessage(messageInfo, -1);
+            helper.setReferMessage(messageInfo, -1);
             return true;
         }
 
@@ -277,7 +277,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
                 .messageTextSize(18)
                 .cancel(io.im.uicommon.R.string.im_alert_cancel, ChatDialog::dismiss)
                 .confirm(io.im.uicommon.R.string.im_alert_delete, dialog -> {
-                    MessageOperate.deleteMessage(list, null);
+                    MessageOperate.deleteMessage(list, userInfo.getId(), null);
                     dialog.dismiss();
                 })
                 .show();
