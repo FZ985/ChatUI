@@ -62,9 +62,28 @@ public interface MessageDao {
     int clearTeamMessages(String groupId, int conversationType);
 
 
-//    @Query("SELECT * FROM message " +
-//            "GROUP BY `to` " +
-//            "ORDER BY sendTime DESC")
-//    LiveData<List<Message>> getUniqueMessages();
+    //更新消息中的用户信息
+    @Query("UPDATE message SET from_name = CASE WHEN from_id = :userId THEN :name ELSE from_name END,from_avatar = CASE WHEN from_id = :userId THEN :avatar ELSE from_avatar END,to_name = CASE WHEN to_id = :userId THEN :name ELSE to_name END,to_avatar = CASE WHEN to_id = :userId THEN :avatar ELSE to_avatar END WHERE from_id = :userId OR to_id = :userId")
+    void updateUserInfo(String userId, String name, String avatar);
+
+
+    //更新用户的备注信息，单聊+群聊
+    @Query("UPDATE message " +
+            "SET " +
+            "from_remark = CASE WHEN from_id = :userId THEN :remark ELSE from_remark END, " +
+            "to_remark = CASE WHEN to_id = :userId THEN :remark ELSE to_remark END " +
+            "WHERE from_id = :userId " +
+            "OR to_id = :userId")
+    void updateUserRemarkWithAll(String userId, String remark);
+
+
+    //更新用户的备注信息，指定单聊还是群聊
+    @Query("UPDATE message " +
+            "SET " +
+            "from_remark = CASE WHEN from_id = :userId THEN :remark ELSE from_remark END, " +
+            "to_remark = CASE WHEN to_id = :userId THEN :remark ELSE to_remark END " +
+            "WHERE chatType = :conversationType " +
+            "AND (from_id = :userId OR to_id = :userId)")
+    void updateUserRemarkByType(String userId, String remark, int conversationType);
 
 }

@@ -1,3 +1,11 @@
+优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
+messageDao新增更新更新用户昵称、头像语句；
+messageDao新增更新更新用户备注语句；
+
+
+
+
+
 去除会话viewmodel中的模拟数据，以真实逻辑去渲染；
 新增会话列表仿iOS侧滑置顶、取消置顶、删除功能；
 新增会话列表添加head功能；

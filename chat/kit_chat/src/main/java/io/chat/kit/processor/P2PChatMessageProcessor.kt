@@ -8,7 +8,6 @@ import io.im.core.model.ConversationType
 import io.im.core.model.Message
 import io.im.core.model.UserInfo
 import io.im.core.utils.ChatExecutorHelper
-import io.im.core.utils.ConversationIdUtil
 import io.im.uicommon.IMCenter
 import java.util.Collections
 
@@ -59,48 +58,23 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
         }
     }
 
-    override fun insertMessage(
-        message: Message,
-        call: ChatFun.Fun1<Long>
-    ) {
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val index = ChatSDK.getDbManager().messageDao().insertMessage(message)
-            call.apply(index)
-        }
-    }
-
-    override fun updateMessage(
-        message: Message,
-        call: ChatFun.Fun?
-    ) {
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            ChatSDK.getDbManager().messageDao().updateMessage(message)
-            call?.apply()
-        }
-    }
-
     override fun deleteMessage(user: UserInfo, message: Message) {
         deleteMessages(user, mutableListOf(message))
     }
 
     override fun deleteMessages(user: UserInfo, messages: MutableList<Message>) {
-        if (messages.isEmpty()) return
-        ChatExecutorHelper.getInstance().diskIO().execute {
-            val index = ChatSDK.getDbManager().messageDao()
-                .deleteP2PMessages(
-                    IMCenter.getAccountId(),
-                    user.id,
-                    messages.map { it.messageId }.toMutableList()
-                )
-            val sid = ConversationIdUtil.p2pConversationId(user.id)
-            val lastMessage = ChatSDK.getDbManager().messageDao()
-                .getLatestP2PMessage(IMCenter.getAccountId(), user.id)
-            IMCenter.getInstance().options.onLocalMessageOperateListener.onDeletedAfterLastMessage(
-                sid,
-                lastMessage
-            )
-//            JLog.e("===delete===message:$index")
-        }
+        ChatRepo.deleteMessages(
+            messages,
+            user.id,
+            ConversationType.TYPE_P2P,
+            object : FetchCallback<Int> {
+                override fun onError(errorCode: Int, errorMsg: String?) {
+
+                }
+
+                override fun onSuccess(data: Int?) {
+                }
+            })
     }
 
     override fun clearMessage(user: UserInfo) {

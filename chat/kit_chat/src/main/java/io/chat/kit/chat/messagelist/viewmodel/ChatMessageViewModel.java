@@ -425,7 +425,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         executePageEvent(new ScrollToEndEvent());
         if (chatProcessor != null) {
             chatProcessor.insertMessage(uiMessage.getMessage(), index -> {
-                JLog.e("====插入游标：" + index);
+//                JLog.e("====插入游标：" + index);
             });
         }
     }

@@ -95,7 +95,7 @@ public class ChatSDK {
                 public void onReceive(Context context, Intent intent) {
                     if (intent != null) {
                         String action = intent.getAction();
-                        if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                        if (!TextUtils.isEmpty(action) && action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                             boolean connection = ChatNetworkUtil.isConnection(context);
                             ErrorResult result = new ErrorResult(connection ? SocketCode.NETWORK_SUCCESS : SocketCode.NETWORK_ERROR,
                                     connection ? "网络连接成功" : "当前无法连接网络，可检查网络设置是否正常。");
@@ -160,7 +160,7 @@ public class ChatSDK {
 
     public static void unConnect() {
         SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
-        sp.edit().clear().commit();
+        sp.edit().clear().apply();
         IMClientCore.getInstance().closeSocket();
     }
 }

@@ -2,10 +2,13 @@ package io.chat.kit.processor;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import io.chat.kit.repo.ChatRepo;
 import io.im.core.listener.ChatFun;
+import io.im.core.listener.FetchCallback;
 import io.im.core.model.Message;
 import io.im.core.model.UserInfo;
 
@@ -23,9 +26,37 @@ public abstract class ChatMessageProcessor {
 
     public abstract void loadMoreMessage(@NonNull UserInfo user, @NonNull ChatFun.Fun1<List<Message>> call);
 
-    public abstract void insertMessage(@NonNull Message message, @NonNull ChatFun.Fun1<Long> call);
+    public void insertMessage(@NonNull Message message, @NonNull ChatFun.Fun1<Long> call) {
+        ChatRepo.insertLocalMessage(message, new FetchCallback<Long>() {
+            @Override
+            public void onError(int errorCode, @Nullable String errorMsg) {
 
-    public abstract void updateMessage(@NonNull Message message, ChatFun.Fun call);
+            }
+
+            @Override
+            public void onSuccess(@Nullable Long data) {
+                if (data != null) {
+                    call.apply(data);
+                }
+            }
+        });
+    }
+
+    public void updateMessage(@NonNull Message message, @Nullable ChatFun.Fun call) {
+        ChatRepo.updateLocalMessage(message, new FetchCallback<>() {
+            @Override
+            public void onError(int errorCode, @Nullable String errorMsg) {
+
+            }
+
+            @Override
+            public void onSuccess(@Nullable Void data) {
+                if (call != null) {
+                    call.apply();
+                }
+            }
+        });
+    }
 
     public abstract void deleteMessage(@NonNull UserInfo user, @NonNull Message message);
 

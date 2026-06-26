@@ -230,7 +230,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         });
 
         userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(ChatRoute.User);
-        JLog.e("----user:"+userInfo.toJson());
+        JLog.e("当前聊天:" + userInfo.getId() + "," + userInfo.getName());
         conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.TYPE_P2P.getValue()));
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);

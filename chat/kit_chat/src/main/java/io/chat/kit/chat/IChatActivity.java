@@ -35,15 +35,7 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         IChatFragment chatFragment = new IChatFragment();
         fragments.add(chatFragment);
         getBinding().pager.setAdapter(adapter = new ChatFragmentPageAdapter(getSupportFragmentManager(), fragments));
-
         uiMode = getResources().getConfiguration().uiMode;
-
-//        chatFragment.onLoaded = () -> {
-//            UserInfo userInfo = (UserInfo) getIntent().getSerializableExtra(ChatRoute.User);
-//            MessageOperate.sendMessage(IMTest.message(userInfo).get(10).getMessage(), null, null);
-//            MessageOperate.sendMessage(IMTest.message(userInfo).get(1).getMessage(), null, null);
-//            MessageOperate.sendMessage(IMTest.message(userInfo).get(2).getMessage(), null, null);
-//        };
     }
 
     @Override

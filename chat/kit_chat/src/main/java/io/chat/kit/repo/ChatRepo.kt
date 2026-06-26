@@ -3,6 +3,7 @@ package io.chat.kit.repo
 import io.im.core.core.ChatSDK
 import io.im.core.listener.FetchCallback
 import io.im.core.model.ConversationType
+import io.im.core.model.Message
 import io.im.core.utils.ChatExecutorHelper
 import io.im.core.utils.ConversationIdUtil
 import io.im.uicommon.IMCenter
@@ -16,7 +17,95 @@ import io.im.uicommon.IMCenter
 object ChatRepo {
 
     /**
+     * 更新本地消息
+     * @param message 消息
+     * @param callback 回调
+     */
+    @JvmStatic
+    fun updateLocalMessage(message: Message, callback: FetchCallback<Void>) {
+        ChatExecutorHelper.getInstance().diskIO().execute {
+            ChatSDK.getDbManager().messageDao().updateMessage(message)
+            ChatExecutorHelper.getInstance().mainThread().execute {
+                callback.onSuccess(null)
+            }
+        }
+    }
+
+    /**
+     * 插入消息到本地
+     * @param message 消息
+     * @param callback 回调
+     */
+    @JvmStatic
+    fun insertLocalMessage(message: Message, callback: FetchCallback<Long>?) {
+        ChatExecutorHelper.getInstance().diskIO().execute {
+            val index = ChatSDK.getDbManager().messageDao().insertMessage(message)
+            ChatExecutorHelper.getInstance().mainThread().execute {
+                callback?.onSuccess(index)
+            }
+        }
+    }
+
+    /**
      * 删除聊天消息
+     * @param messages 消息
+     * @param toId 目标id
+     * @param conversationType 会话类型
+     * @param callback 回调
+     */
+    @JvmStatic
+    fun deleteMessages(
+        messages: MutableList<Message>,
+        toId: String,
+        conversationType: ConversationType,
+        callback: FetchCallback<Int>
+    ) {
+        if (messages.isEmpty()) return
+        if (conversationType == ConversationType.TYPE_P2P) {
+            ChatExecutorHelper.getInstance().diskIO().execute {
+                val index = ChatSDK.getDbManager().messageDao()
+                    .deleteP2PMessages(
+                        IMCenter.getAccountId(),
+                        toId,
+                        messages.map { it.messageId }.toMutableList()
+                    )
+                //更新会话列表的最新消息
+                val sid = ConversationIdUtil.p2pConversationId(toId)
+                val lastMessage = ChatSDK.getDbManager().messageDao()
+                    .getLatestP2PMessage(IMCenter.getAccountId(), toId)
+                IMCenter.getInstance().options.onLocalMessageOperateListener.onDeletedAfterLastMessage(
+                    sid,
+                    lastMessage
+                )
+                ChatExecutorHelper.getInstance().mainThread().execute {
+                    callback.onSuccess(index)
+                }
+//            JLog.e("===delete===message:$index")
+            }
+        } else if (conversationType == ConversationType.TYPE_TEAM) {
+            ChatExecutorHelper.getInstance().diskIO().execute {
+                val index = ChatSDK.getDbManager().messageDao()
+                    .deleteP2PMessages(
+                        IMCenter.getAccountId(),
+                        toId,
+                        messages.map { it.messageId }.toMutableList()
+                    )
+                val sid = ConversationIdUtil.teamConversationId(toId)
+                val lastMessage = ChatSDK.getDbManager().messageDao()
+                    .getLatestP2PMessage(IMCenter.getAccountId(), toId)
+                IMCenter.getInstance().options.onLocalMessageOperateListener.onDeletedAfterLastMessage(
+                    sid,
+                    lastMessage
+                )
+                ChatExecutorHelper.getInstance().mainThread().execute {
+                    callback.onSuccess(index)
+                }
+            }
+        }
+    }
+
+    /**
+     * 清空聊天消息
      * @param id 聊天id
      * @param callback 结果回调
      */
