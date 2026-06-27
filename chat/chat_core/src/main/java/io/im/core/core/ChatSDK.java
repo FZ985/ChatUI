@@ -19,7 +19,7 @@ import io.im.core.core.socket.ConnectRequest;
 import io.im.core.core.socket.ErrorResult;
 import io.im.core.core.socket.SocketCode;
 import io.im.core.database.DbManager;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNetworkUtil;
 import io.im.core.utils.JLog;
@@ -118,7 +118,7 @@ public class ChatSDK {
         CoreSingle.getInstance().connectWebsocket(request);
     }
 
-    public static void login(UserInfo user) {
+    public static void login(User user) {
         setOnLineState(true);
         saveConnectUser(user);
     }
@@ -127,17 +127,17 @@ public class ChatSDK {
         return dbManager;
     }
 
-    public static void saveConnectUser(UserInfo userInfo) {
+    public static void saveConnectUser(User userInfo) {
         if (userInfo != null) {
             SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
             sp.edit().putString("user", ChatLibUtil.toJson(userInfo)).apply();
         }
     }
 
-    public static UserInfo getConnectUser() {
+    public static User getConnectUser() {
         SharedPreferences sp = getContext().getSharedPreferences("im_user", Context.MODE_PRIVATE);
         String json = sp.getString("user", "{}");
-        return ChatLibUtil.gson.fromJson(json, UserInfo.class);
+        return ChatLibUtil.gson.fromJson(json, User.class);
     }
 
     public static String getAccountId() {

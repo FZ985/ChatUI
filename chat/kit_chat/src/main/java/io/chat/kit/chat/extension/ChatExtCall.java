@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner;
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
 import io.chat.kit.helper.IChatHelper;
 import io.im.core.model.ConversationType;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 
 /**
  * author : JFZ
@@ -19,9 +19,9 @@ import io.im.core.model.UserInfo;
  */
 public interface ChatExtCall {
 
-    void updateUser(UserInfo user);
+    void updateUser(User user);
 
-    UserInfo getUser();
+    User getUser();
 
     ConversationType getConversationType();
 

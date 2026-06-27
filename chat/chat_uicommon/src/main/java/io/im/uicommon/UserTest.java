@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.JLog;
 
@@ -89,14 +89,14 @@ public class UserTest {
     }
 
     //创建随机用户
-    public static UserInfo randomUser() {
+    public static User randomUser() {
         //随机头像
         String avatar = AVATARS[RANDOM.nextInt(AVATARS.length)];
-        return new UserInfo(String.valueOf(Math.abs(ChatLibUtil.randomColor())), randomName(), avatar);
+        return new User(String.valueOf(Math.abs(ChatLibUtil.randomColor())), randomName(), avatar);
     }
 
-    public static List<UserInfo> randomUserList(int size) {
-        List<UserInfo> list = new ArrayList<>();
+    public static List<User> randomUserList(int size) {
+        List<User> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             list.add(randomUser());
         }

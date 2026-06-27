@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.im.core.MessageType;
 import io.im.core.message.im.ImageMessage;
 import io.im.core.message.im.TextMessage;
@@ -14,7 +14,7 @@ import io.im.core.message.UnKnowMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.uicommon.UserTest;
 
 /**
@@ -24,16 +24,14 @@ import io.im.uicommon.UserTest;
  */
 public class IMTest {
 
-    public final static UserInfo loginUser = loginUser();
 
-
-    private static UserInfo loginUser() {
-        UserInfo userInfo = UserTest.randomUser();
-        userInfo.setId("888888");
+    public static User loginUser() {
+        User userInfo = UserTest.randomUser();
+//        userInfo.setId("888888");
         return userInfo;
     }
 
-    public static List<UiMessage> message(UserInfo toUser) {
+    public static List<UiMessage> message(User toUser) {
         List<UiMessage> list = new ArrayList<>();
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234234234234234234234234234234234234234234234234234234"))));
@@ -50,17 +48,17 @@ public class IMTest {
         return list;
     }
 
-    public static UiMessage randomMessage(UserInfo toUser) {
+    public static UiMessage randomMessage(User toUser) {
         List<UiMessage> list = message(toUser);
         Random random = new Random();
         return list.get(random.nextInt(list.size()));
     }
 
-    private static Message getSendMsg(UserInfo toUser, int msgType, MessageContent content) {
+    private static Message getSendMsg(User toUser, int msgType, MessageContent content) {
         return Message.obtain(toUser, ConversationType.TYPE_P2P, msgType, content);
     }
 
     private static Message getReceiveMsg(int msgType, MessageContent content) {
-        return Message.obtain(loginUser, ConversationType.TYPE_P2P, msgType, content);
+        return Message.obtain(loginUser(), ConversationType.TYPE_P2P, msgType, content);
     }
 }

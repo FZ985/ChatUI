@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.chat.kit.R;
-import io.chat.kit.provider.ChatProvider;
+import io.chat.kit.provider.InitChatProvider;
 import io.chat.kit.ui.ActionConstants;
 import io.chat.kit.ui.popmenu.IChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
@@ -160,7 +160,7 @@ public class ChatPopActionFactory {
     // 构建撤回按钮
     private void addRevokeAction(Context context, List<PluginAction> actions, Message message) {
         if (message.getMessageDirection() == Message.MessageDirection.SEND) {
-            long revokeTime = ChatProvider.getOptions().revokeTime;
+            long revokeTime = InitChatProvider.getOptions().revokeTime;
             if (MessageCheck.checkRevokeMessage(message, revokeTime)) {
                 actions.add(new PluginAction<>(
                         ActionConstants.POP_ACTION_REVOKE,

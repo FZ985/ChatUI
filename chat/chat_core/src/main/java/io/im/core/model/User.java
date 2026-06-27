@@ -22,8 +22,8 @@ import io.im.core.utils.ChatNull;
  * description :
  */
 @Keep
-@Entity(tableName = "userInfo")
-public class UserInfo implements Serializable {
+@Entity(tableName = "user")
+public class User implements Serializable {
     @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -37,12 +37,12 @@ public class UserInfo implements Serializable {
     @ColumnInfo(name = "remark")
     private String remark;//备注
 
-    public UserInfo() {
+    public User() {
         id = "";
     }
 
     @Ignore
-    public UserInfo(@NonNull String id, String name, String avatar) {
+    public User(@NonNull String id, String name, String avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -88,14 +88,13 @@ public class UserInfo implements Serializable {
         this.remark = remark;
     }
 
-    public MessageUser toMessageUser() {
+    public UserConvert toConvert() {
         String json = toJson();
-        return ChatLibUtil.gson.fromJson(json, MessageUser.class);
+        return ChatLibUtil.gson.fromJson(json, UserConvert.class);
     }
 
-
-    public static UserInfo fromJSONObject(@Nullable JSONObject obj) {
-        UserInfo user = new UserInfo();
+    public static User fromJSONObject(@Nullable JSONObject obj) {
+        User user = new User();
         if (obj != null) {
             user.setId(obj.optString("id"));
             user.setName(obj.optString("name"));
@@ -106,11 +105,11 @@ public class UserInfo implements Serializable {
         return user;
     }
 
-    public static UserInfo fromJson(String json) {
+    public static User fromJson(String json) {
         try {
             return fromJSONObject(new JSONObject(json));
         } catch (JSONException e) {
-            return new UserInfo();
+            return new User();
         }
     }
 

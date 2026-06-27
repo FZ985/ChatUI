@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
             ConversationRoute.goConversation(this)
         }
 
+        binding.refresh.setOnClickListener {
+            ImDebug.switchLoginUser()
+            refreshLoginUI()
+        }
+
         refreshLoginUI()
     }
 

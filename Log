@@ -1,3 +1,9 @@
+MessageUser命名为UserConvert；
+UserInfo命名为User；
+Session新增ownerId字段创建时设置当前登录账号id，livedata获取自己的session
+列表，防止切换用户获取所有session；
+
+
 优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
 messageDao新增更新更新用户昵称、头像语句；
 messageDao新增更新更新用户备注语句；

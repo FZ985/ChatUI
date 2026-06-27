@@ -16,10 +16,9 @@ import io.chat.conversation.R
 import io.chat.conversation.adapter.ConversationAdapter
 import io.chat.conversation.databinding.ConFragmentConversationBinding
 import io.chat.conversation.databinding.ConHeadTopNetworkBinding
-import io.chat.conversation.model.UiSession
 import io.chat.conversation.viewmodel.ConversationViewModel
-import io.chat.kit.event.PageEvent
-import io.chat.kit.event.ScrollToTopEvent
+import io.im.uicommon.event.PageEvent
+import io.im.uicommon.event.ScrollToTopEvent
 import io.im.core.core.socket.ErrorResult
 import io.im.core.core.socket.SocketCode
 import io.im.core.listener.OnConnectListener
@@ -28,6 +27,7 @@ import io.im.uicommon.IMCenter
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.base.ChatBaseFragment
 import io.im.uicommon.helper.IMAlertHelper
+import io.im.uicommon.model.UiSession
 import io.im.uicommon.widgets.FixedLinearLayoutManager
 import io.im.uicommon.widgets.swiperecycler.SwipeMenuItem
 

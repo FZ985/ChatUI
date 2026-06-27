@@ -5,7 +5,7 @@ import io.im.core.listener.ChatFun
 import io.im.core.listener.FetchCallback
 import io.im.core.model.ConversationType
 import io.im.core.model.Message
-import io.im.core.model.UserInfo
+import io.im.core.model.User
 import io.im.core.utils.ChatExecutorHelper
 import io.im.uicommon.IMCenter
 import io.im.uicommon.repo.ChatRepo
@@ -20,7 +20,7 @@ import java.util.Collections
 class P2PChatMessageProcessor : ChatMessageProcessor() {
 
     override fun getFirstMessage(
-        user: UserInfo,
+        user: User,
         call: ChatFun.Fun1<MutableList<Message>>
     ) {
         ChatExecutorHelper.getInstance().diskIO().execute {
@@ -37,7 +37,7 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
     }
 
     override fun loadMoreMessage(
-        user: UserInfo,
+        user: User,
         call: ChatFun.Fun1<MutableList<Message>>
     ) {
         ChatExecutorHelper.getInstance().diskIO().execute {
@@ -58,7 +58,7 @@ class P2PChatMessageProcessor : ChatMessageProcessor() {
         }
     }
 
-    override fun clearMessage(user: UserInfo) {
+    override fun clearMessage(user: User) {
         ChatRepo.clearMessage(user.id, ConversationType.TYPE_P2P, object : FetchCallback<Void> {
             override fun onError(errorCode: Int, errorMsg: String?) {
 

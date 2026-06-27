@@ -12,27 +12,27 @@ import androidx.room.Query;
 public interface UserDao {
 
 //    @Query("SELECT * FROM userInfo")
-//    LiveData<List<UserInfo>> allUser();
+//    LiveData<List<User>> allUser();
 
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    long insertUser(UserInfo user);
+//    long insertUser(User user);
 
 //    @Query("SELECT * FROM userInfo WHERE userName LIKE :text")
-//    List<UserInfo> getUsersBySearch(String text);
+//    List<User> getUsersBySearch(String text);
 
 
     //批量插入
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insertUserList(List<UserInfo> list);
+//    void insertUserList(List<User> list);
 
 //    @Update
-//    void update(UserInfo user);
+//    void update(User user);
 
 //    @Query("SELECT * FROM userInfo WHERE userId = :userIdStr")
-//    UserInfo getUserForUserId(String userIdStr);
+//    User getUserForUserId(String userIdStr);
 
 
     //删除所有数据
-    @Query("DELETE FROM userInfo")
+    @Query("DELETE FROM user")
     int clearAll();
 }

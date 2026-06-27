@@ -25,7 +25,7 @@ import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.State;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ChatToast;
 import io.im.core.utils.ServeTime;
 import io.im.uicommon.bean.AudioDataBean;
@@ -45,7 +45,7 @@ public class MessageOperate {
 
     //撤销消息
     public static void revokeMessage(ConversationType conversationType,
-                                     UserInfo user, @NonNull Message oldMessage) {
+                                     User user, @NonNull Message oldMessage) {
         RevokeMessage revokeMessage = RevokeMessage.obtain(oldMessage);
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
@@ -55,12 +55,12 @@ public class MessageOperate {
 
     //合并转发消息
     public static void sendMergeForwardMessage(ConversationType conversationType,
-                                               UserInfo user, List<Message> messageList, List<UserInfo> users, @Nullable MessageCallback<Message> callback) {
+                                               User user, List<Message> messageList, List<User> users, @Nullable MessageCallback<Message> callback) {
         ForwardMessage forward = ForwardMessage.obtain(
                 IMCenter.getLoginUser().getName(),
                 user.getName(),
                 messageList);
-        for (UserInfo u : users) {
+        for (User u : users) {
             Message message = Message.obtain(u,
                     conversationType,
                     MessageType.CHAT_FORWARD,
@@ -71,9 +71,9 @@ public class MessageOperate {
     }
 
     //逐条发送消息
-    public static void sendForwardMessage(List<Message> messageList, List<UserInfo> users, @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
+    public static void sendForwardMessage(List<Message> messageList, List<User> users, @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
         if (messageList.isEmpty()) return;
-        for (UserInfo user : users) {
+        for (User user : users) {
             List<Message> msgList = new ArrayList<>();
             for (int i = 0; i < messageList.size(); i++) {
                 Message m = messageList.get(i);
@@ -180,7 +180,7 @@ public class MessageOperate {
     }
 
     //发送语音消息
-    public static void sendVoiceMessage(UserInfo toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
+    public static void sendVoiceMessage(User toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
         HQVoiceMessage voiceBody = HQVoiceMessage.obtain(voiceData.getUrl(), voiceData.getPath(), voiceData.getDuration());
         Message message = Message.obtain(toUser, conversationType, MessageType.CHAT_VOICE, voiceBody);
         postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
@@ -188,7 +188,7 @@ public class MessageOperate {
     }
 
 //    //发送订单消息
-//    public void sendOrderMessage(UserInfo user, Conversation.ConversationType type, OrderMessage body, MessageCallback callback) {
+//    public void sendOrderMessage(User user, Conversation.ConversationType type, OrderMessage body, MessageCallback callback) {
 //        Message message = Message.obtain(user, type, MessageType.ORDER, body);
 //        List<MessageEventListener> eventListeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
 //        for (MessageEventListener listener : eventListeners) {
@@ -200,7 +200,7 @@ public class MessageOperate {
 //    }
 //
 //    //发送商品消息
-//    public void sendGoodsMessage(UserInfo user, Conversation.ConversationType type, GoodsMessage goodsMessage, MessageCallback callback) {
+//    public void sendGoodsMessage(User user, Conversation.ConversationType type, GoodsMessage goodsMessage, MessageCallback callback) {
 //        Message message = Message.obtain(user, type, MessageType.GOODS, goodsMessage);
 //        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
 //        for (MessageEventListener listener : listeners) {

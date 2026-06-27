@@ -5,7 +5,6 @@
 
     <string name="kit_send">发送</string>
 
-    <string name="kit_message_unknown">当前版本暂不支持查看此消息</string>
     <string name="kit_message_revoke">你撤回了一条消息</string>
     <string name="kit_message_revoke_from">“%s” 撤回了一条消息</string>
     <string name="kit_message_revoke_edit">重新编辑</string>

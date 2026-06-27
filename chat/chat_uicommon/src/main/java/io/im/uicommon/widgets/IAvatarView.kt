@@ -19,8 +19,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import io.im.core.model.MessageUser
-import io.im.core.model.UserInfo
+import io.im.core.model.User
+import io.im.core.model.UserConvert
 import io.im.uicommon.R
 import io.im.uicommon.databinding.CommonKitViewAvatarBinding
 import io.im.uicommon.helper.OptionsHelper
@@ -42,7 +42,7 @@ class IAvatarView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private var userInfo: UserInfo? = null
+    private var userInfo: User? = null
 
     private var defaultRadius = 0f
 
@@ -63,11 +63,11 @@ class IAvatarView @JvmOverloads constructor(
         }
     }
 
-    fun setUserInfo(info: UserInfo) {
+    fun setUserInfo(info: User) {
         this.userInfo = info
     }
 
-    fun setUserInfoByMessageUser(info: MessageUser) {
+    fun setUserInfoByMessageUser(info: UserConvert) {
         this.userInfo = info.toUserInfo()
     }
 
@@ -111,12 +111,12 @@ class IAvatarView @JvmOverloads constructor(
         }
     }
 
-    fun loadAvatar(info: UserInfo) {
+    fun loadAvatar(info: User) {
         setUserInfo(info)
         loadAvatar()
     }
 
-    fun loadAvatar(info: MessageUser) {
+    fun loadAvatar(info: UserConvert) {
         setUserInfoByMessageUser(info)
         loadAvatar()
     }

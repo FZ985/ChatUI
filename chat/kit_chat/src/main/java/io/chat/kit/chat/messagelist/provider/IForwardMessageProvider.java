@@ -13,15 +13,15 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import io.chat.kit.R;
 import io.im.core.message.im.ForwardMessage;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
-import io.chat.kit.R;
-import io.im.uicommon.helper.OptionsHelper;
-import io.chat.kit.model.UiMessage;
-import io.chat.kit.provider.ChatProvider;
 import io.im.uicommon.adapter.IViewProviderListener;
 import io.im.uicommon.adapter.ViewHolder;
+import io.im.uicommon.config.ChatMessageProvider;
+import io.im.uicommon.helper.OptionsHelper;
+import io.im.uicommon.model.UiMessage;
 
 /**
  * author : JFZ
@@ -85,7 +85,7 @@ public class IForwardMessageProvider extends BaseMessageItemProvider<ForwardMess
         OptionsHelper.updateTextSize(text, 12);
         SpannableStringBuilder sb = new SpannableStringBuilder();
         sb.append(message.getFromUser().getName()).append("：");
-        sb.append(ChatProvider.getOptions().getChatConfig().getMessageSummary(text.getContext(), message.getMessageContent()));
+        sb.append(ChatMessageProvider.getMessageSummary(text.getContext(), message.getMessageContent()));
         text.setText(sb);
     }
 

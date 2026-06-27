@@ -4,6 +4,8 @@ import androidx.collection.SparseArrayCompat;
 
 import java.util.List;
 
+import io.im.uicommon.providers.IViewProvider;
+
 public class ProviderManager<T> {
     private final int DEFAULT_ITEM_VIEW_TYPE = -100;
     private SparseArrayCompat<IViewProvider<T>> mProviders = new SparseArrayCompat<>();

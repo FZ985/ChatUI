@@ -17,7 +17,7 @@ import com.bumptech.glide.request.target.Target;
 
 import io.im.core.model.Message;
 import io.im.core.model.Session;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ChatLibUtil;
 import io.im.uicommon.R;
 import io.im.uicommon.listener.ImageLoader;
@@ -42,7 +42,7 @@ public class DefaultImageLoader implements ImageLoader {
     }
 
     @Override
-    public void loadForwardSelectorAvatar(Context context, IAvatarView view, UserInfo userInfo) {
+    public void loadForwardSelectorAvatar(Context context, IAvatarView view, User userInfo) {
         Glide.with(context)
                 .load(userInfo.getAvatar())
                 .placeholder(R.mipmap.kit_ic_default_avatar)

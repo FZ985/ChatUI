@@ -1,4 +1,4 @@
-package io.chat.kit.chat.messagelist.provider;
+package io.im.uicommon.providers;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import io.chat.kit.R;
+import io.im.uicommon.R;
 import io.im.uicommon.helper.OptionsHelper;
 import io.im.uicommon.adapter.IViewProviderListener;
 import io.im.uicommon.adapter.ViewHolder;
@@ -38,7 +38,7 @@ public class IUnKnowMessageProvider implements ConversationMessageProvider {
         if (summarySpannable != null) {
             return summarySpannable;
         }
-        return new SpannableString(context.getString(R.string.kit_message_unknown));
+        return new SpannableString(context.getString(R.string.common_message_unknown));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class IUnKnowMessageProvider implements ConversationMessageProvider {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_unknow, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.common_item_message_unknow, parent, false);
         return new ViewHolder(parent.getContext(), view);
     }
 

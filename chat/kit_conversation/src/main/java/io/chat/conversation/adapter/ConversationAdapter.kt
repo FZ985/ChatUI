@@ -3,11 +3,12 @@ package io.chat.conversation.adapter
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import io.chat.conversation.model.UiSession
 import io.im.uicommon.adapter.BaseAdapter
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.adapter.ProviderManager
+import io.im.uicommon.model.UiSession
 import io.im.uicommon.widgets.swiperecycler.SwipeRecyclerView
+import kotlin.collections.isNotEmpty
 
 
 /**
@@ -17,7 +18,7 @@ import io.im.uicommon.widgets.swiperecycler.SwipeRecyclerView
  **/
 class ConversationAdapter(listener: IViewProviderListener<UiSession>) : BaseAdapter<UiSession>(
     listener,
-    ProviderManager<UiSession>().apply { addProvider(ConversationProvider()) }
+    ProviderManager<UiSession>().apply { addProvider(ItemConversationProvider()) }
 ) {
 
     private val mDiffCallback = ConversationDiffCallBack()

@@ -1,4 +1,4 @@
-package io.chat.conversation.model;
+package io.im.uicommon.model;
 
 
 import android.text.TextUtils;
@@ -9,9 +9,8 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
-import io.chat.kit.model.UiBaseBean;
 import io.im.core.model.Session;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ConversationIdUtil;
 
 /**
@@ -84,7 +83,7 @@ public class UiSession extends UiBaseBean implements Serializable {
         return targetId;
     }
 
-    public UserInfo getUser() {
+    public User getUser() {
         return session.getUser();
     }
 

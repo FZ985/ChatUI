@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import io.chat.kit.R
-import io.im.core.model.UserInfo
+import io.im.core.model.User
 import io.im.uicommon.IMCenter
-import io.im.uicommon.adapter.IViewProvider
+import io.im.uicommon.providers.IViewProvider
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.adapter.ViewHolder
 import io.im.uicommon.helper.OptionsHelper
@@ -19,7 +19,7 @@ import io.im.uicommon.widgets.IAvatarView
  * 2026/5/29
  * desc：
  **/
-class ForwardSelectorProvider : IViewProvider<UserInfo> {
+class ForwardSelectorProvider : IViewProvider<User> {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -29,14 +29,14 @@ class ForwardSelectorProvider : IViewProvider<UserInfo> {
             .inflate(R.layout.forward_item_selector_user, parent, false)
     )
 
-    override fun isItemViewType(item: UserInfo) = true
+    override fun isItemViewType(item: User) = true
 
     override fun bindViewHolder(
         holder: ViewHolder,
-        item: UserInfo,
+        item: User,
         position: Int,
-        list: List<UserInfo>,
-        listener: IViewProviderListener<UserInfo>?
+        list: List<User>,
+        listener: IViewProviderListener<User>?
     ) {
         val name = holder.getView<TextView>(R.id.name)
         name.text = item.name

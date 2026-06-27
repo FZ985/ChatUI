@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.chat.kit.R;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.chat.kit.utils.TextViewUtil;
 import io.im.core.message.im.TextMessage;
 import io.im.core.model.MessageContent;

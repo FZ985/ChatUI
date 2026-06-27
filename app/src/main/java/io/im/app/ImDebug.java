@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import io.chat.kit.IMTest;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.config.Options;
 
@@ -41,14 +41,22 @@ public class ImDebug {
 //        IMCenter.getInstance().connect(request);
 
         //模拟IM登录
+        login();
+    }
+
+    public static void switchLoginUser() {
+        IMCenter.login(IMTest.loginUser());
+    }
+
+    public static void login() {
         IMCenter.login(getLoginUser());
     }
 
 
-    public static UserInfo getLoginUser() {
-        UserInfo user = IMCenter.getLoginUser();
+    public static User getLoginUser() {
+        User user = IMCenter.getLoginUser();
         if (TextUtils.isEmpty(user.getId())) {
-            return IMTest.loginUser;
+            return IMTest.loginUser();
         }
         return user;
     }

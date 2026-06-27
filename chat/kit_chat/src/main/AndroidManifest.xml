@@ -6,7 +6,7 @@
 
     <application>
         <provider
-            android:name=".provider.ChatProvider"
+            android:name=".provider.InitChatProvider"
             android:authorities="@${applicationId}.chatInit"
             android:exported="false" />
 

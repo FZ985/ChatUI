@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.chat.kit.ChatRoute;
 import io.chat.kit.R;
 import io.chat.kit.chat.IChatFragment;
 import io.chat.kit.chat.extension.ChatExtensionViewModel;
@@ -23,19 +22,21 @@ import io.chat.kit.chat.extension.component.plugins.ChatPluginBoard;
 import io.chat.kit.chat.extension.component.plugins.ChatPluginModule;
 import io.chat.kit.config.enums.ChatInputMode;
 import io.chat.kit.config.enums.InputStyle;
-import io.chat.kit.provider.ChatProvider;
+import io.chat.kit.provider.InitChatProvider;
 import io.im.core.listener.ChatLifecycle;
 import io.im.core.model.Message;
-import io.im.core.model.MessageUser;
+import io.im.core.model.UserConvert;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
+import io.im.uicommon.config.ChatMessageProvider;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.event.PermissionEvent;
 import io.im.uicommon.helper.ChatPermissionHelper;
 import io.im.uicommon.listener.IPermissionProxy;
 import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.route.RouterConstant;
 import io.im.uicommon.widgets.switchpanel.PanelSwitchHelper;
 import io.im.uicommon.widgets.switchpanel.interfaces.ContentScrollMeasurer;
 import io.im.uicommon.widgets.switchpanel.interfaces.PanelHeightMeasurer;
@@ -72,7 +73,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
         this.mContext = context;
         this.mFragment = fragment;
         this.mFragment.getBinding().inputPanel.setInputStyle(InputStyle.setType(
-                fragment.requireActivity().getIntent().getIntExtra(ChatRoute.InputStyle, InputStyle.All.getType())));
+                fragment.requireActivity().getIntent().getIntExtra(RouterConstant.INPUT_STYLE, InputStyle.All.getType())));
         mExtensionViewModel = new ViewModelProvider(fragment).get(ChatExtensionViewModel.class);
         mExtensionViewModel.getInputModeLiveData().observe(fragment, mode -> fragment.getBinding().inputPanel.updateInputMode(mode));
         mExtensionViewModel.setAttachChat(fragment, fragment.getBinding().inputPanel.getEditText());
@@ -267,8 +268,8 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 mFragment.getBinding().referLl.setVisibility(View.VISIBLE);
                 mFragment.getBinding().referClose.setOnClickListener(v -> setReferMessage(null, -1));
 
-                MessageUser user = referMessage.getFromUser();
-                Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(mFragment.getActivity(), referMessage.getMessageContent());
+                UserConvert user = referMessage.getFromUser();
+                Spannable spannable = ChatMessageProvider.getMessageSummary(mFragment.getActivity(), referMessage.getMessageContent());
                 SpannableStringBuilder sb = new SpannableStringBuilder(user.getName() + "：");
                 sb.append(spannable);
                 mFragment.getBinding().referTv.setText(sb);
@@ -312,7 +313,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         if (mFragment != null) {
-            for (ChatPluginModule plugin : ChatProvider.getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
+            for (ChatPluginModule plugin : InitChatProvider.getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
                 plugin.onPluginActivityResult(mFragment, requestCode, resultCode, data);
             }
         }
@@ -321,7 +322,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
 
     @Override
     public void onDestroy() {
-        for (ChatPluginModule plugin : ChatProvider.getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
+        for (ChatPluginModule plugin : InitChatProvider.getOptions().getPluginConfig().getPluginModules(mFragment.getUser())) {
             plugin.onPluginDestroy();
         }
     }

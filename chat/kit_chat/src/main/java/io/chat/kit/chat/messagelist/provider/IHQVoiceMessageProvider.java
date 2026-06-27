@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import io.chat.kit.R;
 import io.chat.kit.chat.voice.AudioRecordManager;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.model.MessageContent;
 import io.im.core.model.State;
@@ -138,7 +138,7 @@ public class IHQVoiceMessageProvider extends BaseMessageItemProvider<HQVoiceMess
     @Override
     protected boolean onItemClick(ViewHolder holder, View view, HQVoiceMessage voiceMessage, UiMessage uiMessage, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
         if (listener != null) {
-            listener.onViewClick(holder.itemView, MessageClickType.AUDIO_CLICK, position, uiMessage);
+            listener.onViewClick(holder.itemView, io.im.core.MessageClickType.AUDIO_CLICK, position, uiMessage);
             return true;
         }
         return false;

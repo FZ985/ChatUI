@@ -19,18 +19,18 @@ import io.im.core.utils.ChatNull;
  * UserInfo的转换类，
  */
 @Keep
-public class MessageUser implements Serializable {
+public class UserConvert implements Serializable {
     private String id;
     private String name;
     private String avatar;
     private int type;
     private String remark;
 
-    public MessageUser() {
+    public UserConvert() {
     }
 
     @Ignore
-    public MessageUser(String id, String name, String avatar) {
+    public UserConvert(String id, String name, String avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -76,17 +76,17 @@ public class MessageUser implements Serializable {
         this.remark = remark;
     }
 
-    public UserInfo toUserInfo() {
+    public User toUserInfo() {
         String json = toJson();
-        return ChatLibUtil.gson.fromJson(json, UserInfo.class);
+        return ChatLibUtil.gson.fromJson(json, User.class);
     }
 
     public String toJson() {
         return ChatLibUtil.toJson(this);
     }
 
-    public static MessageUser fromJSONObject(@Nullable JSONObject obj) {
-        MessageUser user = new MessageUser();
+    public static UserConvert fromJSONObject(@Nullable JSONObject obj) {
+        UserConvert user = new UserConvert();
         if (obj != null) {
             user.setId(obj.optString("id"));
             user.setName(obj.optString("name"));
@@ -97,11 +97,11 @@ public class MessageUser implements Serializable {
         return user;
     }
 
-    public static MessageUser fromJson(String json) {
+    public static UserConvert fromJson(String json) {
         try {
             return fromJSONObject(new JSONObject(json));
         } catch (JSONException e) {
-            return new MessageUser();
+            return new UserConvert();
         }
     }
 

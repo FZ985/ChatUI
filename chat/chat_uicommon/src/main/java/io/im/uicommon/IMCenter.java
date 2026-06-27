@@ -12,7 +12,7 @@ import io.im.core.core.socket.ConnectRequest;
 import io.im.core.core.socket.ErrorResult;
 import io.im.core.listener.OnSocketMessageListener;
 import io.im.core.model.Message;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.JLog;
 import io.im.core.utils.SystemUtil;
 import io.im.core.utils.language.ChatConfigurationManager;
@@ -72,7 +72,7 @@ public final class IMCenter {
         ChatSDK.connect(request);
     }
 
-    public static void login(UserInfo user) {
+    public static void login(User user) {
         ChatSDK.login(user);
     }
 
@@ -83,7 +83,7 @@ public final class IMCenter {
         return options;
     }
 
-    public static UserInfo getLoginUser() {
+    public static User getLoginUser() {
         return ChatSDK.getConnectUser();
     }
 

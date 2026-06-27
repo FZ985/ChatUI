@@ -8,13 +8,13 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import io.chat.kit.chat.messagelist.provider.MessageClickType;
 import io.chat.kit.databinding.ChatItemDefaultReferBinding;
-import io.chat.kit.model.UiMessage;
-import io.chat.kit.provider.ChatProvider;
+import io.im.core.MessageClickType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.config.ChatMessageProvider;
+import io.im.uicommon.model.UiMessage;
 
 /**
  * by DAD FZ
@@ -36,7 +36,7 @@ public class ReferUIHelper {
         if (innerReferMessage != null) {
             binding = ChatItemDefaultReferBinding.inflate(LayoutInflater.from(referContentView.getContext()), referContentView, true);
             MessageContent messageContent = innerReferMessage.getMessageContent();
-            Spannable spannable = ChatProvider.getOptions().getChatConfig().getMessageSummary(referContentView.getContext(), messageContent);
+            Spannable spannable = ChatMessageProvider.getMessageSummary(referContentView.getContext(), messageContent);
             SpannableStringBuilder sb = new SpannableStringBuilder(uiMessage.getMessage().getInnerReferMessage().getFromUser().getName() + "：");
             sb.append(spannable);
             binding.defReferTv.setText(sb);

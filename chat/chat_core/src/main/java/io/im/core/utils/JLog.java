@@ -25,6 +25,12 @@ public class JLog {
         }
     }
 
+    public static void w(String tag, String value) {
+        if (DEBUG) {
+            Log.w(tag, value);
+        }
+    }
+
     public static void d(String tag, String value) {
         if (DEBUG) {
             Log.d(tag, value);

@@ -1,4 +1,4 @@
-package io.chat.kit.model;
+package io.im.uicommon.model;
 
 import android.text.SpannableStringBuilder;
 
@@ -14,7 +14,7 @@ import io.im.core.model.State;
  * description :
  */
 @Keep
-public class UiMessage extends UiBaseBean {
+public class UiMessage extends io.im.uicommon.model.UiBaseBean {
 
     private Message message;
 

@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+import io.im.core.core.ChatSDK;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNull;
 import io.im.core.utils.ConversationIdUtil;
@@ -33,6 +34,9 @@ public class Session implements Serializable {
 
     @ColumnInfo(name = "session")
     private String session;//会话用户、群、服务号等等信息
+
+    @ColumnInfo(name = "ownerId")
+    private String ownerId;//当前登录用户id；
 
     @ColumnInfo(name = "type")
     private int type;//会话类型，对应session中的type，及 ConversationType
@@ -118,13 +122,13 @@ public class Session implements Serializable {
         return getIsDisturb() == 1;
     }
 
-    public UserInfo getUser() {
-        return UserInfo.fromJson(getSession());
+    public User getUser() {
+        return User.fromJson(getSession());
     }
 
     public String getName() {
         String defaultName = "";
-        UserInfo user = getUser();
+        User user = getUser();
         if (!TextUtils.isEmpty(user.getId()) && user.getId().length() > 4) {
             defaultName = user.getId().substring(user.getId().length() - 4);
         }
@@ -158,14 +162,23 @@ public class Session implements Serializable {
         this.type = type;
     }
 
+    public String getOwnerId() {
+        return ChatNull.compat(ownerId);
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return ChatLibUtil.toJson(this);
     }
 
-    public static Session obtain(UserInfo user, ConversationType conversationType, Message message) {
+    public static Session obtain(User user, ConversationType conversationType, Message message) {
         Session session = new Session();
+        session.setOwnerId(ChatSDK.getAccountId());
         session.setCreateTime(ServeTime.currentTimeMillis());
         session.setSid(ConversationIdUtil.conversationId(user.getId(), conversationType));
         session.setSession(user.toJson());

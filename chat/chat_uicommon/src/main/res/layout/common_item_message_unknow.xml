@@ -5,13 +5,13 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/un_know_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="@dimen/chat_dp8"
         android:paddingBottom="@dimen/chat_dp8"
-        android:id="@+id/un_know_tv"
-        android:text="@string/kit_message_unknown"
+        android:text="@string/common_message_unknown"
         android:textColor="@color/chat_skin_Text"
         android:textSize="@dimen/chat_sp13" />
 

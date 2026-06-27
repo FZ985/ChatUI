@@ -13,18 +13,15 @@ import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
 public final class ChatOptions {
 
     //会话配置
-    private static final ChatConfig chatConfig = new ChatConfig();
+    public ChatOptions(){
+        ChatItemConfig.initMessageProvider();
+    }
 
     //表情配置
     private static final ChatEmojiConfig emojiConfig = new ChatEmojiConfig();
 
     //插件配置
     private static final ChatPluginConfig pluginConfig = new ChatPluginConfig();
-
-    //会话消息配置
-    public ChatConfig getChatConfig() {
-        return chatConfig;
-    }
 
     //聊天表情面板配置---------------------------------------------------------------------
     public ChatEmojiConfig getEmojiConfig() {

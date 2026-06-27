@@ -1,4 +1,4 @@
-package io.chat.kit.chat.messagelist.provider;
+package io.im.core;
 
 /**
  * 消息各个点击事件标记类，所有 sdk 的消息，点击事件从 -1 开始定义方便与用户定义的区分

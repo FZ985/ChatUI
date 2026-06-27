@@ -25,7 +25,7 @@ import java.util.List;
 
 import io.chat.kit.R;
 import io.im.uicommon.resend.ResendManager;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.im.core.message.im.ImageMessage;
 import io.im.core.model.MessageContent;
 import io.im.core.model.State;

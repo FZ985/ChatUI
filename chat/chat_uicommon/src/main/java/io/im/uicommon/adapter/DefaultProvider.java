@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import io.im.uicommon.R;
+import io.im.uicommon.providers.IViewProvider;
 
 
 public class DefaultProvider implements IViewProvider {

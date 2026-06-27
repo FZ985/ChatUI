@@ -19,11 +19,8 @@ import io.im.core.model.Session;
 @Dao
 public interface SessionDao {
 
-    @Query("SELECT * FROM session")
-    LiveData<List<Session>> allSessionLiveData();
-
-    @Query("SELECT * FROM session")
-    List<Session> allSession();
+    @Query("SELECT * FROM session WHERE ownerId = :ownerId")
+    LiveData<List<Session>> getSessionLiveData(String ownerId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertSession(Session conversation);
@@ -44,20 +41,5 @@ public interface SessionDao {
     // 删除所有数据
     @Query("DELETE FROM session")
     void clearAll();
-
-//
-//    @Query("SELECT * FROM session WHERE shopId = :shopIdStr")
-//    Session getSessionByShopId(String shopIdStr);
-
-//    @Query("UPDATE session SET noReadNumber = :readCount WHERE friendId = :friendIdStr")
-//    void updateReadCount(String friendIdStr, int readCount);
-
-//    @Query("SELECT * FROM session WHERE topNum =(SELECT MAX(topNum)FROM session)")
-//    Session getMaxTopNum();
-
-
-//    @Query("SELECT * FROM session WHERE friendName LIKE :text")
-//    List<Session> getSessionBySearch(String text);
-
 
 }

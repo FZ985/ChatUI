@@ -1,4 +1,4 @@
-package io.chat.kit.chat.messagelist.provider;
+package io.im.uicommon.providers;
 
 import android.content.Context;
 import android.text.Spannable;

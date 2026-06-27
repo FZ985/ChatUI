@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.chat.kit.R;
-import io.chat.kit.model.UiMessage;
-import io.chat.kit.provider.ChatProvider;
+import io.im.uicommon.model.UiMessage;
+import io.chat.kit.provider.InitChatProvider;
 import io.im.core.MessageType;
 import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.Message;
@@ -61,7 +61,7 @@ public class IRevokeMessageProvider extends BaseMessageItemProvider<RevokeMessag
             if (revokeMessage == null) {
                 edit.setVisibility(View.GONE);
             } else {
-                if (revokeMessage.getMessageType() == MessageType.CHAT_TEXT && MessageCheck.checkRevokeMessage(uiMessage.getMessage(), ChatProvider.getOptions().revokeTime)) {
+                if (revokeMessage.getMessageType() == MessageType.CHAT_TEXT && MessageCheck.checkRevokeMessage(uiMessage.getMessage(), InitChatProvider.getOptions().revokeTime)) {
                     edit.setVisibility(View.VISIBLE);
                 } else {
                     edit.setVisibility(View.GONE);
@@ -71,7 +71,7 @@ public class IRevokeMessageProvider extends BaseMessageItemProvider<RevokeMessag
                 @Override
                 protected void onViewClick(@NonNull View v) {
                     if (listener != null) {
-                        listener.onViewClick(v, MessageClickType.REVOKE_EDIT, position, uiMessage);
+                        listener.onViewClick(v, io.im.core.MessageClickType.REVOKE_EDIT, position, uiMessage);
                     }
                 }
             });

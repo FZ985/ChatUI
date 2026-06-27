@@ -10,16 +10,16 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import io.chat.conversation.R
-import io.chat.conversation.model.UiSession
 import io.chat.conversation.utils.ConUIHelper
-import io.chat.kit.chat.messagelist.provider.MessageClickType
-import io.chat.kit.provider.ChatProvider
+import io.im.core.MessageClickType
 import io.im.core.model.Session
 import io.im.uicommon.IMCenter
-import io.im.uicommon.adapter.IViewProvider
 import io.im.uicommon.adapter.IViewProviderListener
 import io.im.uicommon.adapter.ViewHolder
+import io.im.uicommon.config.ChatMessageProvider
 import io.im.uicommon.helper.OptionsHelper
+import io.im.uicommon.model.UiSession
+import io.im.uicommon.providers.IViewProvider
 import io.im.uicommon.utils.DateUtil
 import io.im.uicommon.utils.doClick
 import io.im.uicommon.utils.dp
@@ -31,7 +31,7 @@ import io.im.uicommon.widgets.IAvatarView
  * 2026/5/29
  * desc：
  **/
-class ConversationProvider : IViewProvider<UiSession> {
+class ItemConversationProvider : IViewProvider<UiSession> {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -110,7 +110,7 @@ class ConversationProvider : IViewProvider<UiSession> {
     private fun getContent(context: Context, session: Session): Spannable {
         if (session.lastMessageObj != null) {
             val message = session.lastMessageObj
-            return ChatProvider.getOptions().chatConfig.getMessageSummary(
+            return ChatMessageProvider.getMessageSummary(
                 context,
                 message!!.messageContent
             )

@@ -15,7 +15,7 @@ import io.chat.kit.chat.extension.component.plugins.impl.RedPacketPlugin;
 import io.chat.kit.chat.extension.component.plugins.impl.TransferPlugin;
 import io.chat.kit.chat.extension.component.plugins.impl.VideoCallPlugin;
 import io.chat.kit.chat.extension.component.plugins.impl.VoiceInputPlugin;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 
 /**
  * by JFZ
@@ -41,7 +41,7 @@ public class ChatPluginConfig {
         defaultPluginModules.add(new MusicPlugin());
     }
 
-    public List<ChatPluginModule> getPluginModules(UserInfo userCall) {
+    public List<ChatPluginModule> getPluginModules(User userCall) {
         if (manager != null) {
             List<ChatPluginModule> pluginModules = manager.getPluginModules(userCall, defaultPluginModules);
             if (pluginModules != null) {
@@ -56,7 +56,7 @@ public class ChatPluginConfig {
     }
 
     interface ChatPluginManager {
-        List<ChatPluginModule> getPluginModules(UserInfo user, List<ChatPluginModule> plugins);
+        List<ChatPluginModule> getPluginModules(User user, List<ChatPluginModule> plugins);
     }
 
 }

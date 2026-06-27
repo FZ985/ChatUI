@@ -1,8 +1,11 @@
-package io.im.uicommon.adapter;
+package io.im.uicommon.providers;
 
 import android.view.ViewGroup;
 
 import java.util.List;
+
+import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.adapter.ViewHolder;
 
 public interface IViewProvider<T> {
     ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);

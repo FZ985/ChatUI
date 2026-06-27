@@ -44,10 +44,10 @@ public class Message implements Serializable {
     private long updateTime;
 
     @Embedded(prefix = "from_")
-    private MessageUser fromUser;
+    private UserConvert fromUser;
 
     @Embedded(prefix = "to_")
-    private MessageUser toUser;
+    private UserConvert toUser;
 
     @ColumnInfo(name = "chatType")
     private int chatType;//聊天类型： 1:单聊 2：群聊
@@ -191,25 +191,25 @@ public class Message implements Serializable {
         this.messageDirection = messageDirection;
     }
 
-    public MessageUser getFromUser() {
+    public UserConvert getFromUser() {
         if (fromUser == null) {
-            fromUser = new MessageUser();
+            fromUser = new UserConvert();
         }
         return fromUser;
     }
 
-    public void setFromUser(MessageUser fromUser) {
+    public void setFromUser(UserConvert fromUser) {
         this.fromUser = fromUser;
     }
 
-    public MessageUser getToUser() {
+    public UserConvert getToUser() {
         if (toUser == null) {
-            toUser = new MessageUser();
+            toUser = new UserConvert();
         }
         return toUser;
     }
 
-    public void setToUser(MessageUser toUser) {
+    public void setToUser(UserConvert toUser) {
         this.toUser = toUser;
     }
 
@@ -345,12 +345,12 @@ public class Message implements Serializable {
     }
 
     //发送消息创建的消息体
-    public static Message obtain(UserInfo toUser, ConversationType chatType, int messageType, MessageContent body) {
+    public static Message obtain(User toUser, ConversationType chatType, int messageType, MessageContent body) {
         Message message = new Message();
         message.setMessageId(message.buildMessageId());
         message.setCreateTime(ServeTime.currentTimeMillis());
-        message.setFromUser(ChatSDK.getConnectUser().toMessageUser());
-        message.setToUser(toUser.toMessageUser());
+        message.setFromUser(ChatSDK.getConnectUser().toConvert());
+        message.setToUser(toUser.toConvert());
         message.setChatType(chatType.getValue());
         message.setMessageType(messageType);
         message.setMessageBody(body.toJson());
@@ -362,7 +362,7 @@ public class Message implements Serializable {
 
     //消息方向反转
     public Message flipFromTo() {
-        MessageUser tempFrom = getFromUser();
+        UserConvert tempFrom = getFromUser();
         setFromUser(getToUser());
         setToUser(tempFrom);
         setMessageDirection(MessageDirection.RECEIVE);
@@ -395,10 +395,10 @@ public class Message implements Serializable {
                 message.setUpdateTime(updateTime);
 
                 JSONObject fromUserObj = obj.optJSONObject("fromUser");
-                message.setFromUser(MessageUser.fromJSONObject(fromUserObj));
+                message.setFromUser(UserConvert.fromJSONObject(fromUserObj));
 
                 JSONObject toUserObj = obj.optJSONObject("toUser");
-                message.setToUser(MessageUser.fromJSONObject(toUserObj));
+                message.setToUser(UserConvert.fromJSONObject(toUserObj));
 
                 message.setChatType(obj.optInt("chatType", ConversationType.TYPE_P2P.getValue()));
 

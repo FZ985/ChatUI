@@ -1,9 +1,8 @@
 package io.chat.conversation
 
 import android.content.Context
-import android.content.Intent
-import io.chat.conversation.ui.ConversationActivity
-import io.im.uicommon.helper.RouteHelper
+import io.im.uicommon.route.IMRoute
+import io.im.uicommon.route.RouterConstant
 
 
 /**
@@ -14,6 +13,8 @@ import io.im.uicommon.helper.RouteHelper
 object ConversationRoute {
 
     fun goConversation(context: Context) {
-        RouteHelper.go(context, Intent(context, ConversationActivity::class.java))
+        IMRoute.withKey(RouterConstant.PAGE_CONVERSATION_PAGE)
+            .withContext(context)
+            .navigate()
     }
 }

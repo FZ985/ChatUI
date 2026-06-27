@@ -29,18 +29,18 @@ import io.chat.kit.R;
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
 import io.chat.kit.databinding.ChatFragmentChatBinding;
-import io.chat.kit.event.PageEvent;
-import io.chat.kit.event.RefreshEvent;
-import io.chat.kit.event.ScrollToEndEvent;
+import io.im.uicommon.event.PageEvent;
+import io.im.uicommon.event.RefreshEvent;
+import io.im.uicommon.event.ScrollToEndEvent;
 import io.chat.kit.factory.ChatPopActionFactory;
 import io.chat.kit.helper.IChatHelper;
-import io.chat.kit.model.UiMessage;
-import io.chat.kit.provider.ChatProvider;
+import io.im.uicommon.model.UiMessage;
+import io.chat.kit.provider.InitChatProvider;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
 import io.im.core.listener.ChatFun;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.JLog;
 import io.im.core.utils.ServeTime;
@@ -51,6 +51,7 @@ import io.im.uicommon.base.ChatBaseFragment;
 import io.im.uicommon.helper.ChatDialog;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.helper.IMAlertHelper;
+import io.im.uicommon.route.RouterConstant;
 import io.im.uicommon.utils.MessageCheck;
 import io.im.uicommon.widgets.FixedLinearLayoutManager;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
@@ -70,7 +71,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     private ConversationType conversationType = ConversationType.TYPE_P2P;
 
-    private UserInfo userInfo;
+    private User userInfo;
 
     private final IChatHelper helper = new IChatHelper();
 
@@ -97,7 +98,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     private final IChatPopMenuClickListener menuClickListener = new IChatPopMenuClickListener() {
         @Override
         public boolean onCopy(String text) {
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onCopy(text)) {
                 return true;
             }
@@ -108,7 +109,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         @Override
         public boolean onDelete(Message messageInfo) {
             closeExpand();
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onDelete(messageInfo)) {
                 return true;
             }
@@ -120,7 +121,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         @Override
         public boolean onRefer(Message messageInfo) {
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onRefer(messageInfo)) {
                 return true;
             }
@@ -131,7 +132,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         @Override
         public boolean onMultiSelected(Message messageInfo) {
             closeExpand();
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onMultiSelected(messageInfo)) {
                 return true;
             }
@@ -146,7 +147,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         @Override
         public boolean onForward(Message messageInfo) {
             closeExpand();
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onForward(messageInfo)) {
                 return true;
             }
@@ -157,11 +158,11 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         @Override
         public boolean onRevoke(Message messageInfo) {
-            IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+            IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
             if (listener != null && listener.onRevoke(messageInfo)) {
                 return true;
             }
-            long revokeTime = ChatProvider.getOptions().revokeTime;
+            long revokeTime = InitChatProvider.getOptions().revokeTime;
             if (MessageCheck.checkRevokeMessage(messageInfo, revokeTime)) {
                 messageViewModel.revokeMessage(messageInfo);
             } else {
@@ -229,9 +230,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             }
         });
 
-        userInfo = (UserInfo) requireActivity().getIntent().getSerializableExtra(ChatRoute.User);
+        userInfo = (User) requireActivity().getIntent().getSerializableExtra(RouterConstant.USER);
         JLog.e("当前聊天:" + userInfo.getId() + "," + userInfo.getName());
-        conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(ChatRoute.ConversationType, ConversationType.TYPE_P2P.getValue()));
+        conversationType = ConversationType.setValue(requireActivity().getIntent().getIntExtra(RouterConstant.CONVERSATION_TYPE, ConversationType.TYPE_P2P.getValue()));
         messageViewModel = new ViewModelProvider(this).get(ChatMessageViewModel.class);
         messageViewModel.bindConversation(this);
 
@@ -245,8 +246,8 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
         liveDataListener();
         scrollToBottom(-1);
-        if (ChatProvider.getOptions().chatPopMenu != null) {
-            ChatPopActionFactory.getInstance().setChatPopMenu(ChatProvider.getOptions().chatPopMenu);
+        if (InitChatProvider.getOptions().chatPopMenu != null) {
+            ChatPopActionFactory.getInstance().setChatPopMenu(InitChatProvider.getOptions().chatPopMenu);
         }
         ChatPopActionFactory.getInstance().setActionListener(menuClickListener);
         uiListener();
@@ -415,12 +416,12 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     }
 
     @Override
-    public void updateUser(UserInfo user) {
+    public void updateUser(User user) {
         this.userInfo = user;
     }
 
     @Override
-    public UserInfo getUser() {
+    public User getUser() {
         return userInfo;
     }
 

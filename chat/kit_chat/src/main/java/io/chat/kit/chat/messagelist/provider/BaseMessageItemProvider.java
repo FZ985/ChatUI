@@ -14,9 +14,10 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.chat.kit.R;
+import io.im.uicommon.providers.ConversationMessageProvider;
 import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.helper.ReferUIHelper;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
@@ -68,7 +69,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 holder.setSelected(R.id.base_edit_iv, uiMessage.isSelected());
                 holder.setOnClickListener(
                         R.id.base_edit,
-                        v -> listener.onViewClick(v, MessageClickType.EDIT_CLICK, position, uiMessage));
+                        v -> listener.onViewClick(v, io.im.core.MessageClickType.EDIT_CLICK, position, uiMessage));
             }
             initTime(holder, position, list, message);
             initContent(holder, isSender, uiMessage, position, listener, list);
@@ -175,7 +176,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                                 listener);
                     }
                     if (!result) {
-                        listener.onViewClick(v, MessageClickType.CONTENT_CLICK, position, uiMessage);
+                        listener.onViewClick(v, io.im.core.MessageClickType.CONTENT_CLICK, position, uiMessage);
                     }
                 });
 
@@ -199,7 +200,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                                 listener);
                     }
                     if (!result) {
-                        return listener.onViewLongClick(v, MessageClickType.CONTENT_LONG_CLICK, position, uiMessage);
+                        return listener.onViewLongClick(v, io.im.core.MessageClickType.CONTENT_LONG_CLICK, position, uiMessage);
                     }
                     return true;
                 });
@@ -251,7 +252,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
                 holder.setVisible(R.id.base_warning, true);
                 holder.setOnClickListener(
                         R.id.base_warning,
-                        v -> listener.onViewClick(v, MessageClickType.WARNING_CLICK, position, uiMessage));
+                        v -> listener.onViewClick(v, io.im.core.MessageClickType.WARNING_CLICK, position, uiMessage));
             } else {
                 holder.setVisible(R.id.base_warning, false);
             }
@@ -305,19 +306,19 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
             holder.setOnClickListener(
                     R.id.base_left_avatar,
-                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
+                    v -> listener.onViewClick(v, io.im.core.MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
 
             holder.setOnClickListener(
                     R.id.base_right_avatar,
-                    v -> listener.onViewClick(v, MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
+                    v -> listener.onViewClick(v, io.im.core.MessageClickType.USER_PORTRAIT_CLICK, position, uiMessage));
 
             holder.setOnLongClickListener(
                     R.id.base_left_avatar,
-                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
+                    v -> listener.onViewLongClick(v, io.im.core.MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
 
             holder.setOnLongClickListener(
                     R.id.base_right_avatar,
-                    v -> listener.onViewLongClick(v, MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
+                    v -> listener.onViewLongClick(v, io.im.core.MessageClickType.USER_PORTRAIT_LONG_CLICK, position, uiMessage));
 
             if (mConfig.showNickName && uiMessage.getMessage().getConversationType() == ConversationType.TYPE_P2P) {
                 if (isSender) {

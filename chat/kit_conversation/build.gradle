@@ -35,5 +35,4 @@ android {
 
 dependencies {
     api project(':chat:chat_uicommon')
-    implementation project(':chat:kit_chat')
 }

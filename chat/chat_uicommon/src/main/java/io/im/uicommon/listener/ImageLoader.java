@@ -4,7 +4,7 @@ import android.content.Context;
 
 import io.im.core.model.Message;
 import io.im.core.model.Session;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 import io.im.uicommon.widgets.IAvatarView;
 
 /**
@@ -16,7 +16,7 @@ public interface ImageLoader {
 
     void loadChatAvatar(Context context, IAvatarView view, Message message, boolean isSender);
 
-    void loadForwardSelectorAvatar(Context context, IAvatarView view, UserInfo userInfo);
+    void loadForwardSelectorAvatar(Context context, IAvatarView view, User userInfo);
 
     void loadConversationAvatar(Context context, IAvatarView view, Session session);
 

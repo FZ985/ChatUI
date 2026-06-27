@@ -3,7 +3,6 @@ package io.chat.kit.forward
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import io.chat.kit.ChatRoute
 import io.chat.kit.R
 import io.chat.kit.databinding.ForwardActivitySelectorBinding
 import io.chat.kit.helper.livedata.ChatLiveData
@@ -11,13 +10,14 @@ import io.chat.kit.model.ForwardSelectorBean
 import io.im.core.listener.MessageCallback
 import io.im.core.model.ConversationType
 import io.im.core.model.Message
-import io.im.core.model.UserInfo
+import io.im.core.model.User
 import io.im.uicommon.MessageOperate
 import io.im.uicommon.UserTest
 import io.im.uicommon.adapter.BaseAdapter
 import io.im.uicommon.adapter.ViewHolder
 import io.im.uicommon.base.ChatBaseActivity
 import io.im.uicommon.helper.ChatMsgCache
+import io.im.uicommon.route.RouterConstant
 import io.im.uicommon.widgets.FixedLinearLayoutManager
 
 
@@ -31,11 +31,11 @@ class IForwardSelectorActivity : ChatBaseActivity<ForwardActivitySelectorBinding
     private val adapter = ForwardSelectorAdapter()
 
     private val isMerge: Boolean by lazy {
-        intent.getBooleanExtra(ChatRoute.IsMerge, true)
+        intent.getBooleanExtra(RouterConstant.IS_MERGE_SEND, true)
     }
 
-    private val user: UserInfo by lazy {
-        intent.getSerializableExtra(ChatRoute.User) as? UserInfo ?: UserInfo()
+    private val user: User by lazy {
+        intent.getSerializableExtra(RouterConstant.USER) as? User ?: User()
     }
 
     override fun onInitPage(savedInstanceState: Bundle?) {

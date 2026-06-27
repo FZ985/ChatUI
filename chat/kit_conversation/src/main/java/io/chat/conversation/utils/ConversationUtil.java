@@ -3,7 +3,7 @@ package io.chat.conversation.utils;
 
 import java.util.Comparator;
 
-import io.chat.conversation.model.UiSession;
+import io.im.uicommon.model.UiSession;
 
 /**
  * by DAD FZ

@@ -1,4 +1,4 @@
-package io.chat.kit.event;
+package io.im.uicommon.event;
 
 
 public class ScrollToEndEvent implements PageEvent {

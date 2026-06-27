@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.chat.conversation.R;
-import io.chat.conversation.model.UiSession;
+import io.im.uicommon.model.UiSession;
 import io.im.uicommon.IMCenter;
 
 /**

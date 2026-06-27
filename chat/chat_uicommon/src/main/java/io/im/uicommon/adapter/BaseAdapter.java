@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.im.uicommon.providers.IViewProvider;
+
 public class BaseAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
 
     private final String TAG = BaseAdapter.class.getSimpleName();

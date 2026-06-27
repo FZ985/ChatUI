@@ -1,4 +1,4 @@
-package io.chat.kit.model;
+package io.im.uicommon.model;
 
 import androidx.annotation.Keep;
 

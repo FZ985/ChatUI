@@ -6,11 +6,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import io.chat.conversation.model.UiSession
 import io.chat.conversation.utils.ConversationUtil
-import io.chat.kit.ChatRoute
-import io.chat.kit.event.PageEvent
-import io.chat.kit.event.ScrollToTopEvent
 import io.im.core.core.ChatSDK
 import io.im.core.listener.ChatLifecycle
 import io.im.core.listener.FetchCallback
@@ -21,9 +17,14 @@ import io.im.core.utils.ChatExecutorHelper
 import io.im.core.utils.ServeTime
 import io.im.uicommon.IMCenter
 import io.im.uicommon.event.ChatMessageEvent
+import io.im.uicommon.event.PageEvent
+import io.im.uicommon.event.ScrollToTopEvent
 import io.im.uicommon.listener.MessageEventListener
 import io.im.uicommon.listener.OnLocalMessageOperateListener
+import io.im.uicommon.model.UiSession
 import io.im.uicommon.repo.ConversationRepo
+import io.im.uicommon.route.IMRoute
+import io.im.uicommon.route.RouterConstant
 import java.util.Collections
 
 
@@ -56,7 +57,8 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     init {
         IMCenter.getInstance().getOptions().addMessageEventListener(this)
         IMCenter.getInstance().getOptions().localMessageOperateListeners.add(this)
-        ChatSDK.getDbManager().sessionDao().allSessionLiveData().observeForever(sessionObserver)
+        ChatSDK.getDbManager().sessionDao().getSessionLiveData(IMCenter.getAccountId())
+            .observeForever(sessionObserver)
     }
 
     private fun mapUISession(session: Session): UiSession {
@@ -95,7 +97,17 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         position: Int,
         data: UiSession
     ) {
-        ChatRoute.goPrivateChat(view.context, data.user)
+        when (val conversationType = ConversationType.setValue(data.session.type)) {
+            ConversationType.TYPE_P2P -> {
+                IMRoute.withKey(RouterConstant.PAGE_CHAT_P2P)
+                    .withContext(view.context)
+                    .withParam(RouterConstant.USER, data.user)
+                    .withParam(RouterConstant.CONVERSATION_TYPE, conversationType.value)
+            }
+
+            else -> {}
+        }
+
     }
 
     fun onViewLongClick(
@@ -209,7 +221,8 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     }
 
     override fun onDestroy() {
-        ChatSDK.getDbManager().sessionDao().allSessionLiveData().removeObserver(sessionObserver)
+        ChatSDK.getDbManager().sessionDao().getSessionLiveData(IMCenter.getAccountId())
+            .removeObserver(sessionObserver)
         IMCenter.getInstance().getOptions().localMessageOperateListeners.remove(this)
         super.onDestroy()
     }

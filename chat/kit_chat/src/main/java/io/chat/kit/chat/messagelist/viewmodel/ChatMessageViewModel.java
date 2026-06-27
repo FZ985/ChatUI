@@ -22,19 +22,19 @@ import java.util.List;
 import java.util.Objects;
 
 import io.chat.kit.chat.extension.ChatExtCall;
-import io.chat.kit.chat.messagelist.provider.MessageClickType;
+import io.chat.kit.provider.InitChatProvider;
+import io.im.core.MessageClickType;
 import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.chat.voice.AudioPlayManager;
-import io.chat.kit.event.PageEvent;
-import io.chat.kit.event.RefreshEvent;
-import io.chat.kit.event.ScrollToEndEvent;
+import io.im.uicommon.event.PageEvent;
+import io.im.uicommon.event.RefreshEvent;
+import io.im.uicommon.event.ScrollToEndEvent;
 import io.chat.kit.listener.IAudioPlayListener;
 import io.chat.kit.listener.IMessageViewModelProcessor;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 import io.chat.kit.processor.ChatMessageProcessor;
 import io.chat.kit.processor.P2PChatMessageProcessor;
 import io.chat.kit.processor.TeamChatMessageProcessor;
-import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
 import io.im.core.MessageType;
@@ -469,7 +469,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             if (popMenu != null && !popMenu.isShowing()) {
                 SelectableTextHelper.getInstance().dismiss();
             }
-            IMessageViewModelProcessor viewModelProcessor = ChatProvider.getOptions().getViewModelProcessor();
+            IMessageViewModelProcessor viewModelProcessor = InitChatProvider.getOptions().getViewModelProcessor();
             boolean isProcess = false;
             if (viewModelProcessor != null) {
                 isProcess = viewModelProcessor.onViewClick(this, clickType, data);
@@ -540,7 +540,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
         if (!reMessages.isEmpty()) {
             List<ReMessage> mRevokeMessages = new ArrayList<>();
             List<ReMessage> mDelRevokeMessages = new ArrayList<>();
-            long time = ChatProvider.getOptions().revokeTime;
+            long time = InitChatProvider.getOptions().revokeTime;
             for (ReMessage reMessage : reMessages) {
                 Message message = reMessage.getMessage();
                 if (message != null) {
@@ -571,7 +571,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             ReMessage reMessage = revokeMessages.get(0);
             Message message = reMessage.getMessage();
             if (message != null) {
-                long time = ChatProvider.getOptions().revokeTime;
+                long time = InitChatProvider.getOptions().revokeTime;
                 long lastRevokeTime = MessageCheck.lastRevokeTime(message, time);
                 if (lastRevokeTime > 0) {
                     handler.postDelayed(() -> {
@@ -594,7 +594,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     public boolean onViewLongClick(View view, int clickType, int position, UiMessage data) {
-        IMessageViewModelProcessor viewModelProcessor = ChatProvider.getOptions().getViewModelProcessor();
+        IMessageViewModelProcessor viewModelProcessor = InitChatProvider.getOptions().getViewModelProcessor();
         boolean isProcess = false;
         if (viewModelProcessor != null) {
             isProcess = viewModelProcessor.onViewLongClick(this, clickType, data);
@@ -613,7 +613,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     public boolean onClickLink(Context context, String link) {
-        IMessageViewModelProcessor viewModelProcessor = ChatProvider.getOptions().getViewModelProcessor();
+        IMessageViewModelProcessor viewModelProcessor = InitChatProvider.getOptions().getViewModelProcessor();
         boolean isProcess = false;
         if (viewModelProcessor != null) {
             isProcess = viewModelProcessor.onClickLink(context, link);
@@ -632,7 +632,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
     }
 
     public boolean onTextSelected(View view, int position, UiMessage uiMessage, String text, boolean isSelectAll, int eventAction) {
-        IChatPopMenuClickListener listener = ChatProvider.getOptions().popMenuClickListener;
+        IChatPopMenuClickListener listener = InitChatProvider.getOptions().popMenuClickListener;
         if (listener == null || listener.onTextSelected(view, position, uiMessage.getMessage(), text, isSelectAll, eventAction)) {
 
 //            if (messageInfo.isRevoked()) {

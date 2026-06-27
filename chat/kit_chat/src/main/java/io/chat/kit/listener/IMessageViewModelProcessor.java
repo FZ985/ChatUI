@@ -4,7 +4,7 @@ package io.chat.kit.listener;
 import android.content.Context;
 
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
-import io.chat.kit.model.UiMessage;
+import io.im.uicommon.model.UiMessage;
 
 /**
  * by DAD FZ

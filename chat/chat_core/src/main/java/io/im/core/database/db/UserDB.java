@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import io.im.core.database.dao.UserDao;
-import io.im.core.model.UserInfo;
+import io.im.core.model.User;
 
 
 /**
@@ -15,7 +15,7 @@ import io.im.core.model.UserInfo;
  * date : 2023/12/21 10:25
  * description :
  */
-@Database(entities = {UserInfo.class}, version = 1)
+@Database(entities = {User.class}, version = 1)
 public abstract class UserDB extends RoomDatabase {
     private static UserDB rsDataBase = null;
 

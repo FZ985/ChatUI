@@ -3,6 +3,12 @@
 
 
     <application>
+
+        <provider
+            android:name=".provider.InitConversationProvider"
+            android:authorities="@${applicationId}.conversationInit"
+            android:exported="false" />
+
         <activity
             android:name=".ui.ConversationActivity"
             android:screenOrientation="portrait" />

@@ -15,14 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.im.core.model.Message;
 import io.chat.kit.R;
 import io.chat.kit.chat.messagelist.provider.BaseMessageItemProvider;
-import io.chat.kit.model.UiMessage;
-import io.chat.kit.provider.ChatProvider;
 import io.chat.kit.utils.AnimatedColor;
+import io.im.core.model.Message;
 import io.im.uicommon.adapter.BaseAdapter;
 import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.config.ChatMessageProvider;
+import io.im.uicommon.model.UiMessage;
 import io.im.uicommon.utils.KtExtKt;
 
 /**
@@ -56,7 +56,7 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
     }
 
     public IChatListAdapter(IViewProviderListener<UiMessage> listener) {
-        super(listener, ChatProvider.getOptions().getChatConfig().getConversationProvider());
+        super(listener, ChatMessageProvider.getConversationProvider());
     }
 
     private void updateItemBg() {

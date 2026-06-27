@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import io.chat.kit.provider.InitChatProvider;
 import io.im.core.model.Message;
 import io.chat.kit.R;
 import io.chat.kit.chat.IChatFragment;
 import io.chat.kit.databinding.ChatPanelPluginBoardBinding;
-import io.chat.kit.provider.ChatProvider;
 import io.im.uicommon.base.ChatBaseFragment;
 
 /**
@@ -65,7 +65,7 @@ public class ChatPluginBoard extends FrameLayout {
             }
             return;
         }
-        pluginModules = ChatProvider.getOptions().getPluginConfig().getPluginModules(fragment.getUser());
+        pluginModules = InitChatProvider.getOptions().getPluginConfig().getPluginModules(fragment.getUser());
         int pages = 0;
         int count = pluginModules.size();
         if (count > 0) {

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.chat.kit.provider.InitChatProvider;
 import io.im.core.listener.ChatFun;
 import io.im.core.utils.ChatNull;
 import io.chat.kit.R;
@@ -29,7 +30,6 @@ import io.chat.kit.chat.IChatFragment;
 import io.chat.kit.chat.extension.ChatExtensionViewModel;
 import io.chat.kit.config.ChatEmojiConfig;
 import io.chat.kit.databinding.ChatPanelEmojiBoardBinding;
-import io.chat.kit.provider.ChatProvider;
 import io.im.uicommon.adapter.ViewHolder;
 import io.im.uicommon.base.ChatPageAdapter;
 
@@ -79,7 +79,7 @@ public class ChatEmoticonBoard extends LinearLayout {
     }
 
     private void initContent() {
-        ChatEmojiConfig emojiConfig = ChatProvider.getOptions().getEmojiConfig();
+        ChatEmojiConfig emojiConfig = InitChatProvider.getOptions().getEmojiConfig();
         boolean showTabItem = emojiConfig.isShowTabItem();
         if (showTabItem) {
             binding.emojiTab.setVisibility(VISIBLE);
