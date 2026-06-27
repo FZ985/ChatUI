@@ -103,6 +103,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
                     .withContext(view.context)
                     .withParam(RouterConstant.USER, data.user)
                     .withParam(RouterConstant.CONVERSATION_TYPE, conversationType.value)
+                    .navigate()
             }
 
             else -> {}
