@@ -16,15 +16,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Arrays;
-
 import io.chat.kit.R;
 import io.chat.kit.databinding.ChatEmojiTabDefaultBinding;
-import io.im.uicommon.adapter.ViewHolder;
 import io.im.core.listener.ChatFun;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNull;
 import io.im.core.utils.JLog;
+import io.im.uicommon.adapter.ViewHolder;
 
 
 /**
@@ -88,7 +86,6 @@ public class ChatEmojiTab implements ChatEmoticonTab {
                 for (int i = 1; i < chars.length; i++) {
                     key.append(chars[i]);
                 }
-                JLog.e("key:===:" + key.toString() + "," + Arrays.toString(chars) + "," + code + "," + Character.toString(chars[0]));
                 mEmojiLiveData.setValue(key.toString());
             } catch (Exception e) {
                 JLog.e("====emoji item click err:" + e.getMessage());

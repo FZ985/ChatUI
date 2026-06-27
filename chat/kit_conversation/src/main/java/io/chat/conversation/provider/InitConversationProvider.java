@@ -23,7 +23,7 @@ public final class InitConversationProvider extends InitializerProvider implemen
 
     @Override
     protected void onInitializer() {
-        JLog.e("======InitChatProvider====init");
+        JLog.e("======InitConversationProvider====init");
         InitializerManager.getInstance().registerInitializer(key, this);
     }
 
