@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -77,6 +78,7 @@ public class ChatLibUtil {
     }
 
     public static boolean isJson(String text) {
+        if (TextUtils.isEmpty(text)) return false;
         try {
             new JSONObject(text);
             return true;
@@ -103,7 +105,7 @@ public class ChatLibUtil {
         return object;
     }
 
-    private static <T extends Serializable> T deepSerializableCopy(T object) {
+    private static <T extends Serializable> T deepSerializableCopy(@NonNull T object) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
