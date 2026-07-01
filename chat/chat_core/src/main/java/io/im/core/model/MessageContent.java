@@ -68,7 +68,7 @@ public abstract class MessageContent implements Serializable {
 
 
     public MessageContent copy() {
-        return ChatLibUtil.deepSerializableCopy(this);
+        return ChatLibUtil.deepCopy(this);
     }
 
     public abstract Spannable getSummarySpannable(Context context);

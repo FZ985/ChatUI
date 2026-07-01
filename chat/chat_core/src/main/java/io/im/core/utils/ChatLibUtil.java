@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
@@ -86,18 +90,46 @@ public class ChatLibUtil {
         }
     }
 
-    public static <T extends Serializable> T deepSerializableCopy(T object) {
+    @SuppressWarnings("unchecked")
+    public static <T> T deepCopy(@NonNull T object) {
+        if (object instanceof Parcelable) {
+            return (T) deepParcelableCopy((Parcelable) object);
+        }
+
+        if (object instanceof Serializable) {
+            return (T) deepSerializableCopy((Serializable) object);
+        }
+
+        return object;
+    }
+
+    private static <T extends Serializable> T deepSerializableCopy(T object) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bis);
+
             return (T) ois.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Parcelable> T deepParcelableCopy(@NonNull T object) {
+        Parcel parcel = Parcel.obtain();
+        try {
+            parcel.writeParcelable(object, 0);
+            parcel.setDataPosition(0);
+
+            ClassLoader classLoader = object.getClass().getClassLoader();
+            return parcel.readParcelable(classLoader);
+        } finally {
+            parcel.recycle();
+        }
     }
 
     public static String getAppName(Context context) {

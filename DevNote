@@ -1,3 +1,15 @@
+26.06.29
+校园餐饮：
+创建冠县实高分之，替换冠县实高logo并打包；
+其他(Kotlin)：
+kotlin API中launch、async、suspend关键字的作用和区别；
+launch主要用于执行没有返回值的异步任务，
+async用于执行有返回值的异步任务，并通过 `await()` 获取执行结果；
+suspend用于声明挂起函数，使耗时操作能够以同步代码的形式编写。
+CoroutineScope的作用域用于管理协程的生命周期，
+Dispatchers.Main、Dispatchers.IO、Dispatchers.Default等常用调度器的作用，用于UI更新、IO操作之间的线程切换；
+
+
 26.06.25
 双泽：
 1、超万个单词时列表渲染慢；

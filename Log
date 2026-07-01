@@ -1,3 +1,5 @@
+添加Parcelable的深度复制函数；
+
 MessageUser命名为UserConvert；
 UserInfo命名为User；
 Session新增ownerId字段创建时设置当前登录账号id，livedata获取自己的session
