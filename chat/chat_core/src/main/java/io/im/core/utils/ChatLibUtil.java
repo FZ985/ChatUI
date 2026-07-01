@@ -110,7 +110,6 @@ public class ChatLibUtil {
             oos.writeObject(object);
             ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bis);
-
             return (T) ois.readObject();
         } catch (Exception e) {
             e.printStackTrace();
