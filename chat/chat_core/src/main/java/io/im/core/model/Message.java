@@ -85,6 +85,8 @@ public class Message implements Serializable {
     @Ignore
     public Message(MessageContent messageContent) {
         this.messageContent = messageContent;
+        setMessageId(buildMessageId());
+        setCreateTime(ServeTime.currentTimeMillis());
     }
 
     public long getMessageId() {
