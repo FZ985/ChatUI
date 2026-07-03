@@ -46,7 +46,7 @@ object ConversationRepo {
                 }
             } else {
                 session = Session.obtain(
-                    toUser.toUserInfo(),
+                    toUser.toUser(),
                     message.conversationType,
                     message
                 )

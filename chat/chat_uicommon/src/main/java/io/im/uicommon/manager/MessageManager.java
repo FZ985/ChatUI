@@ -17,8 +17,8 @@ import io.im.core.listener.OnSocketMessageListener;
 import io.im.core.model.Message;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
-import io.im.uicommon.MessageOperate;
 import io.im.uicommon.event.ChatMessageEvent;
+import io.im.uicommon.helper.PostMessageEvent;
 import io.im.uicommon.listener.MessageInterceptListener;
 import io.im.uicommon.repo.ConversationRepo;
 import io.im.uicommon.resend.ResendManager;
@@ -87,9 +87,9 @@ public class MessageManager {
                 }
             } else {
                 if (MessageType.isAppType(message.getMessageType())) {
-                    MessageOperate.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    PostMessageEvent.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
                 } else {
-                    MessageOperate.postSendEvent(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                    PostMessageEvent.postSendEvent(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
                     checkSession(message);
                 }
             }
@@ -103,9 +103,9 @@ public class MessageManager {
                 callback.onError(message, errorCode);
             } else {
                 if (MessageType.isAppType(message.getMessageType())) {
-                    MessageOperate.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                    PostMessageEvent.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
                 } else {
-                    MessageOperate.postSendEvent(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                    PostMessageEvent.postSendEvent(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
                 }
             }
             removeCallback(message);
@@ -124,9 +124,9 @@ public class MessageManager {
     //接收消息
     private void filterReceiveMessage(Message message, int errorCode) {
         if (MessageType.isAppType(message.getMessageType())) {
-            MessageOperate.postReceiveOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+            PostMessageEvent.postReceiveOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
         } else {
-            MessageOperate.postReceiveMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+            PostMessageEvent.postReceiveMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
         }
     }
 

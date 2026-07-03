@@ -76,7 +76,7 @@ public class UserConvert implements Serializable {
         this.remark = remark;
     }
 
-    public User toUserInfo() {
+    public User toUser() {
         String json = toJson();
         return ChatLibUtil.gson.fromJson(json, User.class);
     }
@@ -88,11 +88,7 @@ public class UserConvert implements Serializable {
     public static UserConvert fromJSONObject(@Nullable JSONObject obj) {
         UserConvert user = new UserConvert();
         if (obj != null) {
-            user.setId(obj.optString("id"));
-            user.setName(obj.optString("name"));
-            user.setAvatar(obj.optString("avatar"));
-            user.setType(obj.optInt("type"));
-            user.setRemark(obj.optString("remark"));
+            user = ChatLibUtil.gson.fromJson(obj.toString(), UserConvert.class);
         }
         return user;
     }

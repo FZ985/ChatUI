@@ -46,6 +46,12 @@ public class CoreService extends ISocketCoreService {
         }
     }
 
+    //发送字节数组数据
+    public void sendByteData(byte[] data, CoreResultInterface callback) {
+        mCallback = callback;
+        sendByteSocketData(data);
+    }
+
     //根据类型获取结果
     public String getTypeResult(int type, CoreResultInterface callback) {
         mCallback = callback;

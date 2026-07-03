@@ -68,7 +68,7 @@ class IAvatarView @JvmOverloads constructor(
     }
 
     fun setUserInfoByMessageUser(info: UserConvert) {
-        this.userInfo = info.toUserInfo()
+        this.userInfo = info.toUser()
     }
 
     fun imageView(): ImageView {

@@ -1,11 +1,6 @@
 package io.im.uicommon;
 
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -14,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.im.core.MessageType;
-import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatFun;
 import io.im.core.listener.FetchCallback;
 import io.im.core.listener.MessageCallback;
@@ -26,11 +20,11 @@ import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.State;
 import io.im.core.model.User;
-import io.im.core.utils.ChatToast;
 import io.im.core.utils.ServeTime;
 import io.im.uicommon.bean.AudioDataBean;
 import io.im.uicommon.event.ChatMessageEvent;
-import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.event.DeleteMessageEvent;
+import io.im.uicommon.helper.PostMessageEvent;
 import io.im.uicommon.listener.UploadDownloadProcessor;
 import io.im.uicommon.manager.MessageManager;
 import io.im.uicommon.repo.ChatRepo;
@@ -43,9 +37,53 @@ import io.im.uicommon.resend.ResendManager;
  **/
 public class MessageOperate {
 
-    //撤销消息
-    public static void revokeMessage(ConversationType conversationType,
-                                     User user, @NonNull Message oldMessage) {
+    //发送消息
+    public static void sendMessage(Message message, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
+        sendMessage(message, referMessage, true, true, callback);
+    }
+
+    //发送消息
+    public static void sendMessage(Message message, @Nullable Message referMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
+        if (referMessage != null) {
+            message.setReferMessage(referMessage.toJson());
+        }
+        if (postEvent && postAttach) {
+            PostMessageEvent.postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ATTACH, message));
+        }
+        MessageManager.getInstance().sendMessage(message, new MessageCallback<>() {
+            @Override
+            public void onSuccess(Message message) {
+                if (postEvent) {
+                    if (MessageType.isAppType(message.getMessageType())) {
+                        PostMessageEvent.postSendOtherMessage(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.SUCCESS, message));
+                    } else {
+                        PostMessageEvent.postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.SUCCESS, message));
+                    }
+                }
+                if (callback != null) {
+                    callback.onSuccess(message);
+                }
+            }
+
+            @Override
+            public void onError(Message message, int errorCode) {
+                if (postEvent) {
+                    if (MessageType.isAppType(message.getMessageType())) {
+                        PostMessageEvent.postSendOtherMessage(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ERROR, message));
+                    } else {
+                        PostMessageEvent.postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ERROR, message));
+                    }
+                }
+                if (callback != null) {
+                    callback.onError(message, errorCode);
+                }
+            }
+        });
+    }
+
+    //发送->撤销消息
+    public static void sendRevokeMessage(ConversationType conversationType,
+                                         User user, @NonNull Message oldMessage) {
         RevokeMessage revokeMessage = RevokeMessage.obtain(oldMessage);
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
@@ -53,7 +91,7 @@ public class MessageOperate {
         sendMessage(message, null, true, false, null);
     }
 
-    //合并转发消息
+    //发送->合并转发消息
     public static void sendMergeForwardMessage(ConversationType conversationType,
                                                User user, List<Message> messageList, List<User> users, @Nullable MessageCallback<Message> callback) {
         ForwardMessage forward = ForwardMessage.obtain(
@@ -70,7 +108,7 @@ public class MessageOperate {
         }
     }
 
-    //逐条发送消息
+    //发送->逐条发送消息
     public static void sendForwardMessage(List<Message> messageList, List<User> users, @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
         if (messageList.isEmpty()) return;
         for (User user : users) {
@@ -86,7 +124,7 @@ public class MessageOperate {
         }
     }
 
-    //多条转发消息发送
+    //发送->多条转发消息发送
     private static void sendForwardMessage(List<Message> messageList,
                                            List<Message> successMessage, List<Message> errorMessage,
                                            @NonNull ChatFun.Fun2<List<Message>, List<Message>> callback) {
@@ -112,69 +150,30 @@ public class MessageOperate {
         }
     }
 
-    //发送消息
-    public static void sendMessage(Message message, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
-        sendMessage(message, referMessage, true, true, callback);
-    }
-
-    //发送消息
-    public static void sendMessage(Message message, @Nullable Message referMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
-        if (referMessage != null) {
-            message.setReferMessage(referMessage.toJson());
-        }
-        if (postEvent && postAttach) {
-            postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ATTACH, message));
-        }
-        MessageManager.getInstance().sendMessage(message, new MessageCallback<>() {
-            @Override
-            public void onSuccess(Message message) {
-                if (postEvent) {
-                    if (MessageType.isAppType(message.getMessageType())) {
-                        postSendOtherMessage(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.SUCCESS, message));
-                    } else {
-                        postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.SUCCESS, message));
-                    }
-                }
-                if (callback != null) {
-                    callback.onSuccess(message);
-                }
-            }
-
-            @Override
-            public void onError(Message message, int errorCode) {
-                if (postEvent) {
-                    if (MessageType.isAppType(message.getMessageType())) {
-                        postSendOtherMessage(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ERROR, message));
-                    } else {
-                        postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ERROR, message));
-                    }
-                }
-                if (callback != null) {
-                    callback.onError(message, errorCode);
-                }
-            }
-        });
-    }
-
-
     //删除消息
-    public static void deleteMessage(Message message, @NonNull String toId, @Nullable MessageCallback<Message> callback) {
+    public static void deleteMessage(Message message, @NonNull String toId, @Nullable MessageCallback<List<Message>> callback) {
         List<Message> messageList = new ArrayList<>();
         messageList.add(message);
         deleteMessage(messageList, toId, callback);
     }
 
     //删除消息
-    public static void deleteMessage(List<Message> messageList, @NonNull String toId, @Nullable MessageCallback<Message> callback) {
+    public static void deleteMessage(List<Message> messageList, @NonNull String toId, @Nullable MessageCallback<List<Message>> callback) {
         ChatRepo.deleteMessages(messageList, toId, new FetchCallback<>() {
             @Override
             public void onError(int errorCode, @Nullable String errorMsg) {
-
+                PostMessageEvent.postDeleteMessage(new DeleteMessageEvent(DeleteMessageEvent.ERROR, messageList));
+                if (callback != null) {
+                    callback.onError(messageList, errorCode);
+                }
             }
 
             @Override
             public void onSuccess(@Nullable Integer data) {
-                postDeleteMessage(new io.im.uicommon.event.DeleteMessageEvent(io.im.uicommon.event.DeleteMessageEvent.SUCCESS, messageList));
+                PostMessageEvent.postDeleteMessage(new DeleteMessageEvent(DeleteMessageEvent.SUCCESS, messageList));
+                if (callback != null) {
+                    callback.onSuccess(messageList);
+                }
             }
         });
     }
@@ -183,7 +182,7 @@ public class MessageOperate {
     public static void sendVoiceMessage(User toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
         HQVoiceMessage voiceBody = HQVoiceMessage.obtain(voiceData.getUrl(), voiceData.getPath(), voiceData.getDuration());
         Message message = Message.obtain(toUser, conversationType, MessageType.CHAT_VOICE, voiceBody);
-        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
+        PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
         sendMessage(message, referMessage, callback);
     }
 
@@ -231,11 +230,10 @@ public class MessageOperate {
 //        });
 //    }
 //
-//
 
     //上传并发送消息
     public static void uploadAndSendMediaMessage(Message message, File file) {
-        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
+        PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
         UploadDownloadProcessor uploadProcessor = IMCenter.getInstance().getOptions().uploadDownloadProcessor;
         if (uploadProcessor != null) {
             uploadProcessor.upload(file, url -> {
@@ -247,129 +245,24 @@ public class MessageOperate {
                     @Override
                     public void onSuccess(Message message) {
                         message.setSendStatus(State.SUCCESS);
-                        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+                        PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
                     }
 
                     @Override
                     public void onError(Message message, int errorCode) {
                         message.setSendStatus(State.ERROR);
-                        postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                        PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
                     }
                 });
             }, errorMessage -> {
                 ResendManager.getInstance().addResendMessage(message, false);
                 message.setSendStatus(State.ERROR);
-                postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
+                PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.ERROR, message));
             }, progress -> {
                 message.setSendStatus(State.PROGRESS);
-                postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, progress.intValue()));
+                PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, progress.intValue()));
             });
         }
     }
 
-    //分发发送事件
-    public static void postSendEvent(io.im.uicommon.event.ChatMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onSendMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-    //分发发送媒体消息回调事件
-    public static void postSendMediaMessage(io.im.uicommon.event.ChatMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onSendMediaMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-    //分发发送的其他消息回调事件
-    public static void postSendOtherMessage(io.im.uicommon.event.ChatMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onSendOtherMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-    //分发接收消息回调事件
-    public static void postReceiveMessage(io.im.uicommon.event.ChatMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onReceiveMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-    //分发接收的其他消息回调事件
-    public static void postReceiveOtherMessage(io.im.uicommon.event.ChatMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onReceiveOtherMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-
-    //分发删除消息的回调事件
-    public static void postDeleteMessage(io.im.uicommon.event.DeleteMessageEvent event) {
-        List<MessageEventListener> listeners = IMCenter.getInstance().getOptions().getMessageEventListeners();
-        try {
-            for (MessageEventListener listener : listeners) {
-                if (listener != null) {
-                    listener.onDeleteMessage(event);
-                }
-            }
-        } catch (Exception e) {
-            //
-        }
-    }
-
-
-    /**
-     * 复制文本到剪切板
-     *
-     * @param text      文本内容
-     * @param showToast 是否显示Toast提示
-     */
-    public static void copyText(String text, boolean showToast) {
-        if (TextUtils.isEmpty(text)) {
-            return;
-        }
-        ClipboardManager cmb = (ClipboardManager) ChatSDK.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText(null, text);
-        if (clipData != null) {
-            cmb.setPrimaryClip(clipData);
-            if (showToast) {
-                ChatToast.toast(ChatSDK.getContext(), R.string.chat_message_action_copy_success);
-            }
-        }
-    }
 }

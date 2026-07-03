@@ -125,7 +125,6 @@ public class ChatLibUtil {
         try {
             parcel.writeParcelable(object, 0);
             parcel.setDataPosition(0);
-
             ClassLoader classLoader = object.getClass().getClassLoader();
             return parcel.readParcelable(classLoader);
         } finally {

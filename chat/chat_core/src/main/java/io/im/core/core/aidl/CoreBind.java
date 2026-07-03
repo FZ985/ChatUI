@@ -33,4 +33,9 @@ public class CoreBind extends CoreInterface.Stub {
         return service.getTypeDataResult(type, data, callback);
     }
 
+    @Override
+    public void sendByteData(byte[] data, CoreResultInterface callback) throws RemoteException {
+        service.sendByteData(data, callback);
+    }
+
 }

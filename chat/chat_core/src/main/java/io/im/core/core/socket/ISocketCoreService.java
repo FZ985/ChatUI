@@ -17,7 +17,7 @@ public abstract class ISocketCoreService extends Service {
 
     protected CoreResultInterface mCallback;
 
-    protected void connectWebSocket(String data) {
+    protected final void connectWebSocket(String data) {
         ConnectRequest request = ChatLibUtil.gson.fromJson(data, ConnectRequest.class);
         ISocketClient.getInstance().startConnect(request, new ISocketListener() {
             @Override
@@ -93,22 +93,33 @@ public abstract class ISocketCoreService extends Service {
         });
     }
 
-    protected void sendSocketData(String data) {
+    protected final void sendSocketData(String data) {
         try {
             boolean success = ISocketClient.getInstance().sendMessage(data);
             if (!success && mCallback != null) {
                 mCallback.onResult(CoreConstant.SocketResponse, new WebSocketResult(SocketCode.SOCKET_SEND_ERROR, data).toJson());
             }
         } catch (RemoteException e) {
-
+            //
         }
     }
 
-    protected boolean checkSocket() {
+    protected final void sendByteSocketData(byte[] data) {
+//        try {
+//            boolean success = ISocketClient.getInstance().sendMessage(ByteString.of(data));
+//            if (!success && mCallback != null) {
+//                mCallback.onResult(CoreConstant.SocketResponse, new WebSocketResult(SocketCode.SOCKET_SEND_ERROR, data).toJson());
+//            }
+//        } catch (RemoteException e) {
+//
+//        }
+    }
+
+    protected final boolean checkSocket() {
         return ISocketClient.getInstance().sendPing();
     }
 
-    protected void closeSocket() {
+    protected final void closeSocket() {
         ISocketClient.getInstance().destroy();
     }
 }

@@ -29,12 +29,8 @@ import io.chat.kit.R;
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.messagelist.viewmodel.ChatMessageViewModel;
 import io.chat.kit.databinding.ChatFragmentChatBinding;
-import io.im.uicommon.event.PageEvent;
-import io.im.uicommon.event.RefreshEvent;
-import io.im.uicommon.event.ScrollToEndEvent;
 import io.chat.kit.factory.ChatPopActionFactory;
 import io.chat.kit.helper.IChatHelper;
-import io.im.uicommon.model.UiMessage;
 import io.chat.kit.provider.InitChatProvider;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
 import io.im.core.listener.ChatFun;
@@ -48,11 +44,16 @@ import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
 import io.im.uicommon.adapter.IViewProviderListener;
 import io.im.uicommon.base.ChatBaseFragment;
+import io.im.uicommon.event.PageEvent;
+import io.im.uicommon.event.RefreshEvent;
+import io.im.uicommon.event.ScrollToEndEvent;
 import io.im.uicommon.helper.ChatDialog;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.helper.IMAlertHelper;
+import io.im.uicommon.model.UiMessage;
 import io.im.uicommon.route.RouterConstant;
 import io.im.uicommon.utils.MessageCheck;
+import io.im.uicommon.utils.TextUtil;
 import io.im.uicommon.widgets.FixedLinearLayoutManager;
 import io.im.uicommon.widgets.text.selection.SelectableTextHelper;
 
@@ -102,7 +103,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onCopy(text)) {
                 return true;
             }
-            MessageOperate.copyText(text, true);
+            TextUtil.copyText(text, true);
             return true;
         }
 

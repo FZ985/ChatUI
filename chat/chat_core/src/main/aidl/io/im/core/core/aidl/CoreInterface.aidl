@@ -7,12 +7,14 @@ import io.im.core.core.aidl.CoreResultInterface;
 interface CoreInterface {
 
       //根据类型和参数去做一些事
-      void toTypeAction(int type,String action,CoreResultInterface callback);
+     void toTypeAction(int type,String action,CoreResultInterface callback);
 
       //根据类型获取结果
-      String getTypeResult(int type,CoreResultInterface callback);
+     String getTypeResult(int type,CoreResultInterface callback);
 
       //根据类型 和 参数 获取结果
-      String getTypeDataResult(int type,String data,CoreResultInterface callback);
+     String getTypeDataResult(int type,String data,CoreResultInterface callback);
 
+     //发送字节数组数据
+     void sendByteData(in byte[] data, CoreResultInterface callback);
 }

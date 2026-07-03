@@ -533,7 +533,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     //撤回消息
     public void revokeMessage(Message message) {
-        MessageOperate.revokeMessage(mCall.getConversationType(), mCall.getUser(), message);
+        MessageOperate.sendRevokeMessage(mCall.getConversationType(), mCall.getUser(), message);
     }
 
     private void handlerRevokeList(List<ReMessage> reMessages) {

@@ -96,11 +96,7 @@ public class User implements Serializable {
     public static User fromJSONObject(@Nullable JSONObject obj) {
         User user = new User();
         if (obj != null) {
-            user.setId(obj.optString("id"));
-            user.setName(obj.optString("name"));
-            user.setAvatar(obj.optString("avatar"));
-            user.setType(obj.optInt("type"));
-            user.setRemark(obj.optString("remark"));
+            user = ChatLibUtil.gson.fromJson(obj.toString(), User.class);
         }
         return user;
     }
