@@ -437,6 +437,7 @@ public class Message implements Serializable {
 
     @Override
     public boolean equals(@Nullable Object o) {
+        if (o == null) return false;
         if (o instanceof Message) {
             Message that = (Message) o;
             return getMessageId() == that.getMessageId()
