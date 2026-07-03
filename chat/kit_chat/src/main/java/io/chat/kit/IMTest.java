@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.im.uicommon.model.UiMessage;
 import io.im.core.MessageType;
+import io.im.core.message.UnKnowMessage;
 import io.im.core.message.im.ImageMessage;
 import io.im.core.message.im.TextMessage;
-import io.im.core.message.UnKnowMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.User;
 import io.im.uicommon.UserTest;
+import io.im.uicommon.model.UiMessage;
 
 /**
  * author : JFZ
@@ -41,7 +41,7 @@ public class IMTest {
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_TEXT, TextMessage.obtain("234"))));
-        list.add(new UiMessage(new Message(new UnKnowMessage())));
+        list.add(new UiMessage(getSendMsg(toUser, MessageType.UNKNOWN, new UnKnowMessage())));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("", "", new Size(800, 500)))));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2145774639,3196122421&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500", ""))));
         list.add(new UiMessage(getSendMsg(toUser, MessageType.CHAT_IMAGE, ImageMessage.obtain("https://img1.baidu.com/it/u=2457208575,2459586361&fm=253&fmt=auto&app=138&f=JPEG?w=313&h=500", "", new Size(313, 500)))));

@@ -72,9 +72,9 @@ public final class ChatMessageProvider {
      * @param messageContent 消息类型
      */
     public static Spannable getMessageSummary(Context context, MessageContent messageContent) {
-        Spannable spannable = new SpannableString("");
+        Spannable spannable = null;
         if (messageContent == null) {
-            return spannable;
+            return new SpannableString("");
         }
         Spannable defaultSpannable = defaultMessageProvider.getSummarySpannable(context, messageContent);
         for (ConversationSummaryProvider item : mConversationSummaryProviders) {
