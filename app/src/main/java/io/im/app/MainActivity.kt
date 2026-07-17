@@ -17,6 +17,7 @@ import io.chat.kit.ChatRoute
 import io.im.app.databinding.ActivityMainBinding
 import io.im.uicommon.UserTest
 
+
 class MainActivity : AppCompatActivity() {
 
 
@@ -47,8 +48,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.refresh.setOnClickListener {
-            ImDebug.switchLoginUser()
-            refreshLoginUI()
+//            ImDebug.switchLoginUser()
+//            refreshLoginUI()
+
+            V1RequestIdGenerator.test()
+            V2RequestIdGenerator.test()
         }
 
         refreshLoginUI()
