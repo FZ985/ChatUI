@@ -1,3 +1,21 @@
+26.07.17:
+优化ImmersionBar对于Android15及以上的沉浸式；
+Android15以上开启EdgeToEdge，界面开启全面屏与状态栏导航栏重叠；
+状态栏、导航栏高度获取的适配；
+
+添加扩展函数，在设备时Android15以上，且宿主App的targetSdk必须35及以上时，对其进行edgetoedge适配，
+还有不能忽略在Android15中的新属性，android:windowOptOutEdgeToEdgeEnforcement(是否允许开启全面屏)，
+读取此属性设为true的才对app沉浸式进行适配，需要注意的是此属性在Android16将废弃，强制开启；
+
+状态栏、导航栏高度Android15将获取有偏差，采用Window中WindowInsets对象获取，此对象包含了所有bar的大小数据；
+注意的是在模拟器中google fold 9折叠屏设备中，WindowInsets获取的状态栏高度与实际高度偏小，
+所以采取的做法是，原读取系统属性的获取方法不变，在利用WindowInsets获取，两者采用最大数字返回；
+
+View.setOnApplyWindowInsetsListener监听各种bar的状态；
+
+还要注意的是原生BottomNavBarView内部源码中默认兼容了edgeToEdge，所以在使用该组件的界面不要再设置底部安全区域；
+
+
 26.07.16:
 前端幂等性中的requestId的设计与生成，编写代码示例；
 

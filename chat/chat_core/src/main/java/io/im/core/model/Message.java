@@ -61,6 +61,9 @@ public class Message implements Serializable {
     @ColumnInfo(name = "referMessage")
     private String referMessage;//引用的消息，Message结构
 
+    @ColumnInfo(name = "extra")
+    private String extra;//扩展字段
+
     @ColumnInfo(name = "readStatus")
     private int readStatus;//阅读状态
 
@@ -264,6 +267,17 @@ public class Message implements Serializable {
         return this;
     }
 
+    public String getExtra() {
+        if (extra == null) {
+            extra = "";
+        }
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
+
     public long buildMessageId() {
         return MessageIdGenerator.nextId();
     }
@@ -348,6 +362,10 @@ public class Message implements Serializable {
 
     //发送消息创建的消息体
     public static Message obtain(User toUser, ConversationType chatType, int messageType, MessageContent body) {
+        return obtain(toUser, chatType, messageType, body, "");
+    }
+
+    public static Message obtain(User toUser, ConversationType chatType, int messageType, MessageContent body, String extra) {
         Message message = new Message();
         message.setMessageId(message.buildMessageId());
         message.setCreateTime(ServeTime.currentTimeMillis());
@@ -358,6 +376,7 @@ public class Message implements Serializable {
         message.setMessageBody(body.toJson());
         message.setReadStatus(ReadStatus.UN_READ.getValue());
         message.setSendStatus(SentStatus.SENDING.getValue());
+        message.setExtra(extra);
         return message;
     }
 
@@ -413,6 +432,8 @@ public class Message implements Serializable {
                 message.setSendStatus(obj.optInt("sendStatus", SentStatus.SENDING.getValue()));
 
                 message.setReferMessage(obj.optString("referMessage", ""));
+
+                message.setExtra(obj.optString("extra", ""));
 
                 return message;
             } catch (JSONException e) {

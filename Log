@@ -1,3 +1,10 @@
+升级项目模版为Android16；
+重构KtBaseDelegateActivity类中的window监听逻辑；
+升级ImmersionBar兼容Android15，针对导航、键盘的适配；
+将debug面板代码从core中抽取；
+去除Base页面中的无用扩展函数；
+
+
 添加Parcelable的深度复制函数；
 
 MessageUser命名为UserConvert；

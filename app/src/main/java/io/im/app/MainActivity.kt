@@ -20,7 +20,6 @@ import io.im.uicommon.UserTest
 
 class MainActivity : AppCompatActivity() {
 
-
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -48,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.refresh.setOnClickListener {
-//            ImDebug.switchLoginUser()
-//            refreshLoginUI()
-
-            V1RequestIdGenerator.test()
-            V2RequestIdGenerator.test()
+            ImDebug.switchLoginUser()
+            refreshLoginUI()
+//            V1RequestIdGenerator.test()
+//            V2RequestIdGenerator.test()
         }
 
         refreshLoginUI()
+
     }
 
     @SuppressLint("SetTextI18n")
