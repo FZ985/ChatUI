@@ -31,7 +31,7 @@ import io.im.core.utils.ServeTime;
  */
 @Keep
 @Entity(tableName = "message")
-public class Message implements Serializable {
+public final class Message implements Serializable {
 
     @PrimaryKey
     @ColumnInfo(name = "messageId")
