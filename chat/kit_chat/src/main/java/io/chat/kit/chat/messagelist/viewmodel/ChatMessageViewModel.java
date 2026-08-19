@@ -24,6 +24,7 @@ import java.util.Objects;
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.provider.InitChatProvider;
 import io.im.core.MessageClickType;
+import io.im.core.message.im.AIMessage;
 import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.chat.voice.AudioPlayManager;
 import io.im.uicommon.event.PageEvent;
@@ -270,6 +271,12 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 sendMessageEvent(uiMessage);
             } else {
                 refreshSingleMessage(uiMessage);
+                //AI消息的话，实时更新
+                if (msg.getMessageType() == AIMessage.TYPE_AI_MESSAGE && chatProcessor != null) {
+                    chatProcessor.updateMessage(uiMessage.getMessage(), () -> {
+//                        executePageEvent(new ScrollToEndEvent());
+                    });
+                }
             }
         }
         if (isEdit()) {

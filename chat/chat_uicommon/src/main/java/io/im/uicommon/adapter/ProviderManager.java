@@ -1,5 +1,6 @@
 package io.im.uicommon.adapter;
 
+import androidx.annotation.NonNull;
 import androidx.collection.SparseArrayCompat;
 
 import java.util.List;
@@ -115,5 +116,16 @@ public class ProviderManager<T> {
             }
         }
         return mDefaultProvider;
+    }
+
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        try {
+            for (int i = 0; i < mProviders.size(); i++) {
+                IViewProvider<T> provider = mProviders.valueAt(i);
+                provider.onViewRecycled(holder);
+            }
+        } catch (Exception e) {
+            //
+        }
     }
 }

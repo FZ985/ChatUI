@@ -9,11 +9,16 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.Keep;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.im.core.MessageType;
 import io.im.core.core.aidl.CoreInterface;
 import io.im.core.core.aidl.CoreResultBind;
 import io.im.core.core.aidl.CoreResultInterface;
@@ -21,6 +26,8 @@ import io.im.core.core.service.CoreService;
 import io.im.core.core.socket.ConnectRequest;
 import io.im.core.core.socket.SocketCode;
 import io.im.core.core.socket.WebSocketResult;
+import io.im.core.message.im.AIMessage;
+import io.im.core.message.im.TextMessage;
 import io.im.core.model.Message;
 import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNetworkUtil;
@@ -172,6 +179,82 @@ public class CoreSingle {
                     receiveObj.put("code", SocketCode.success);
                     String receiveData = new WebSocketResult(SocketCode.SOCKET_MESSAGE, receiveObj.toString()).toJson();
                     callback.onResult(CoreConstant.SocketResponse, receiveData);
+
+
+                    //模拟AI消息
+                    AIMessage ai = AIMessage.obtain("");
+                    if (flipMessage.getMessageType() == MessageType.CHAT_TEXT) {
+                        TextMessage body = (TextMessage) flipMessage.getMessageContent();
+                        StringBuilder sb = new StringBuilder(body.getContent());
+                        ai.setContent(sb.toString());
+                        ai.setGenerating(true);
+                        flipMessage.setMessageType(AIMessage.TYPE_AI_MESSAGE);
+                        flipMessage.updateMessageBody(ai);
+                        String receiveJson2 = flipMessage.toJson();
+                        JSONObject receiveObj2 = new JSONObject(receiveJson2);
+                        receiveObj2.put("code", SocketCode.success);
+                        String receiveData2 = new WebSocketResult(SocketCode.SOCKET_MESSAGE, receiveObj2.toString()).toJson();
+                        callback.onResult(CoreConstant.SocketResponse, receiveData2);
+
+
+                        List<String> dataList = new ArrayList<>();
+                        dataList.add("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈");
+                        dataList.add("呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵");
+                        dataList.add("嘻嘻嘻嘻嘻嘻");
+                        String mdText = "## 表格\n\n" +  // 标题和表格之间空行
+                                "| ID | 名称 | 数量 |\n" +
+                                "|:---:|:---:|:---:|\n" +
+                                "| 1  | A产品 | 100 |\n" +
+                                "| 2  | B产品 | 200 |\n\n" + // 表格结束空行！！
+                                "下面紧跟的文字，不会再重叠";
+                        dataList.add("# Markdown演示文档\n" +
+                                "## 文本样式\n" +
+                                "**加粗**、*斜体*、~~删除线~~、`code行内代码`\n" +
+                                "\n" +
+                                "## 列表\n" +
+                                "- 苹果\n" +
+                                "- 香蕉\n" +
+                                "- 橙子\n" +
+                                "\n" +
+                                "1. 看书\n" +
+                                "2. 写代码\n" +
+                                "3. 运动\n" +
+                                "\n" +
+                                mdText +
+                                "> 生活在于折腾\n" +
+                                "\n" +
+                                "```python\n" +
+                                "print(\"测试\")\n");
+                        dataList.add("");
+                        long interval = 200;
+                        for (int i = 0; i < dataList.size(); i++) {
+                            boolean isLast = i == dataList.size() - 1;
+                            final String item = dataList.get(i);
+                            // 累计延迟：第0个0ms，第1个1000ms，第2个2000ms...保证顺序执行
+                            long delayMs = i * interval;
+                            testHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        sb.append(item);
+                                        ai.setContent(sb.toString());
+                                        ai.setGenerating(!isLast);
+                                        flipMessage.setMessageType(AIMessage.TYPE_AI_MESSAGE);
+                                        flipMessage.updateMessageBody(ai);
+
+                                        String receiveJson = flipMessage.toJson();
+                                        JSONObject receiveObj = new JSONObject(receiveJson);
+                                        Log.e("Mo", receiveObj.toString());
+                                        receiveObj.put("code", SocketCode.success);
+                                        String receiveData = new WebSocketResult(SocketCode.SOCKET_MESSAGE, receiveObj.toString()).toJson();
+                                        callback.onResult(CoreConstant.SocketResponse, receiveData);
+                                    } catch (Exception e) {
+                                        //
+                                    }
+                                }
+                            }, delayMs);
+                        }
+                    }
                 } catch (Exception e) {
                     //
                 }

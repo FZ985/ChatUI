@@ -21,6 +21,7 @@ import io.chat.kit.utils.AnimatedColor;
 import io.im.core.model.Message;
 import io.im.uicommon.adapter.BaseAdapter;
 import io.im.uicommon.adapter.IViewProviderListener;
+import io.im.uicommon.adapter.ViewHolder;
 import io.im.uicommon.config.ChatMessageProvider;
 import io.im.uicommon.model.UiMessage;
 import io.im.uicommon.utils.KtExtKt;
@@ -172,5 +173,11 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
         public void setNewList(List<UiMessage> newList) {
             this.newList = newList;
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        ChatMessageProvider.getConversationProvider().onViewRecycled(holder);
     }
 }

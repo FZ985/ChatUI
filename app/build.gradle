@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt' //必须开启kapt
 }
 
 android {
@@ -47,6 +48,10 @@ android {
     }
 }
 
+configurations.all {
+    exclude group: "org.jetbrains", module: "annotations-java5"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -58,4 +63,17 @@ dependencies {
 
     implementation project(':chat:kit_chat')
     implementation project(':chat:kit_conversation')
+
+    def markwon_version = "4.6.2"
+    implementation "io.noties.markwon:core:$markwon_version"
+    implementation "io.noties.markwon:syntax-highlight:$markwon_version" //代码高亮
+    implementation "io.noties.markwon:linkify:$markwon_version" //链接
+//    implementation "io.noties.markwon:ext-tables:$markwon_version"
+    implementation "io.noties.markwon:recycler:$markwon_version"
+    implementation "io.noties.markwon:recycler-table:$markwon_version"
+
+    // prism4j 注解处理器，自动生成语法
+    kapt("io.noties:prism4j-bundler:2.0.0") {
+        exclude group: "org.jetbrains", module: "annotations-java5"
+    }
 }

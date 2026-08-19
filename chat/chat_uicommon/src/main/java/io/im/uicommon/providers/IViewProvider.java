@@ -2,6 +2,8 @@ package io.im.uicommon.providers;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import io.im.uicommon.adapter.IViewProviderListener;
@@ -24,4 +26,7 @@ public interface IViewProvider<T> {
      * @param position 位置
      */
     void bindViewHolder(ViewHolder holder, T t, int position, List<T> list, IViewProviderListener<T> listener);
+
+    default void onViewRecycled(@NonNull ViewHolder holder) {
+    }
 }
