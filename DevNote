@@ -2,7 +2,7 @@
 chatUI：
 定义AIClient策略模式；
 定义ai配置策略入口，有外部传入ai策略实现；
-创建deepseek策略调试，与viewmodel之间的数据互动，再更新UI状态；
+构建deepseek策略调试，与viewmodel之间的数据互动，再更新UI状态；
 构建api请求中messages参数结构；
 构建请求tools工具定义构建；
 其他：
