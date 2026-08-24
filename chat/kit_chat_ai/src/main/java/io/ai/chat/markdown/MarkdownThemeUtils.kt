@@ -1,0 +1,74 @@
+package io.ai.chat.markdown
+
+import android.content.Context
+import android.util.TypedValue
+import androidx.annotation.AnyRes
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
+import io.ai.chat.R
+
+data class MarkdownCodeColors(
+    @get:ColorInt val blockBackgroundColor: Int,
+    @get:ColorInt val headerTextColor: Int,
+    @get:ColorInt val codeTextColor: Int,
+    @get:ColorInt val dividerColor: Int,
+    @get:ColorInt val strokeColor: Int,
+    @get:ColorInt val keywordColor: Int,
+    @get:ColorInt val stringColor: Int,
+    @get:ColorInt val commentColor: Int,
+    @get:ColorInt val numberColor: Int,
+    @get:ColorInt val annotationColor: Int,
+    @get:ColorInt val inlineCodeBackgroundColor: Int,
+    @get:ColorInt val inlineCodeTextColor: Int
+)
+
+fun resolveMarkdownCodeColors(context: Context): MarkdownCodeColors {
+    val blockBackgroundColor = ContextCompat.getColor(context, R.color.markdown_code_block_background)
+    val headerTextColor = ContextCompat.getColor(context, R.color.markdown_code_block_header_text)
+    val codeTextColor = ContextCompat.getColor(context, R.color.markdown_code_block_text)
+    val dividerColor = ContextCompat.getColor(context, R.color.markdown_code_block_divider)
+    val strokeColor = ContextCompat.getColor(context, R.color.markdown_code_block_stroke)
+    val keywordColor = ContextCompat.getColor(context, R.color.markdown_code_keyword)
+    val stringColor = ContextCompat.getColor(context, R.color.markdown_code_string)
+    val commentColor = ContextCompat.getColor(context, R.color.markdown_code_comment)
+    val numberColor = ContextCompat.getColor(context, R.color.markdown_code_number)
+    val annotationColor = ContextCompat.getColor(context, R.color.markdown_code_annotation)
+
+    return MarkdownCodeColors(
+        blockBackgroundColor = blockBackgroundColor,
+        headerTextColor = headerTextColor,
+        codeTextColor = codeTextColor,
+        dividerColor = dividerColor,
+        strokeColor = strokeColor,
+        keywordColor = keywordColor,
+        stringColor = stringColor,
+        commentColor = commentColor,
+        numberColor = numberColor,
+        annotationColor = annotationColor,
+        inlineCodeBackgroundColor = blockBackgroundColor,
+        inlineCodeTextColor = codeTextColor
+    )
+}
+
+internal fun resolveThemeColor(context: Context, attr: Int, @ColorInt fallback: Int): Int {
+    val typedValue = TypedValue()
+    val resolved = context.theme.resolveAttribute(attr, typedValue, true)
+    return if (resolved) {
+        if (typedValue.resourceId != 0) ContextCompat.getColor(context, typedValue.resourceId) else typedValue.data
+    } else {
+        fallback
+    }
+}
+
+internal fun blendWithAlpha(@ColorInt color: Int, alpha: Int): Int {
+    val r = (color shr 16) and 0xFF
+    val g = (color shr 8) and 0xFF
+    val b = color and 0xFF
+    return (alpha shl 24) or (r shl 16) or (g shl 8) or b
+}
+
+internal fun resolveThemeResource(context: Context, attr: Int, @AnyRes fallback: Int): Int {
+    val typedValue = TypedValue()
+    val resolved = context.theme.resolveAttribute(attr, typedValue, true)
+    return if (resolved && typedValue.resourceId != 0) typedValue.resourceId else fallback
+}

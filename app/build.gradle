@@ -27,10 +27,28 @@ android {
 
     }
 
+    signingConfigs {
+        create("sign") {
+            keyAlias = "key"
+            keyPassword = "123456"
+            storeFile = file("../test.jks")
+            storePassword = "123456"
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("sign")
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("sign")
         }
     }
 
@@ -55,6 +73,8 @@ configurations.all {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation Activity
+    implementation FragmentKtx
     implementation KtxCore
     implementation Appcompat
     implementation Material
@@ -63,6 +83,8 @@ dependencies {
 
     implementation project(':chat:kit_chat')
     implementation project(':chat:kit_conversation')
+
+    implementation project(':chat:kit_chat_ai')
 
     def markwon_version = "4.6.2"
     implementation "io.noties.markwon:core:$markwon_version"

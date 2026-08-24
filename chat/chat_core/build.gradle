@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation Activity
+    implementation FragmentKtx
     implementation KtxCore
     implementation Appcompat
     implementation Material

@@ -2,7 +2,9 @@ package io.im.app
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -53,8 +55,41 @@ class MainActivity : AppCompatActivity() {
 //            V2RequestIdGenerator.test()
         }
 
+        binding.aiChat.setOnClickListener {
+//            AiRoute.goAI(this)
+
+//            val pkgName = "io.plugin_app" //指定要卸载的包名
+            val pkgName = "io.plugin_app2" //指定要卸载的包名
+            val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
+                data = Uri.parse("package:$pkgName")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                putExtra(Intent.EXTRA_RETURN_RESULT, true) //获取卸载结果回调
+            }
+            startActivityForResult(intent, 1001)
+        }
+
+        binding.aiChatHistory.setOnClickListener {
+            try {
+                val intent = Intent()
+//                intent.setClassName("io.plugin_app", "io.plugin_app.MainActivity")
+                intent.setClassName("io.plugin_app2", "io.plugin_app2.MainActivity")
+                intent.putExtra("send", "我是内容")
+                startActivityForResult(intent, 1001)
+            } catch (e: Exception) {
+            }
+        }
+
         refreshLoginUI()
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("result", "onActivityResult:$requestCode,$resultCode")
+        data?.let {
+            val d = it.getStringExtra("data") ?: ""
+            Log.e("result", "接收数据：$d")
+        }
     }
 
     @SuppressLint("SetTextI18n")

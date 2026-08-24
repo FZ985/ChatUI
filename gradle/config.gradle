@@ -1,8 +1,11 @@
 ext {
 
+    Activity = 'androidx.activity:activity:1.13.0'
+    FragmentKtx = 'androidx.fragment:fragment-ktx:1.8.9'
+
     Appcompat = 'androidx.appcompat:appcompat:1.7.1'
-    Material = 'com.google.android.material:material:1.13.0'
-    KtxCore = 'androidx.core:core-ktx:1.16.0'
+    Material = 'com.google.android.material:material:1.14.0'
+    KtxCore = 'androidx.core:core-ktx:1.18.0'
     Constraintlayout = 'androidx.constraintlayout:constraintlayout:2.2.1'
 
     Recyclerview = 'androidx.recyclerview:recyclerview:1.4.0'
@@ -11,9 +14,10 @@ ext {
     Annotation = 'androidx.annotation:annotation:1.9.1'
     Swiperefreshlayout = 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    AndroidViewModel = 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
-    AndroidLiveData = 'androidx.lifecycle:lifecycle-livedata:2.6.1'
-    AndroidLifecycleRuntime = 'androidx.lifecycle:lifecycle-runtime:2.6.1'
+    AndroidViewModel = 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0'
+    AndroidLiveData = 'androidx.lifecycle:lifecycle-livedata-ktx:2.10.0'
+    AndroidLifecycleRuntime = 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
+
 
     Gson = 'com.google.code.gson:gson:2.13.1'
     Okhttp = 'com.squareup.okhttp3:okhttp:4.12.0'
@@ -28,4 +32,8 @@ ext {
     Room = 'androidx.room:room-runtime:2.7.2'
     RoomAnnotationProcessor = 'androidx.room:room-compiler:2.7.2'
 
+    blurview = 'com.github.Dimezis:blurview:version-3.2.0'
+    prism4j = 'io.noties:prism4j:2.0.0'
+    flexmark = 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.8'
+    ratexAndroid = 'io.github.erweixin:ratex-android:0.1.14'
 }

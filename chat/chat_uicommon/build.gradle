@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    api Activity
+    api FragmentKtx
     api KtxCore
     api Appcompat
     api Material

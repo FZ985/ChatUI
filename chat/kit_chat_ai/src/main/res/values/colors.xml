@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Markdown 代码高亮 -->
+    <color name="markdown_code_block_background">#0D000000</color> <!-- Black 5%（叠加在卡片上） -->
+    <color name="markdown_code_block_header_text">#424A53</color>
+    <color name="markdown_code_block_text">#24292F</color>
+    <color name="markdown_code_block_divider">#14000000</color>
+    <color name="markdown_code_block_stroke">#14000000</color>
+    <color name="markdown_code_keyword">#CF222E</color>
+    <color name="markdown_code_string">#116329</color>
+    <color name="markdown_code_comment">#6E7781</color>
+    <color name="markdown_code_number">#0550AE</color>
+    <color name="markdown_code_annotation">#8250DF</color>
+</resources>

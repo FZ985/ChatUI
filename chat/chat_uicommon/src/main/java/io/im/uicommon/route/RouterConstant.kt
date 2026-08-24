@@ -11,6 +11,9 @@ object RouterConstant {
     //单聊页面
     const val PAGE_CHAT_P2P = "im://chat/p2pChat.page"
 
+    //AI聊天页面
+    const val PAGE_CHAT_AI_P2P = "im://chat/p2pAIChat.page"
+
     //合并转发
     const val PAGE_CHAT_FORWARD = "im://chat/forward.page"
 

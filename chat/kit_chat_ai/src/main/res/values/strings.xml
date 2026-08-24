@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI Chat</string>
+    <string name="ai_action_copy">复制</string>
+
+
+    <string name="ai_label_thinking">思考过程</string>
+    <string name="ai_tool_summary_loading">正在执行：%1$s</string>
+    <string name="ai_action_expand">展开</string>
+    <string name="ai_action_collapse">收起</string>
+
+    <string name="ai_label_parameters">参数：</string>
+    <string name="ai_label_result">结果：</string>
+
+    <string name="ai_settings_reasoning_low">低</string>
+    <string name="ai_settings_reasoning_medium">中</string>
+    <string name="ai_settings_reasoning_high">高</string>
+    <string name="ai_settings_reasoning_xhigh">极高</string>
+
+    <string name="ai_reasoning_off">关闭</string>
+    <string name="ai_reasoning_on">开启</string>
+    <string name="ai_reasoning_max">最高</string>
+</resources>

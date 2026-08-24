@@ -1,3 +1,23 @@
+26.08.22:
+chatUI：
+定义AIClient策略模式；
+定义ai配置策略入口，有外部传入ai策略实现；
+创建deepseek策略调试，与viewmodel之间的数据互动，再更新UI状态；
+构建api请求中messages参数结构；
+构建请求tools工具定义构建；
+其他：
+插件式app与主app的双向通信测试；
+
+
+26.08.21:
+ChatUI：
+创建AI libModel；
+引入markdown库进行封装markdown数据；
+引入blur库后期实现毛玻璃效果；
+创建AIMessage消息体；
+以Deepseek api调试ai发送消息，Log查看响应数据；
+创建AIChatMessageAdapter适配器，创建AIViewHolder；
+
 26.07.31:
 梳理iOS与web交互的逻辑，编写交互代码；
 了解js立即函数的形式定义；
