@@ -1,12 +1,52 @@
 26.08.22:
+世纪道和：
+替换应用图标和名称；
+简游：
+提交华为应用商店；
+与iOS调试iOS端的h5交互；
+其他：
+androidx.webkit:webkit:1.16.0库的使用详解；
+>Jetpack Webkit，官方WebView兼容库，不是WebView渲染内核本身，
+是一套兼容桥接API，解决系统API版本碎片化
+
+世纪道和：
+去除所有地方的人脸拍照；
+其他：
+查看RenderNode API详解；
+RenderNode是Android硬件渲染(Hardware Rendering)的核心对象，
+Android8.0(API26)引入，用来封装渲染树的一个节点，替代旧的DisplayList。
+作用：把绘制指令录制到RenderNode，后续可以直接复用，不用重复onDraw绘制，提升UI性能，减少CPU绘制开销。
+适合：静态图形、背景、复杂矢量图形，频繁刷新但是内容不变的UI。
+
+androidx.bluetooth:bluetooth:1.0.0‑alpha02库使用详解；
+这是Jetpack Bluetooth库（AndroidX 蓝牙新库，Google 推出的新一代蓝牙 API，
+用来替代老旧的BluetoothAdapter、BluetoothGatt原生API。
+
+androidx.webkit:webkit:1.16.0库的使用详解；
+>Jetpack Webkit，官方WebView兼容库，不是WebView渲染内核本身，
+是一套兼容桥接API，解决系统API版本碎片化
+
+
+
+乾坤大集：
+下单额度不足时的提示改为弹窗提示，并跳转充值；
+打包1.0.6;
 chatUI：
+创建messageAdapter；
+添加ai和用户的item ViewHolder；
 定义AIClient策略模式；
 定义ai配置策略入口，有外部传入ai策略实现；
 构建deepseek策略调试，与viewmodel之间的数据互动，再更新UI状态；
 构建api请求中messages参数结构；
 构建请求tools工具定义构建；
-其他：
-插件式app与主app的双向通信测试；
+
+
+我作一条垂直辅助线，
+用判定定理：一条直线和另一条直线相交，只要有一个角是90°，就互相垂直；
+得出两个直角，
+再用定理：同一平面内，垂直于同一条直线的两条直线互相平行；
+去证明两条线平行；
+再去计算角的度数；
 
 
 26.08.21:
