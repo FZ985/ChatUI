@@ -1,3 +1,39 @@
+26.08.29:
+新增是否显示安全锁字段；
+新增华为渠道打包；
+并添加华为渠道包相关逻辑判断；
+Android Service帖子讲解；
+Android Dialog无法使用Application中的context的源码解析；
+
+
+
+26.08.27:
+简游：
+提交华为云测试；
+下架华为私语阁a，并重新提交简游MX；
+排查ios与h5交互数据不通问题；
+
+js中函数与this的指向问题；
+let token = "";
+function test1() {
+    let payload = {"key":"getUserInfo"};
+    window.appApiSuccess = function(response:any){
+        this.token = response.data.token
+        window.alert(this.token)
+        }
+}
+function test2(){
+    window.alert(this.token)
+}
+代码中，test1函数中的this指向的为window，在test2函数中，token为空，所指向的
+不是同一个this，在test1中可以使用箭头函数去指向外层this；
+所以：
+1. 普通function：看谁调用，this就是谁；全局调用this=window
+2. 箭头函数：看写在哪里，this继承外层，调用不改变
+
+
+
+
 26.08.22:
 世纪道和：
 替换应用图标和名称；

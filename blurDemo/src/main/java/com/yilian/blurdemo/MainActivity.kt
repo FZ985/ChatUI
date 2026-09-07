@@ -1,6 +1,9 @@
 package com.yilian.blurdemo
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         convertSize(findViewById(R.id.i5), R.mipmap.i5)
 
         setupBlurView()
+        calTime()
     }
 
 
@@ -55,5 +59,18 @@ class MainActivity : AppCompatActivity() {
         bv.setupWith(target)
             .setFrameClearDrawable(windowBackground)
             .setBlurRadius(radius)
+    }
+
+    val handle = Handler(Looper.getMainLooper())
+
+    private fun calTime() {
+        val endTime = DateTime.getStringToDate("yyyy-MM-dd HH:mm:ss", "2026-08-29 18:00:00")
+        val startTime = System.currentTimeMillis()
+        val times = endTime - startTime
+        val second = times / 1000
+        Log.e("Time", second.toString() + "秒")
+        handle.postDelayed({
+            calTime()
+        }, 1000)
     }
 }

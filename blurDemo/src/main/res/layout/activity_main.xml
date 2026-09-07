@@ -29,12 +29,6 @@
                     android:scaleType="centerCrop"
                     android:src="@mipmap/i1" />
 
-                <ImageView
-                    android:id="@+id/i2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/i2" />
 
                 <ImageView
                     android:id="@+id/i3"
@@ -57,6 +51,12 @@
                     android:scaleType="centerCrop"
                     android:src="@mipmap/i5" />
 
+                <ImageView
+                    android:id="@+id/i2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/i2" />
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -65,9 +65,9 @@
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/bv"
         android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:layout_gravity="center"
-        android:layout_height="100dp"
-        app:blurOverlayColor="#80FFFFFF">
+        app:blurOverlayColor="#70FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
