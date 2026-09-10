@@ -84,18 +84,20 @@ dependencies {
     implementation project(':chat:kit_chat')
     implementation project(':chat:kit_conversation')
 
-    implementation project(':chat:kit_chat_ai')
+//    implementation project(':chat:kit_chat_ai')
 
-    def markwon_version = "4.6.2"
-    implementation "io.noties.markwon:core:$markwon_version"
-    implementation "io.noties.markwon:syntax-highlight:$markwon_version" //代码高亮
-    implementation "io.noties.markwon:linkify:$markwon_version" //链接
+//    def markwon_version = "4.6.2"
+//    implementation "io.noties.markwon:core:$markwon_version"
+//    implementation "io.noties.markwon:syntax-highlight:$markwon_version" //代码高亮
+//    implementation "io.noties.markwon:linkify:$markwon_version" //链接
 //    implementation "io.noties.markwon:ext-tables:$markwon_version"
-    implementation "io.noties.markwon:recycler:$markwon_version"
-    implementation "io.noties.markwon:recycler-table:$markwon_version"
+//    implementation "io.noties.markwon:recycler:$markwon_version"
+//    implementation "io.noties.markwon:recycler-table:$markwon_version"
+
+    api project(':markdown:fluid-markdown')
 
     // prism4j 注解处理器，自动生成语法
-    kapt("io.noties:prism4j-bundler:2.0.0") {
-        exclude group: "org.jetbrains", module: "annotations-java5"
-    }
+//    kapt("io.noties:prism4j-bundler:2.0.0") {
+//        exclude group: "org.jetbrains", module: "annotations-java5"
+//    }
 }

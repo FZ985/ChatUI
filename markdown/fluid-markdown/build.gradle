@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.fluid.afm'
+    compileSdk appCompileSdk
+
+    defaultConfig {
+        minSdk appMinSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation Appcompat
+    api project(':markdown:markwon-core')
+    api project(':markdown:markwon-ext-latex')
+    api project(':markdown:markwon-ext-strikethrough')
+    api project(':markdown:markwon-ext-tables')
+    api project(':markdown:markwon-ext-tasklist')
+    api project(':markdown:markwon-image')
+    api project(':markdown:markwon-html')
+    api project(':markdown:markwon-inline-parser')
+    api project(':markdown:markwon-syntax-highlight')
+    implementation Recyclerview
+    implementation 'com.vdurmont:emoji-java:5.1.1'
+}

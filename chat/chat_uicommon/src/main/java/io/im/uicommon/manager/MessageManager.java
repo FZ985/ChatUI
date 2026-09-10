@@ -29,7 +29,7 @@ import io.im.uicommon.resend.ResendManager;
  * date : 2023/12/21 14:02
  * description : 消息管理
  */
-public class MessageManager {
+public final class MessageManager {
 
     private final HashMap<Long, MessageCallback<Message>> callbackMap = new HashMap<>();
 
@@ -75,22 +75,22 @@ public class MessageManager {
     }
 
     //发送的消息
-    private void filterSendMessage(Message message, int errorCode) {
-        message = transformMessage(message);
+    private void filterSendMessage(Message messagePar, int errorCode) {
+        Message message = transformMessage(messagePar);
         MessageCallback<Message> callback = callbackMap.get(message.getMessageId());
         if (errorCode == SocketCode.success) {
             ResendManager.getInstance().removeResendMessage(message.getMessageId());
             if (callback != null) {
                 callback.onSuccess(message);
                 if (!MessageType.isAppType(message.getMessageType())) {
-                    checkSession(message);
+                    checkSession(message, false);
                 }
             } else {
                 if (MessageType.isAppType(message.getMessageType())) {
                     PostMessageEvent.postSendOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
                 } else {
                     PostMessageEvent.postSendEvent(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
-                    checkSession(message);
+                    checkSession(message, false);
                 }
             }
             removeCallback(message);
@@ -127,6 +127,9 @@ public class MessageManager {
             PostMessageEvent.postReceiveOtherMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
         } else {
             PostMessageEvent.postReceiveMessage(new ChatMessageEvent(ChatMessageEvent.SUCCESS, message));
+            //正常场景是从会话列表中进入聊天，所以会保存最新的会话信息，不需要两边都要执行更新会话操作
+            //只在 ConversationViewModel 中作更新就可以了
+//            checkSession(message, true);
         }
     }
 
@@ -163,8 +166,8 @@ public class MessageManager {
     }
 
     //验证会话并创建
-    private void checkSession(Message message) {
-        ConversationRepo.createConversation(message, false, null);
+    private void checkSession(Message message, boolean updateLocal) {
+        ConversationRepo.createConversation(message, updateLocal, null);
     }
 
 }

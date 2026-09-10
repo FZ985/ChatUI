@@ -32,6 +32,8 @@ public class ImDebug {
         IMCenter.init(application, options);
 
 
+        AIInit.init(application);
+
         //连接socket
 //        ConnectRequest request = ConnectRequest.get().url(wss);
 //        request.addParam("version", version);

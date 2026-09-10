@@ -22,25 +22,20 @@ import java.util.List;
 import java.util.Objects;
 
 import io.chat.kit.chat.extension.ChatExtCall;
-import io.chat.kit.provider.InitChatProvider;
-import io.im.core.MessageClickType;
-import io.im.core.message.im.AIMessage;
-import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.chat.voice.AudioPlayManager;
-import io.im.uicommon.event.PageEvent;
-import io.im.uicommon.event.RefreshEvent;
-import io.im.uicommon.event.ScrollToEndEvent;
 import io.chat.kit.listener.IAudioPlayListener;
 import io.chat.kit.listener.IMessageViewModelProcessor;
-import io.im.uicommon.model.UiMessage;
 import io.chat.kit.processor.ChatMessageProcessor;
 import io.chat.kit.processor.P2PChatMessageProcessor;
 import io.chat.kit.processor.TeamChatMessageProcessor;
+import io.chat.kit.provider.InitChatProvider;
 import io.chat.kit.ui.popmenu.ChatPopMenu;
 import io.chat.kit.ui.popmenu.IChatPopMenuClickListener;
+import io.im.core.MessageClickType;
 import io.im.core.MessageType;
 import io.im.core.core.ChatSDK;
 import io.im.core.listener.ChatLifecycle;
+import io.im.core.message.im.AIMessage;
 import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.message.im.RevokeMessage;
 import io.im.core.message.im.TextMessage;
@@ -55,8 +50,13 @@ import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
 import io.im.uicommon.event.ChatMessageEvent;
 import io.im.uicommon.event.DeleteMessageEvent;
+import io.im.uicommon.event.PageEvent;
+import io.im.uicommon.event.RefreshEvent;
+import io.im.uicommon.event.ScrollToEndEvent;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.model.UiMessage;
+import io.im.uicommon.resend.ResendManager;
 import io.im.uicommon.ui.web.IWebActivity;
 import io.im.uicommon.utils.MessageCheck;
 import io.im.uicommon.utils.SavePathUtils;
@@ -274,7 +274,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 //AI消息的话，实时更新
                 if (msg.getMessageType() == AIMessage.TYPE_AI_MESSAGE && chatProcessor != null) {
                     chatProcessor.updateMessage(uiMessage.getMessage(), () -> {
-//                        executePageEvent(new ScrollToEndEvent());
+                        executePageEvent(new ScrollToEndEvent());
                     });
                 }
             }

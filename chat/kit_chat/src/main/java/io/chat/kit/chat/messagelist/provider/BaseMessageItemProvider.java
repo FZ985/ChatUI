@@ -14,6 +14,9 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.chat.kit.R;
+import io.chat.kit.processor.ChatMessageProcessor;
+import io.chat.kit.processor.P2PChatMessageProcessor;
+import io.chat.kit.processor.TeamChatMessageProcessor;
 import io.im.uicommon.providers.ConversationMessageProvider;
 import io.im.uicommon.resend.ResendManager;
 import io.chat.kit.helper.ReferUIHelper;
@@ -42,6 +45,8 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
 
     private final ReferUIHelper referUIHelper = new ReferUIHelper();
 
+    protected ChatMessageProcessor chatProcessor;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_base, parent, false);
@@ -62,6 +67,7 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
         }
         if (uiMessage != null && uiMessage.getMessage() != null && listener != null) {
             Message message = uiMessage.getMessage();
+            initProcessor(message);
             boolean isSender = uiMessage.getMessage().getMessageDirection().equals(Message.MessageDirection.SEND);
             holder.setVisible(R.id.base_edit_iv, uiMessage.isEdit() && canEdit());
             holder.setVisible(R.id.base_edit, uiMessage.isEdit() && canEdit());
@@ -396,6 +402,17 @@ public abstract class BaseMessageItemProvider<T extends MessageContent> implemen
             }
         }
         return true;
+    }
+
+    private void initProcessor(Message message) {
+        if (chatProcessor == null) {
+            if (message.getConversationType() == ConversationType.TYPE_P2P) {
+                chatProcessor = new P2PChatMessageProcessor();
+            }
+            if (message.getConversationType() == ConversationType.TYPE_TEAM) {
+                chatProcessor = new TeamChatMessageProcessor();
+            }
+        }
     }
 
     protected final void log(String m) {

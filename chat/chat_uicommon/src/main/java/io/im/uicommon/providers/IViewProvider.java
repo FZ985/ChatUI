@@ -3,6 +3,7 @@ package io.im.uicommon.providers;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -28,5 +29,13 @@ public interface IViewProvider<T> {
     void bindViewHolder(ViewHolder holder, T t, int position, List<T> list, IViewProviderListener<T> listener);
 
     default void onViewRecycled(@NonNull ViewHolder holder) {
+    }
+
+    default void onAttachedToRecyclerView(RecyclerView recyclerView) {
+
+    }
+
+    default void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+
     }
 }

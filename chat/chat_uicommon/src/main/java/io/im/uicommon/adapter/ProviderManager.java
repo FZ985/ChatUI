@@ -2,6 +2,7 @@ package io.im.uicommon.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.collection.SparseArrayCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -123,6 +124,28 @@ public class ProviderManager<T> {
             for (int i = 0; i < mProviders.size(); i++) {
                 IViewProvider<T> provider = mProviders.valueAt(i);
                 provider.onViewRecycled(holder);
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        try {
+            for (int i = 0; i < mProviders.size(); i++) {
+                IViewProvider<T> provider = mProviders.valueAt(i);
+                provider.onAttachedToRecyclerView(recyclerView);
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        try {
+            for (int i = 0; i < mProviders.size(); i++) {
+                IViewProvider<T> provider = mProviders.valueAt(i);
+                provider.onDetachedFromRecyclerView(recyclerView);
             }
         } catch (Exception e) {
             //

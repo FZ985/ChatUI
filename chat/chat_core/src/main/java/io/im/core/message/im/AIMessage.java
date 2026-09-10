@@ -23,7 +23,8 @@ public final class AIMessage extends MessageContent implements Serializable {
     public static final int TYPE_AI_MESSAGE = 2000;
 
     private String content;
-    private boolean isGenerating = false;
+
+    private boolean isComplete = false;
 
     public static AIMessage obtain(String content) {
         AIMessage body = new AIMessage();
@@ -35,18 +36,11 @@ public final class AIMessage extends MessageContent implements Serializable {
     public MessageContent parseContent(JSONObject obj) {
         if (obj != null) {
             setContent(obj.optString("content"));
-            setGenerating(obj.optBoolean("isGenerating", false));
+            setComplete(obj.optBoolean("isComplete", false));
         }
         return this;
     }
 
-    public boolean isGenerating() {
-        return isGenerating;
-    }
-
-    public void setGenerating(boolean generating) {
-        isGenerating = generating;
-    }
 
     public String getContent() {
         return ChatNull.compat(content);
@@ -54,6 +48,14 @@ public final class AIMessage extends MessageContent implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
     }
 
     @Override

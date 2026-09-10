@@ -2,7 +2,7 @@ package io.im.app;
 
 import androidx.multidex.MultiDexApplication;
 
-import io.im.app.ext.AITextMessageProvider;
+import io.im.app.ai.AITextMessageProvider;
 import io.im.uicommon.config.ChatMessageProvider;
 
 /**

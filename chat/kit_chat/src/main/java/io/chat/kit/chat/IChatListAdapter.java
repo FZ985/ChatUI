@@ -54,6 +54,13 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
                 }
             });
         }
+        ChatMessageProvider.getConversationProvider().onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        ChatMessageProvider.getConversationProvider().onDetachedFromRecyclerView(recyclerView);
     }
 
     public IChatListAdapter(IViewProviderListener<UiMessage> listener) {
