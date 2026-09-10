@@ -38,4 +38,12 @@ public interface IViewProvider<T> {
     default void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
 
     }
+
+    default void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+
+    }
+
+    default void onPageDestroy(){
+
+    }
 }

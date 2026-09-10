@@ -191,12 +191,14 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         binding.refresh.setColorSchemeResources(io.im.core.R.color.chat_theme);
         binding.refresh.setOnRefreshListener(this);
         FixedLinearLayoutManager layoutManager = new FixedLinearLayoutManager(mActivity);
-//        layoutManager.setStackFromEnd(true);
+        layoutManager.setStackFromEnd(true);
         binding.recycler.setLayoutManager(layoutManager);
         SimpleItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setSupportsChangeAnimations(false);
         binding.recycler.setItemAnimator(itemAnimator);
         binding.recycler.setAdapter(adapter);
+
+        binding.recyclerRl.setTouchCall(this::closeExpand);
 
         GestureDetector gd = new GestureDetector(mActivity, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -360,6 +362,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         messageViewModel.onDestroy();
         messageViewModel.getPageEventLiveData().removeObserver(mPageObserver);
         messageViewModel.getUiMessageLiveData().removeObserver(mListObserver);
+        adapter.onPageDestroy();
         super.onDestroyView();
     }
 

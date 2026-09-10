@@ -18,6 +18,7 @@ import java.util.List;
 
 import io.chat.kit.chat.messagelist.provider.BaseMessageItemProvider;
 import io.im.app.databinding.AppChatItemMessageAiBinding;
+import io.im.core.message.im.AIMessage;
 import io.im.core.model.MessageContent;
 import io.im.core.utils.JLog;
 import io.im.uicommon.adapter.IViewProviderListener;
@@ -32,6 +33,8 @@ import io.im.uicommon.model.UiMessage;
  */
 public class AITextMessageProvider extends BaseMessageItemProvider<io.im.core.message.im.AIMessage> {
 
+    private AIMessage msgContent;
+    private UiMessage uiMessage;
 
     @Override
     protected ViewHolder onCreateContentViewHolder(ViewGroup parent, int viewType) {
@@ -43,6 +46,8 @@ public class AITextMessageProvider extends BaseMessageItemProvider<io.im.core.me
 
     @Override
     protected void bindContentViewHolder(ViewHolder parentHolder, ViewHolder contentHolder, io.im.core.message.im.AIMessage msgContent, UiMessage uiMessage, boolean isSender, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
+        this.msgContent = msgContent;
+        this.uiMessage = uiMessage;
         // ✅ binding从holder拿，不要用provider全局binding
         AppChatItemMessageAiBinding binding = AppChatItemMessageAiBinding.bind(contentHolder.itemView);
         PrinterMarkDownTextView msgTextAi = binding.msgTextAi;
@@ -117,4 +122,17 @@ public class AITextMessageProvider extends BaseMessageItemProvider<io.im.core.me
         return true;
     }
 
+
+    @Override
+    public void onPageDestroy() {
+        JLog.e("DOG", "onPageDestroy:" + uiMessage + "," + msgContent);
+        if (msgContent != null && uiMessage != null) {
+            msgContent.setComplete(true);
+            uiMessage.getMessage().updateMessageBody(msgContent);
+            //AI消息的话，实时更新
+            chatProcessor.updateMessage(uiMessage.getMessage(), () -> {
+                JLog.e("DOG", "detach=======update---success===");
+            });
+        }
+    }
 }

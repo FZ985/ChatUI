@@ -39,12 +39,19 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
-                <io.chat.kit.widget.AutoHidePanelRecyclerView
-                    android:id="@+id/recycler"
+                <io.chat.kit.widget.RecyclerViewRelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never"
-                    android:scrollbars="none" />
+                    android:id="@+id/recycler_rl"
+                    android:layout_height="match_parent">
+
+                    <io.chat.kit.widget.AutoHidePanelRecyclerView
+                        android:id="@+id/recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        android:scrollbars="none" />
+                </io.chat.kit.widget.RecyclerViewRelativeLayout>
+
             </io.im.uicommon.widgets.ChatRefreshLayout>
 
             <LinearLayout

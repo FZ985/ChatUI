@@ -151,4 +151,26 @@ public class ProviderManager<T> {
             //
         }
     }
+
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        try {
+            for (int i = 0; i < mProviders.size(); i++) {
+                IViewProvider<T> provider = mProviders.valueAt(i);
+                provider.onViewDetachedFromWindow(holder);
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    public void onPageDestroy(){
+        try {
+            for (int i = 0; i < mProviders.size(); i++) {
+                IViewProvider<T> provider = mProviders.valueAt(i);
+                provider.onPageDestroy();
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
 }

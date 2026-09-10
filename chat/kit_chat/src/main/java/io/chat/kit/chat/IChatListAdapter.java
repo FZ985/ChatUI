@@ -187,4 +187,14 @@ public class IChatListAdapter extends BaseAdapter<UiMessage> {
         super.onViewRecycled(holder);
         ChatMessageProvider.getConversationProvider().onViewRecycled(holder);
     }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        ChatMessageProvider.getConversationProvider().onViewDetachedFromWindow(holder);
+    }
+
+    public void onPageDestroy() {
+        ChatMessageProvider.getConversationProvider().onPageDestroy();
+    }
 }

@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,12 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         fragments.add(chatFragment);
         getBinding().pager.setAdapter(adapter = new ChatFragmentPageAdapter(getSupportFragmentManager(), fragments));
         uiMode = getResources().getConfiguration().uiMode;
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                onBackKey();
+            }
+        });
     }
 
     @Override
@@ -48,12 +55,11 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
         }
     }
 
-    @Override
-    public void onBackPressed() {
+    private void onBackKey() {
         ChatBaseFragment item = adapter.getItem(getBinding().pager.getCurrentItem());
         boolean pressed = item.onBackPressed();
         if (!pressed) {
-            super.onBackPressed();
+            finish();
         }
     }
 

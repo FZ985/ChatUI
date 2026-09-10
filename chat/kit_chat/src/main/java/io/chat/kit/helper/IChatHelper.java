@@ -328,7 +328,14 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     }
 
     public boolean onBackPressed() {
-        return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
+        if (mHelper != null) {
+            if (mHelper.isPanelState()) {
+                closeExpand();
+                return true;
+            }
+            return mHelper.hookSystemBackByPanelSwitcher();
+        }
+        return false;
     }
 
     private void log(String m) {

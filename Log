@@ -1,3 +1,16 @@
+添加markdown扩展库；
+创建AIMessage消息体；
+创建AIMessageProvider消息布局提供者；
+模拟AI消息回复，打字机效果输出展示；
+已存在无法自动滑动底部效果问题；
+ProviderManager管理类添加onAttachedToRecyclerView、onViewRecycled、
+onDetachedFromRecyclerView、onViewDetachedFromWindow、onPageDestroy函数用于Item分发；
+修改IChatFragment中touch外部区域导致input组件状态错乱问题；
+优化面板弹出时的返回键逻辑；
+
+
+
+
 升级项目模版为Android16；
 重构KtBaseDelegateActivity类中的window监听逻辑；
 升级ImmersionBar兼容Android15，针对导航、键盘的适配；
