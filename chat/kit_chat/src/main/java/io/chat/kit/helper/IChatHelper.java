@@ -176,8 +176,6 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                     .addViewClickListener(IChatHelper.this)
                     .build();
         }
-
-//        mFragment.getBinding().recycler.setTouchCall(this::closeExpand);
     }
 
     private void scrollToBottom(int index) {
