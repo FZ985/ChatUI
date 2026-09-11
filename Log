@@ -1,3 +1,6 @@
+新增清空消息API和清空会话API；
+
+
 添加markdown扩展库；
 创建AIMessage消息体；
 创建AIMessageProvider消息布局提供者；
