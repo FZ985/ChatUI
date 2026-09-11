@@ -23,6 +23,7 @@ import io.im.core.utils.ChatLibUtil;
 import io.im.core.utils.ChatNull;
 import io.im.core.utils.JLog;
 import io.im.core.utils.ServeTime;
+import kotlin.jvm.Transient;
 
 /**
  * author : JFZ
@@ -70,15 +71,19 @@ public final class Message implements Serializable {
     @ColumnInfo(name = "sendStatus")
     private int sendStatus;//发送状态
 
+    @Transient
     @Ignore
     private MessageDirection messageDirection;//消息方向， 左边、右边
 
+    @Transient
     @Ignore
     private ConversationType conversationType;//会话类型， 单聊、群聊
 
+    @Transient
     @Ignore
     private MessageContent messageContent;
 
+    @Transient
     @Ignore
     private Message innerReferMessage;//内部引用消息的对象转换
 

@@ -60,22 +60,32 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/go_chat"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:text="chat"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/conversation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_id" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/conversation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="conversation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/go_chat"
+        app:layout_constraintTop_toTopOf="@id/go_chat" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clear_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="15dp"
-        android:text="conversation"
+        android:layout_marginTop="12dp"
+        android:text="清除本地所有聊天消息与会话数据"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/go_chat" />
@@ -85,11 +95,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:text="ai chat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/conversation" />
+        app:layout_constraintTop_toBottomOf="@id/clear_data" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -97,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:text="history ai conversation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

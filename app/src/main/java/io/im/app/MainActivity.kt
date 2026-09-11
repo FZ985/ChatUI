@@ -16,7 +16,10 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.chat.conversation.ConversationRoute
 import io.chat.kit.ChatRoute
 import io.im.app.databinding.ActivityMainBinding
+import io.im.core.utils.JLog
 import io.im.uicommon.UserTest
+import io.im.uicommon.repo.ChatRepo
+import io.im.uicommon.repo.ConversationRepo
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,12 +50,24 @@ class MainActivity : AppCompatActivity() {
             ConversationRoute.goConversation(this)
         }
 
+        binding.clearData.setOnClickListener {
+            ChatRepo.clear{
+                JLog.e("=====聊天数量：$it")
+            }
+            ConversationRepo.clear {
+                JLog.e("=====会话数量：$it")
+            }
+
+        }
+
         binding.refresh.setOnClickListener {
             ImDebug.switchLoginUser()
             refreshLoginUI()
 //            V1RequestIdGenerator.test()
 //            V2RequestIdGenerator.test()
         }
+
+
 
         binding.aiChat.setOnClickListener {
 //            AiRoute.goAI(this)

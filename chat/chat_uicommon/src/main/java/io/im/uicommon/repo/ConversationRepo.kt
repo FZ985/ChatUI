@@ -109,4 +109,19 @@ object ConversationRepo {
     }
 
 
+    /**
+     * 清空会话
+     */
+    @JvmStatic
+    fun clear(callback: ((Int) -> Unit)?) {
+        ChatExecutorHelper.getInstance().threadPool().execute {
+            val dao = ChatSDK.getDbManager().sessionDao()
+            val lines = dao.clearAll()
+            ChatExecutorHelper.getInstance().mainThread().execute {
+                callback?.invoke(lines)
+            }
+        }
+    }
+
+
 }

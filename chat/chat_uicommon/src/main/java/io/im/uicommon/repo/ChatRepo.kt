@@ -107,5 +107,18 @@ object ChatRepo {
         }
     }
 
+    /**
+     * 清空所有聊天
+     */
+    @JvmStatic
+    fun clear(callback: ((Int) -> Unit)?) {
+        ChatExecutorHelper.getInstance().threadPool().execute {
+            val dao = ChatSDK.getDbManager().messageDao()
+            val lines = dao.clearAll()
+            ChatExecutorHelper.getInstance().mainThread().execute {
+                callback?.invoke(lines)
+            }
+        }
+    }
 
 }

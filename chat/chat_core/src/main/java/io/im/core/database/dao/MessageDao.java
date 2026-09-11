@@ -86,4 +86,7 @@ public interface MessageDao {
             "AND (from_id = :userId OR to_id = :userId)")
     void updateUserRemarkByType(String userId, String remark, int conversationType);
 
+    // 删除所有数据
+    @Query("DELETE FROM message")
+    int clearAll();
 }

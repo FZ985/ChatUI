@@ -40,6 +40,6 @@ public interface SessionDao {
 
     // 删除所有数据
     @Query("DELETE FROM session")
-    void clearAll();
+    int clearAll();
 
 }
