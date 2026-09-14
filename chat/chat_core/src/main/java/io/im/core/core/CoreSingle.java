@@ -135,9 +135,6 @@ public class CoreSingle {
         }
     }
 
-    public ChatFun.Fun2<Message, CoreResultInterface> getDebugCall() {
-        return debugCall;
-    }
 
     public void setDebugCall(ChatFun.Fun2<Message, CoreResultInterface> debugCall) {
         this.debugCall = debugCall;
