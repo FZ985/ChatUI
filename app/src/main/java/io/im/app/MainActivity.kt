@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -51,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.clearData.setOnClickListener {
-            ChatRepo.clear{
+            ChatRepo.clear {
                 JLog.e("=====聊天数量：$it")
+                ConversationRepo.clear { i ->
+                    JLog.e("=====会话数量：$i")
+                    Toast.makeText(this, "clear success", Toast.LENGTH_SHORT).show()
+                }
             }
-            ConversationRepo.clear {
-                JLog.e("=====会话数量：$it")
-            }
-
         }
 
         binding.refresh.setOnClickListener {
