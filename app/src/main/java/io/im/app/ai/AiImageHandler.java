@@ -21,9 +21,12 @@ import com.fluid.afm.handler.ImageHandler;
 import com.fluid.afm.utils.Utils;
 
 public final class AiImageHandler implements ImageHandler {
+
+    private final String prefix = "local://";
+
     @Override
     public void loadImage(Context context, String url, Callback<Drawable> callback) {
-        if (url.startsWith("local://")) {
+        if (url.startsWith(prefix)) {
             Drawable drawable = loadDrawableResource(context, url, 0, 0);
             if (drawable != null) {
                 callback.onSuccess(drawable);
@@ -90,7 +93,7 @@ public final class AiImageHandler implements ImageHandler {
 
     @Override
     public void loadImage(Context context, String url, int width, int height, Callback<Drawable> callback) {
-        if (url.startsWith("local://")) {
+        if (url.startsWith(prefix)) {
             Drawable drawable = loadDrawableResource(context, url, width, height);
             if (drawable != null) {
                 callback.onSuccess(drawable);
@@ -107,7 +110,7 @@ public final class AiImageHandler implements ImageHandler {
 
     @Override
     public Drawable loadImageSync(Context context, String url) {
-        if (url.startsWith("local://")) {
+        if (url.startsWith(prefix)) {
             return loadDrawableResource(context, url, 0, 0);
         }
         int defaultW = context.getResources().getDisplayMetrics().widthPixels - Utils.dpToPx(context, 24);
@@ -120,7 +123,7 @@ public final class AiImageHandler implements ImageHandler {
 
     @Override
     public Drawable loadImageSync(Context context, String url, int width, int height) {
-        if (url.startsWith("local://")) {
+        if (url.startsWith(prefix)) {
             return loadDrawableResource(context, url, width, height);
         }
         try {
