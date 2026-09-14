@@ -187,8 +187,14 @@ public class ChatPopMenu {
             // 下方仍超出屏幕则强制上方
             if (finalY + popupHeight > screenHeight) {
                 finalY = anchorY - popupHeight - margin;
+                if (finalY < 0) {
+                    finalY = screenHeight / 2 - popupHeight / 2;
+                }
                 binding.bubbleLl.setBottomOffset(triangleOffset);
-            }else {
+            } else {
+                if (anchorHeight > screenHeight) {
+                    finalY = screenHeight / 2 - popupHeight / 2;
+                }
                 binding.bubbleLl.setTopOffset(triangleOffset);
             }
         }

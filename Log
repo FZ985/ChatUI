@@ -11,6 +11,8 @@ onDetachedFromRecyclerView、onViewDetachedFromWindow、onPageDestroy函数用�
 修改IChatFragment中touch外部区域导致input组件状态错乱问题；
 优化面板弹出时的返回键逻辑；
 
+调整AI消息体的长按菜单弹窗的位置偏移位置；
+优化面板弹出时的返回键逻辑；
 
 
 升级项目模版为Android16；

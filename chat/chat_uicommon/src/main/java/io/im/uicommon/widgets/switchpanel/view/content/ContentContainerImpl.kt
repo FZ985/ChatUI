@@ -30,7 +30,12 @@ import java.util.WeakHashMap
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer,
+class ContentContainerImpl(
+    private val mViewGroup: ViewGroup,
+    private val autoReset: Boolean,
+    @IdRes private val editTextId: Int,
+    @IdRes private val resetId: Int
+) : IContentContainer,
     ViewAssertion {
 
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
@@ -165,10 +170,20 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                         }
                     }
 
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
                     }
 
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
                     }
                 })
                 mainInputView.accessibilityDelegate = object : View.AccessibilityDelegate() {
@@ -210,7 +225,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
              * 非全屏模式下：
              * 所有焦点权利都在 realEditView
              */
-            override fun updateFullScreenParams(isFullScreen: Boolean, panelId: Int, panelHeight: Int) {
+            override fun updateFullScreenParams(
+                isFullScreen: Boolean,
+                panelId: Int,
+                panelHeight: Int
+            ) {
                 if (panelId == curPanelId) {
                     return
                 }
@@ -228,7 +247,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 if (isFullScreen) {
                     if (panelId == Constants.PANEL_KEYBOARD) {
                         retrieveFocusRight(requestFocus = true, resetSelection = true)
-                    } else if (panelId != Constants.PANEL_NONE && !PanelUtil.isPanelHeightBelowKeyboardHeight(context, panelHeight)) {
+                    } else if (panelId != Constants.PANEL_NONE && !PanelUtil.isPanelHeightBelowKeyboardHeight(
+                            context,
+                            panelHeight
+                        )
+                    ) {
                         retrieveFocusRight(requestFocus = false, resetSelection = true)
                     } else {
                         giveUpFocusRight()
@@ -255,7 +278,10 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 }
             }
 
-            private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
+            private fun retrieveFocusRight(
+                requestFocus: Boolean = false,
+                resetSelection: Boolean = false
+            ) {
                 checkoutInputRight = true
                 realEditViewAttach = true
                 if (mPixelInputView.hasFocus()) {
@@ -381,11 +407,17 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
     private val map = HashMap<Int, ViewPosition>()
 
 
-
-
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
-                                 contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
-                                 reset: Boolean, changed: Boolean) {
+    override fun layoutContainer(
+        l: Int,
+        t: Int,
+        r: Int,
+        b: Int,
+        contentScrollMeasurers: MutableList<ContentScrollMeasurer>,
+        defaultScrollHeight: Int,
+        canScrollOutsize: Boolean,
+        reset: Boolean,
+        changed: Boolean
+    ) {
         // Step 1 这里执行了一次父控件的layout方法，这样每个子View的位置是默认状态
         skipLayoutListener = false
         mViewGroup.layout(l, t, r, b)
@@ -401,10 +433,16 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 view?.let {
                     var viewPosition = map[viewId]
                     if (viewPosition == null) {
-                        viewPosition = ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
+                        viewPosition =
+                            ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
                         view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
                             if (!skipLayoutListener) {
-                                viewPosition.syncPosition(view.left, view.top, view.right, view.bottom)
+                                viewPosition.syncPosition(
+                                    view.left,
+                                    view.top,
+                                    view.right,
+                                    view.bottom
+                                )
                             }
                         }
                         map[viewId] = viewPosition
@@ -420,7 +458,8 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                             viewPosition.reset()
                         }
                     } else {
-                        willScrollDistance = contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
+                        willScrollDistance =
+                            contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
                         if (willScrollDistance > defaultScrollHeight) {
                             return
                         }
@@ -428,11 +467,27 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                             willScrollDistance = 0
                         }
                         val diffY = defaultScrollHeight - willScrollDistance
-                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b + diffY)
-                        view.layout(viewPosition.changeL, viewPosition.changeT, viewPosition.changeR, viewPosition.changeB)
+                        viewPosition.change(
+                            viewPosition.l,
+                            viewPosition.t + diffY,
+                            viewPosition.r,
+                            viewPosition.b + diffY
+                        )
+                        view.layout(
+                            viewPosition.changeL,
+                            viewPosition.changeT,
+                            viewPosition.changeR,
+                            viewPosition.changeB
+                        )
                     }
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.r}, b ${viewPosition.b})")
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) layout parent(l $l,t $t,r $r,b $b) self(l ${viewPosition.changeL},t ${viewPosition.changeT},r ${viewPosition.changeR}, b${viewPosition.changeB})")
+                    LogTracker.log(
+                        "${PanelSwitchLayout.TAG}#onLayout",
+                        "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.r}, b ${viewPosition.b})"
+                    )
+                    LogTracker.log(
+                        "${PanelSwitchLayout.TAG}#onLayout",
+                        "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) layout parent(l $l,t $t,r $r,b $b) self(l ${viewPosition.changeL},t ${viewPosition.changeT},r ${viewPosition.changeR}, b${viewPosition.changeB})"
+                    )
                 }
             }
         }
@@ -441,9 +496,13 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
     /**
      * Android 11 键盘动画方式的控件干预实现
      */
-    override fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float) {
+    override fun translationContainer(
+        contentScrollMeasurers: MutableList<ContentScrollMeasurer>,
+        defaultScrollHeight: Int,
+        contentTranslationY: Float
+    ) {
         mViewGroup.translationY = contentTranslationY
-        contentScrollMeasurers.forEach {  contentMeasure ->
+        contentScrollMeasurers.forEach { contentMeasure ->
             val viewId = contentMeasure.getScrollViewId()
             val view = (mViewGroup).findViewById<View>(viewId)
             val willScrollDistance = contentMeasure.getScrollDistance(defaultScrollHeight)
@@ -459,7 +518,10 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             } else {
                 view.translationY = maxDistance.toFloat()
             }
-            Log.d("translationContainer", "viewId = $viewId, maxDistance = $maxDistance, parentY = $parentY, y = ${view.translationY}")
+            Log.d(
+                "translationContainer",
+                "viewId = $viewId, maxDistance = $maxDistance, parentY = $parentY, y = ${view.translationY}"
+            )
         }
     }
 

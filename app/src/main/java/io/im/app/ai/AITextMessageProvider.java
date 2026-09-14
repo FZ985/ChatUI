@@ -88,6 +88,12 @@ public class AITextMessageProvider extends BaseMessageItemProvider<io.im.core.me
 
         JLog.e("DOG", "msg===:" + msgContent.isComplete() + "," + uiMessage.getMessage().getMessageId());
 
+        msgTextAi.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return listener.onViewLongClick(v, io.im.core.MessageClickType.CONTENT_LONG_CLICK, position, uiMessage);
+            }
+        });
         if (msgContent.isComplete()) {
             msgTextAi.restore(new PrinterMarkDownTextView.MarkDownPrintData());
             msgTextAi.setMarkdownText(msgContent.getContent());
@@ -95,6 +101,7 @@ public class AITextMessageProvider extends BaseMessageItemProvider<io.im.core.me
             msgTextAi.setPrintData(new PrinterMarkDownTextView.MarkDownPrintData());
             msgTextAi.startPrinting(msgContent.getContent());
         }
+
 
         msgTextAi.setTextColor(isSender ?
                 ContextCompat.getColor(contentHolder.getContext(), io.im.core.R.color.chat_white_90)

@@ -174,6 +174,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                         }
                     })
                     .addViewClickListener(IChatHelper.this)
+                    .logTrack(false)
                     .build();
         }
     }
