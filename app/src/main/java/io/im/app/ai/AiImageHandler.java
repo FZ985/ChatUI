@@ -100,12 +100,16 @@ public final class AiImageHandler implements ImageHandler {
             }
             return;
         }
-        Glide.with(context).load(url).transition(DrawableTransitionOptions.withCrossFade()).apply(new RequestOptions().override(width, height)).into(new SimpleTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                callback.onSuccess(resource);
-            }
-        });
+        Glide.with(context)
+                .load(url)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(new RequestOptions().override(width, height))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        callback.onSuccess(resource);
+                    }
+                });
     }
 
     @Override
