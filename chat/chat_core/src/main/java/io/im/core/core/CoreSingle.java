@@ -144,17 +144,17 @@ public class CoreSingle {
     }
 
     public void sendMessage(Message message) {
-//        if (bindState()) {
-//            try {
-//                getBind().toTypeAction(CoreConstant.SendMessage, ChatLibUtil.toJson(message), callback);
-//            } catch (RemoteException e) {
-//                JLog.e("连接 exception:" + e.getMessage());
-//                connectWebsocket(request);
-//            }
-//        }
-
         if (debugCall != null) {
             debugCall.apply(message, callback);
+        } else {
+            if (bindState()) {
+                try {
+                    getBind().toTypeAction(CoreConstant.SendMessage, ChatLibUtil.toJson(message), callback);
+                } catch (RemoteException e) {
+                    JLog.e("连接 exception:" + e.getMessage());
+                    connectWebsocket(request);
+                }
+            }
         }
     }
 
