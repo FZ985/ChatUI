@@ -261,14 +261,10 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
 
     private void uiListener() {
         //逐条转发
-        binding.shareMulti.setOnClickListener(v -> {
-            ChatRoute.goForwardSelect(mActivity, userInfo, false);
-        });
+        binding.shareMulti.setOnClickListener(v -> ChatRoute.goForwardSelect(mActivity, userInfo, false));
 
         //和并转发
-        binding.shareSingle.setOnClickListener(v -> {
-            ChatRoute.goForwardSelect(mActivity, userInfo, true);
-        });
+        binding.shareSingle.setOnClickListener(v -> ChatRoute.goForwardSelect(mActivity, userInfo, true));
 
         //删除
         binding.shareDelete.setOnClickListener(v -> deleteMessage(ChatMsgCache.getMessageList()));
