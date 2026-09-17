@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import io.chat.kit.provider.InitChatProvider;
-import io.im.core.model.Message;
 import io.chat.kit.R;
 import io.chat.kit.chat.IChatFragment;
 import io.chat.kit.databinding.ChatPanelPluginBoardBinding;
+import io.chat.kit.provider.InitChatProvider;
+import io.im.core.model.ExtMessage;
 import io.im.uicommon.base.ChatBaseFragment;
 
 /**
@@ -58,10 +58,10 @@ public class ChatPluginBoard extends FrameLayout {
         binding = ChatPanelPluginBoardBinding.inflate(LayoutInflater.from(getContext()), this, true);
     }
 
-    public void initPlugin(IChatFragment fragment, @Nullable Message referMessage) {
+    public void initPlugin(IChatFragment fragment, @Nullable ExtMessage extMessage) {
         if (pluginModules != null && !pluginModules.isEmpty()) {
             if (mPagerAdapter != null) {
-                mPagerAdapter.setReferMessage(referMessage);
+                mPagerAdapter.setExtMessage(extMessage);
             }
             return;
         }
@@ -85,7 +85,7 @@ public class ChatPluginBoard extends FrameLayout {
         int pages;
         int items;
         @Nullable
-        Message referMessage;
+        ExtMessage extMessage;
 
         ChatBaseFragment fragment;
 
@@ -107,7 +107,7 @@ public class ChatPluginBoard extends FrameLayout {
         public void onBindViewHolder(@NonNull PluginPagerViewHolder holder, int position) {
             GridView gridView = holder.gridView;
             gridView.setNumColumns(DEFAULT_SHOW_COLUMN);
-            gridView.setAdapter(new PluginItemAdapter(position * mPluginCountPerPage, items, fragment, referMessage));
+            gridView.setAdapter(new PluginItemAdapter(position * mPluginCountPerPage, items, fragment, extMessage));
         }
 
         @Override
@@ -117,8 +117,8 @@ public class ChatPluginBoard extends FrameLayout {
 
 
         @SuppressLint("NotifyDataSetChanged")
-        public void setReferMessage(@Nullable Message referMessage) {
-            this.referMessage = referMessage;
+        public void setExtMessage(@Nullable ExtMessage extMessage) {
+            this.extMessage = extMessage;
             notifyDataSetChanged();
         }
 
@@ -138,14 +138,14 @@ public class ChatPluginBoard extends FrameLayout {
         Pair<Integer, Integer> cellSize;
 
         @Nullable
-        Message referMessage;
+        ExtMessage extMessage;
 
         ChatBaseFragment fragment;
 
-        public PluginItemAdapter(int index, int count, ChatBaseFragment fragment, @Nullable Message referMessage) {
+        public PluginItemAdapter(int index, int count, ChatBaseFragment fragment, @Nullable ExtMessage extMessage) {
             this.count = Math.min(mPluginCountPerPage, count - index);
             this.index = index;
-            this.referMessage = referMessage;
+            this.extMessage = extMessage;
             this.fragment = fragment;
             cellSize = new Pair<>(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
@@ -212,10 +212,10 @@ public class ChatPluginBoard extends FrameLayout {
             holder.imageView.setImageDrawable(plugin.obtainDrawable(context));
             holder.textView.setText(plugin.obtainTitle(context));
             holder.imageView.setOnClickListener(v -> {
-                plugin.onPluginClick(fragment, v, referMessage);
+                plugin.onPluginClick(fragment, v, extMessage);
             });
             holder.imageView.setOnLongClickListener(v -> {
-                return plugin.onPluginLongClick(fragment, v, referMessage);
+                return plugin.onPluginLongClick(fragment, v, extMessage);
             });
             return convertView;
         }

@@ -59,11 +59,11 @@ public final class Message implements Serializable {
     @ColumnInfo(name = "messageBody")
     private String messageBody;//消息内容
 
-    @ColumnInfo(name = "referMessage")
-    private String referMessage;//引用的消息，Message结构
+    @ColumnInfo(name = "extMessage")
+    private String extMessage;//扩展消息(引用消息、企业微信中的贴表情功能、分支回复功能扩展)，jsonObject结构
 
     @ColumnInfo(name = "extra")
-    private String extra;//扩展字段
+    private String extra;//扩展字段,json结构
 
     @ColumnInfo(name = "readStatus")
     private int readStatus;//阅读状态
@@ -86,6 +86,11 @@ public final class Message implements Serializable {
     @Transient
     @Ignore
     private Message innerReferMessage;//内部引用消息的对象转换
+
+    @Transient
+    @Ignore
+    private ExtMessage innerExtMessage;//内部扩展消息
+
 
     public Message() {
     }
@@ -162,18 +167,29 @@ public final class Message implements Serializable {
         }
     }
 
-    public String getReferMessage() {
-        return ChatNull.compat(referMessage);
+    public String getExtMessage() {
+        return ChatNull.compat(extMessage);
     }
 
-    public void setReferMessage(String referMessage) {
-        this.referMessage = referMessage;
+    public void setExtMessage(String extMessage) {
+        this.extMessage = extMessage;
+    }
+
+    @Nullable
+    public ExtMessage getInnerExtMessage() {
+        if (innerExtMessage == null) {
+            if (!TextUtils.isEmpty(extMessage)) {
+                innerExtMessage = ChatLibUtil.gson.fromJson(extMessage, ExtMessage.class);
+            }
+        }
+        return innerExtMessage;
     }
 
     @Nullable
     public Message getInnerReferMessage() {
-        if (innerReferMessage == null && !TextUtils.isEmpty(getReferMessage())) {
-            innerReferMessage = Message.parseMessageFromJson(getReferMessage());
+        ExtMessage extMsg = getInnerExtMessage();
+        if (extMsg != null) {
+            innerReferMessage = extMsg.getReferMessage();
         }
         return innerReferMessage;
     }
@@ -436,7 +452,7 @@ public final class Message implements Serializable {
 
                 message.setSendStatus(obj.optInt("sendStatus", SentStatus.SENDING.getValue()));
 
-                message.setReferMessage(obj.optString("referMessage", ""));
+                message.setExtMessage(obj.optString("extMessage", ""));
 
                 message.setExtra(obj.optString("extra", ""));
 

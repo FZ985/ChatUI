@@ -17,6 +17,7 @@ import io.im.core.message.im.HQVoiceMessage;
 import io.im.core.message.im.MediaMessage;
 import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.ConversationType;
+import io.im.core.model.ExtMessage;
 import io.im.core.model.Message;
 import io.im.core.model.State;
 import io.im.core.model.User;
@@ -38,14 +39,14 @@ import io.im.uicommon.resend.ResendManager;
 public class MessageOperate {
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
-        sendMessage(message, referMessage, true, true, callback);
+    public static void sendMessage(Message message, @Nullable ExtMessage extMessage, @Nullable MessageCallback<Message> callback) {
+        sendMessage(message, extMessage, true, true, callback);
     }
 
     //发送消息
-    public static void sendMessage(Message message, @Nullable Message referMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
-        if (referMessage != null) {
-            message.setReferMessage(referMessage.toJson());
+    public static void sendMessage(Message message, @Nullable ExtMessage extMessage, boolean postEvent, boolean postAttach, @Nullable MessageCallback<Message> callback) {
+        if (extMessage != null) {
+            message.setExtMessage(extMessage.toJson());
         }
         if (postEvent && postAttach) {
             PostMessageEvent.postSendEvent(new io.im.uicommon.event.ChatMessageEvent(io.im.uicommon.event.ChatMessageEvent.ATTACH, message));
@@ -117,7 +118,7 @@ public class MessageOperate {
                 Message m = messageList.get(i);
                 Message newMsg = Message.obtain(user, m.getConversationType(), m.getMessageType(), m.getMessageContent());
                 newMsg.setCreateTime(ServeTime.currentTimeMillis() + i);
-                newMsg.setReferMessage(m.getReferMessage());
+                newMsg.setExtMessage(m.getExtMessage());
                 msgList.add(newMsg);
             }
             sendForwardMessage(msgList, new ArrayList<>(), new ArrayList<>(), callback);
@@ -179,11 +180,11 @@ public class MessageOperate {
     }
 
     //发送语音消息
-    public static void sendVoiceMessage(User toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable Message referMessage, @Nullable MessageCallback<Message> callback) {
+    public static void sendVoiceMessage(User toUser, ConversationType conversationType, AudioDataBean voiceData, @Nullable ExtMessage extMessage, @Nullable MessageCallback<Message> callback) {
         HQVoiceMessage voiceBody = HQVoiceMessage.obtain(voiceData.getUrl(), voiceData.getPath(), voiceData.getDuration());
         Message message = Message.obtain(toUser, conversationType, MessageType.CHAT_VOICE, voiceBody);
         PostMessageEvent.postSendMediaMessage(new ChatMessageEvent(ChatMessageEvent.PROGRESS, message, 0));
-        sendMessage(message, referMessage, callback);
+        sendMessage(message, extMessage, callback);
     }
 
 //    //发送订单消息

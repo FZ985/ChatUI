@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import io.im.core.model.ExtMessage;
 import io.im.uicommon.MessageOperate;
 import io.chat.kit.R;
 import io.chat.kit.chat.IChatFragment;
@@ -163,7 +164,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         return mInputModeLiveData;
     }
 
-    public void onSendClick(@Nullable Message referMessage) {
+    public void onSendClick(@Nullable ExtMessage extMessage) {
         if (editText == null) return;
         if (TextUtils.isEmpty(editText.getText())
                 || TextUtils.isEmpty(editText.getText().toString().trim())) {
@@ -183,7 +184,7 @@ public final class ChatExtensionViewModel extends AndroidViewModel {
         TextMessage textMessage = TextMessage.obtain(text);
         Message message = Message.obtain(fragment.getUser(), fragment.getConversationType(), MessageType.CHAT_TEXT, textMessage);
         message.setSendStatus(Message.SentStatus.SENDING.getValue());
-        MessageOperate.sendMessage(message, referMessage, null);
+        MessageOperate.sendMessage(message, extMessage, null);
 
     }
 }

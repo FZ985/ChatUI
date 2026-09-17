@@ -1,3 +1,11 @@
+删除Message中的referMessage引用消息字段和相关逻辑；
+增加extMessage扩展消息字段，将引用消息功能扩展到该字段中；
+extMessage将为后续的类似企业微信中的贴表情功能、分支回复功能扩展埋点；
+与extra字段不同，extMessage结构创建根据规范定义；
+extra结构由用户完全自定义，扩展性更广；
+
+
+
 新增清空消息API和清空会话API；
 
 

@@ -7,8 +7,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import io.im.core.model.ExtMessage;
 import io.im.uicommon.base.ChatBaseFragment;
-import io.im.core.model.Message;
 
 /**
  * by JFZ
@@ -36,22 +36,22 @@ public interface ChatPluginModule {
     /**
      * 插件点击
      *
-     * @param fragment     插件所在页面
-     * @param v            view
-     * @param referMessage 引用消息
+     * @param fragment   插件所在页面
+     * @param v          view
+     * @param extMessage 扩展消息
      */
-    default void onPluginClick(ChatBaseFragment fragment, View v, @Nullable Message referMessage) {
+    default void onPluginClick(ChatBaseFragment fragment, View v, @Nullable ExtMessage extMessage) {
     }
 
     /**
      * 插件长按
      *
-     * @param fragment     插件所在页面
-     * @param v            view
-     * @param referMessage 引用消息
+     * @param fragment   插件所在页面
+     * @param v          view
+     * @param extMessage 扩展消息
      * @return true，false
      */
-    default boolean onPluginLongClick(ChatBaseFragment fragment, View v, @Nullable Message referMessage) {
+    default boolean onPluginLongClick(ChatBaseFragment fragment, View v, @Nullable ExtMessage extMessage) {
         return false;
     }
 

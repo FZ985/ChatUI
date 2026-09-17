@@ -24,6 +24,7 @@ import io.chat.kit.config.enums.ChatInputMode;
 import io.chat.kit.config.enums.InputStyle;
 import io.chat.kit.provider.InitChatProvider;
 import io.im.core.listener.ChatLifecycle;
+import io.im.core.model.ExtMessage;
 import io.im.core.model.Message;
 import io.im.core.model.UserConvert;
 import io.im.core.utils.ChatLibUtil;
@@ -64,7 +65,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
     private ChatExtensionViewModel mExtensionViewModel;
 
     @Nullable
-    private Message referMessage;
+    private ExtMessage extMessage;
 
     private int referIndex = -1;
 
@@ -95,7 +96,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
             }
         });
 
-        mFragment.getBinding().inputPanel.setSendVoiceCall(result -> MessageOperate.sendVoiceMessage(fragment.getUser(), fragment.getConversationType(), result, referMessage, null));
+        mFragment.getBinding().inputPanel.setSendVoiceCall(result -> MessageOperate.sendVoiceMessage(fragment.getUser(), fragment.getConversationType(), result, extMessage, null));
 
         IMCenter.getInstance().getOptions().addMessageEventListener(this);
     }
@@ -168,7 +169,7 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                                     emoticonBoard.initEmoji(mFragment);
                                 } else if (panelView.getId() == R.id.panel_addition) {
                                     ChatPluginBoard pluginBoard = mFragment.getBinding().panelAddition.findViewById(R.id.plugin_board);
-                                    pluginBoard.initPlugin(mFragment, referMessage);
+                                    pluginBoard.initPlugin(mFragment, extMessage);
                                 }
                             }
                         }
@@ -253,14 +254,14 @@ public final class IChatHelper implements ChatLifecycle, OnViewClickListener, Me
                 }
             } else if (id == R.id.send) {
                 //点击 发送按钮
-                mExtensionViewModel.onSendClick(referMessage);
+                mExtensionViewModel.onSendClick(extMessage);
             }
 //            log("点击了View : " + view);
         }
     }
 
     public void setReferMessage(@Nullable Message referMessage, int index) {
-        this.referMessage = referMessage;
+        this.extMessage = ExtMessage.buildReferMessage(referMessage);
         this.referIndex = index;
         if (mFragment != null) {
             if (referMessage != null) {
