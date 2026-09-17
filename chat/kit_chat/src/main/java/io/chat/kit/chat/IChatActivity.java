@@ -1,6 +1,5 @@
 package io.chat.kit.chat;
 
-import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,12 +53,6 @@ public class IChatActivity extends ChatBaseActivity<ChatActivityChatBinding> {
             uiMode = newUiMode;
             recreate();
         }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onBackPressed() {
-        onBackKey();
     }
 
     private void onBackKey() {

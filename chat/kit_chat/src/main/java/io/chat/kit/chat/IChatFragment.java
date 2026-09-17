@@ -406,7 +406,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (userInfo != null) {
                 binding.conversationToolbar.setTitleName(userInfo.getName());
             }
-            binding.conversationToolbar.setLeftOnclick(v -> mActivity.onBackPressed());
+            binding.conversationToolbar.setLeftOnclick(v -> onFinish());
             binding.conversationToolbar.setLeftIcon(io.im.core.R.drawable.chat_skin_arrow_left_black);
         }
     }
@@ -457,6 +457,12 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
     @Override
     public AppCompatActivity getConversationActivity() {
         return mActivity;
+    }
+
+    private void onFinish() {
+        if (!onBackPressed()) {
+            mActivity.finish();
+        }
     }
 
     @Override
