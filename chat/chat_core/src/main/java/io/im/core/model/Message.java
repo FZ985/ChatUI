@@ -57,10 +57,10 @@ public final class Message implements Serializable {
     private int messageType;//消息类型
 
     @ColumnInfo(name = "messageBody")
-    private String messageBody;//消息内容
+    private String messageBody;//消息内容,json结构
 
     @ColumnInfo(name = "extMessage")
-    private String extMessage;//扩展消息(引用消息、企业微信中的贴表情功能、分支回复功能扩展)，jsonObject结构
+    private String extMessage;//扩展消息(引用消息、企业微信中的贴表情功能、分支回复功能扩展)，json结构
 
     @ColumnInfo(name = "extra")
     private String extra;//扩展字段,json结构
