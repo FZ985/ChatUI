@@ -5,6 +5,7 @@
 
     <string name="kit_send">发送</string>
 
+    <string name="kit_message_revoke0">撤回了一条消息</string>
     <string name="kit_message_revoke">你撤回了一条消息</string>
     <string name="kit_message_revoke_from">“%s” 撤回了一条消息</string>
     <string name="kit_message_revoke_edit">重新编辑</string>

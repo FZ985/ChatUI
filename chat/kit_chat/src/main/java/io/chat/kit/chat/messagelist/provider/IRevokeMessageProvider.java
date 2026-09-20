@@ -1,5 +1,6 @@
 package io.chat.kit.chat.messagelist.provider;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -14,6 +15,8 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.chat.kit.R;
+import io.im.core.model.RoleType;
+import io.im.core.model.User;
 import io.im.uicommon.model.UiMessage;
 import io.chat.kit.provider.InitChatProvider;
 import io.im.core.MessageType;
@@ -46,6 +49,7 @@ public class IRevokeMessageProvider extends BaseMessageItemProvider<RevokeMessag
         return new ViewHolder(parent.getContext(), LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_message_revoke, parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void bindContentViewHolder(ViewHolder parentHolder, ViewHolder contentHolder, RevokeMessage msgContent, UiMessage uiMessage, boolean isSender, int position, List<UiMessage> list, IViewProviderListener<UiMessage> listener) {
         TextView msg = contentHolder.getView(R.id.revoke_tv);
@@ -77,7 +81,21 @@ public class IRevokeMessageProvider extends BaseMessageItemProvider<RevokeMessag
             });
         } else {
             edit.setVisibility(View.GONE);
-            msg.setText(contentHolder.getContext().getString(R.string.kit_message_revoke_from, uiMessage.getMessage().getFromUser().getName()));
+            User user = msgContent.getUser();
+            if (user != null) {
+                String name = contentHolder.getContext().getString(R.string.kit_message_revoke_from, user.getName());
+                String role = "";
+                RoleType roleType = msgContent.getRoleType();
+                if (roleType == RoleType.TOLE_CREATOR) {
+                    role = "群主";
+                }
+                if (roleType == RoleType.TOLE_MANAGER) {
+                    role = "管理员";
+                }
+                msg.setText(role + name);
+            } else {
+                msg.setText(R.string.kit_message_revoke0);
+            }
         }
     }
 

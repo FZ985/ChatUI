@@ -1,5 +1,7 @@
 package io.im.core.model;
 
+import android.text.TextUtils;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -111,5 +113,9 @@ public class User implements Serializable {
 
     public String toJson() {
         return ChatLibUtil.toJson(this);
+    }
+
+    public boolean isValid() {
+        return !TextUtils.isEmpty(getId());
     }
 }

@@ -2,6 +2,7 @@ package io.im.core.message.im;
 
 import android.content.Context;
 import android.text.Spannable;
+import android.text.TextUtils;
 
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
@@ -12,6 +13,8 @@ import java.io.Serializable;
 
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
+import io.im.core.model.RoleType;
+import io.im.core.model.User;
 import io.im.core.utils.ChatNull;
 
 /**
@@ -22,11 +25,15 @@ import io.im.core.utils.ChatNull;
 @Keep
 public final class RevokeMessage extends MessageContent implements Serializable {
 
+    private String revokeUser;//谁撤回的，针对群聊或特殊权限人员可撤回
+    private int role = -1;
     private String content;
 
-    public static RevokeMessage obtain(Message oldMessage) {
+    public static RevokeMessage obtain(RoleType role, User revokeUser, Message oldMessage) {
         RevokeMessage body = new RevokeMessage();
         body.setContent(oldMessage.toJson());
+        body.setRevokeUser(revokeUser.toJson());
+        body.setRole(role.getValue());
         return body;
     }
 
@@ -34,6 +41,8 @@ public final class RevokeMessage extends MessageContent implements Serializable 
     public MessageContent parseContent(JSONObject obj) {
         if (obj != null) {
             setContent(obj.optString("content"));
+            setRevokeUser(obj.optString("revokeUser"));
+            setRole(obj.optInt("role", -1));
         }
         return this;
     }
@@ -55,4 +64,37 @@ public final class RevokeMessage extends MessageContent implements Serializable 
     public Spannable getSummarySpannable(Context context) {
         return null;
     }
+
+    public String getRevokeUser() {
+        return revokeUser;
+    }
+
+    public void setRevokeUser(String revokeUser) {
+        this.revokeUser = revokeUser;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    @Nullable
+    public User getUser() {
+        String revokeUserStr = getRevokeUser();
+        if (!TextUtils.isEmpty(revokeUserStr)) {
+            User user = User.fromJson(revokeUserStr);
+            if (user.isValid()) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public RoleType getRoleType() {
+        return RoleType.setValue(getRole());
+    }
+
 }

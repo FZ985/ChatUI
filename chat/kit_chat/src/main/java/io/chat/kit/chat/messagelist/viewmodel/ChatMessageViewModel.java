@@ -43,6 +43,7 @@ import io.im.core.model.ConversationType;
 import io.im.core.model.Message;
 import io.im.core.model.MessageContent;
 import io.im.core.model.ReMessage;
+import io.im.core.model.RoleType;
 import io.im.core.model.State;
 import io.im.core.utils.ChatExecutorHelper;
 import io.im.core.utils.JLog;
@@ -71,6 +72,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     private final MediatorLiveData<Boolean> mIsEditStatus = new MediatorLiveData<>(false);
     private final MediatorLiveData<PageEvent> mPageEventLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<RoleType> mRoleTypeLiveData = new MediatorLiveData<>(RoleType.TOLE_NORMAL);
     private final MediatorLiveData<List<UiMessage>> mUiMessageLiveData = new MediatorLiveData<>();
 
     private final List<UiMessage> mUiMessages = new ArrayList<>();
@@ -540,7 +542,7 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
 
     //撤回消息
     public void revokeMessage(Message message) {
-        MessageOperate.sendRevokeMessage(mCall.getConversationType(), mCall.getUser(), message);
+        MessageOperate.sendRevokeMessage(mCall.getConversationType(), mRoleTypeLiveData.getValue(), mCall.getUser(), message);
     }
 
     private void handlerRevokeList(List<ReMessage> reMessages) {

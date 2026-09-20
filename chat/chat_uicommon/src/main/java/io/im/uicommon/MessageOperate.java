@@ -19,6 +19,7 @@ import io.im.core.message.im.RevokeMessage;
 import io.im.core.model.ConversationType;
 import io.im.core.model.ExtMessage;
 import io.im.core.model.Message;
+import io.im.core.model.RoleType;
 import io.im.core.model.State;
 import io.im.core.model.User;
 import io.im.core.utils.ServeTime;
@@ -83,9 +84,9 @@ public class MessageOperate {
     }
 
     //发送->撤销消息
-    public static void sendRevokeMessage(ConversationType conversationType,
+    public static void sendRevokeMessage(ConversationType conversationType, RoleType roleType,
                                          User user, @NonNull Message oldMessage) {
-        RevokeMessage revokeMessage = RevokeMessage.obtain(oldMessage);
+        RevokeMessage revokeMessage = RevokeMessage.obtain(roleType,IMCenter.getLoginUser(), oldMessage);
         Message message = Message.obtain(user, conversationType, MessageType.CHAT_REVOKE, revokeMessage);
         //将原位置的消息id给到最新的message对象
         message.setMessageId(oldMessage.getMessageId());

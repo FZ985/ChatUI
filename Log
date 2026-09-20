@@ -1,12 +1,18 @@
+撤回消息中新增撤回用户revokeUser字段；
+谁撤回的，提供给针对群聊或特殊权限人员可撤回消息功能；
+撤回消息中新增权限人roleType字段；
+撤回人员的权限，普通用户、创建者、管理者；
+
+
 删除Message中的referMessage引用消息字段和相关逻辑；
 增加extMessage扩展消息字段，将引用消息功能扩展到该字段中；
-extMessage将为后续的类似企业微信中的贴表情功能、分支回复功能扩展埋点；
+extMessage将为后续的类似企业微信中的贴表情功能、分支回复功能扩展开发埋点；
 与extra字段不同，extMessage结构创建根据规范定义；
-extra结构由用户完全自定义，扩展性更广；
-
+extra结构由开发者用户完全自定义，扩展性更广；
 
 
 新增清空消息API和清空会话API；
+
 
 
 添加markdown扩展库；
@@ -18,6 +24,7 @@ ProviderManager管理类添加onAttachedToRecyclerView、onViewRecycled、
 onDetachedFromRecyclerView、onViewDetachedFromWindow、onPageDestroy函数用于Item分发；
 修改IChatFragment中touch外部区域导致input组件状态错乱问题；
 优化面板弹出时的返回键逻辑；
+
 
 调整AI消息体的长按菜单弹窗的位置偏移位置；
 优化面板弹出时的返回键逻辑；
