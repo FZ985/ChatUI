@@ -35,10 +35,6 @@ public class ExtMessage implements Serializable {
         this.extData = extData == null ? "" : extData;
     }
 
-    public static String buildReferMessageJson(String extData) {
-        return ChatLibUtil.toJson(new ExtMessage(EXT_REFER, extData));
-    }
-
     public static ExtMessage buildReferMessage(@Nullable Message message) {
         if (message != null) {
             return new ExtMessage(EXT_REFER, message.toJson());
