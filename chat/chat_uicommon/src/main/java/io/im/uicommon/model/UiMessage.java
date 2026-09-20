@@ -19,6 +19,7 @@ public class UiMessage extends io.im.uicommon.model.UiBaseBean {
     private Message message;
 
     private boolean isEdit = false;//是否为编辑
+
     private boolean isSelected = false;//是否选中
 
     private boolean isPlaying = false;//是否语音播放中
