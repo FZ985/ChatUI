@@ -56,6 +56,7 @@ import io.im.uicommon.event.RefreshEvent;
 import io.im.uicommon.event.ScrollToEndEvent;
 import io.im.uicommon.helper.ChatMsgCache;
 import io.im.uicommon.listener.MessageEventListener;
+import io.im.uicommon.listener.UploadDownloadProcessor;
 import io.im.uicommon.model.UiMessage;
 import io.im.uicommon.resend.ResendManager;
 import io.im.uicommon.ui.web.IWebActivity;
@@ -728,26 +729,31 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             File savePath = SavePathUtils.getSavePath(getApplication().getCacheDir());
             String path = savePath.getAbsolutePath();
             String fileName = file.getName();
-//            DownLoadInfo info = new DownLoadInfo(hqVoiceMessage.getUrl(), path, fileName);
-//            DownloadModel.get()
-//                    .download(info, (progress, percent, length) -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
-//                        if (!isDestroy) {
-//                            uiMessage.setState(State.PROGRESS);
-//                            uiMessage.setProgress(percent.intValue());
-//                            refreshSingleMessage(uiMessage);
-//                        }
-//                    }), completeFile -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
-//                        if (!isDestroy) {
-//                            uiMessage.setState(State.NORMAL);
-//                            refreshSingleMessage(uiMessage);
-//                            playVoiceMessage(uiMessage);
-//                        }
-//                    }), () -> ChatExecutorHelper.getInstance().mainThread().execute(() -> {
-//                        if (!isDestroy) {
-//                            uiMessage.setState(State.ERROR);
-//                            refreshSingleMessage(uiMessage);
-//                        }
-//                    }));
+
+            UploadDownloadProcessor downloadProcessor = IMCenter.getInstance().getOptions().uploadDownloadProcessor;
+
+            if (downloadProcessor != null) {
+                downloadProcessor.download(hqVoiceMessage.getUrl(), path, fileName,
+                        completeFile -> {
+                            if (!isDestroy) {
+                                uiMessage.setState(State.NORMAL);
+                                refreshSingleMessage(uiMessage);
+                                playVoiceMessage(uiMessage);
+                            }
+                        },
+                        error -> {
+                            if (!isDestroy) {
+                                uiMessage.setState(State.ERROR);
+                                refreshSingleMessage(uiMessage);
+                            }
+                        },
+                        (currentLength, percent, length) -> {
+                            uiMessage.setState(State.PROGRESS);
+                            uiMessage.setProgress(percent.intValue());
+                            refreshSingleMessage(uiMessage);
+                        }
+                );
+            }
         }
     }
 
