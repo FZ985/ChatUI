@@ -21,7 +21,7 @@ import io.im.core.utils.ChatLibUtil;
 public abstract class MessageContent implements Serializable {
 
     public int extType;
-    public String ext;
+    public String extData;
 
     public MessageContent() {
     }
@@ -34,12 +34,12 @@ public abstract class MessageContent implements Serializable {
         this.extType = extType;
     }
 
-    public String getExt() {
-        return ext;
+    public String getExtData() {
+        return extData;
     }
 
-    public void setExt(String ext) {
-        this.ext = ext;
+    public void setExtData(String extData) {
+        this.extData = extData;
     }
 
     MessageContent parseJsonToContent(JSONObject obj) {
@@ -47,8 +47,8 @@ public abstract class MessageContent implements Serializable {
             if (obj.has("extType")) {
                 setExtType(obj.optInt("extType"));
             }
-            if (obj.has("ext")) {
-                setExt(obj.optString("ext"));
+            if (obj.has("extData")) {
+                setExtData(obj.optString("extData"));
             }
         }
         return parseContent(obj);
