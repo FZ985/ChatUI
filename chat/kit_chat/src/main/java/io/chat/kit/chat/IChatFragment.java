@@ -408,22 +408,20 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         } else {
             ChatMsgCache.clear();
             binding.multiSelectLl.setVisibility(View.GONE);
-            checkCanChat();
+
+            if (messageViewModel.canChatNoToast()) {
+                binding.inputPanel.setVisibility(View.VISIBLE);
+                binding.noChatAllowed.setVisibility(View.GONE);
+            } else {
+                binding.inputPanel.setVisibility(View.GONE);
+                binding.noChatAllowed.setVisibility(View.VISIBLE);
+            }
+
             if (userInfo != null) {
                 binding.conversationToolbar.setTitleName(userInfo.getName());
             }
             binding.conversationToolbar.setLeftOnclick(v -> onFinish());
             binding.conversationToolbar.setLeftIcon(io.im.core.R.drawable.chat_skin_arrow_left_black);
-        }
-    }
-
-    private void checkCanChat() {
-        if (messageViewModel.canChatNoToast()) {
-            binding.inputPanel.setVisibility(View.VISIBLE);
-            binding.noChatAllowed.setVisibility(View.GONE);
-        } else {
-            binding.inputPanel.setVisibility(View.GONE);
-            binding.noChatAllowed.setVisibility(View.VISIBLE);
         }
     }
 
