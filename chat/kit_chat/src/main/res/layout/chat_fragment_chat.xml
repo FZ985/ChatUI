@@ -40,8 +40,8 @@
                 android:layout_weight="1">
 
                 <io.chat.kit.widget.RecyclerViewRelativeLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/recycler_rl"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <io.chat.kit.widget.AutoHidePanelRecyclerView
@@ -96,6 +96,17 @@
                     android:id="@+id/input_panel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/no_chat_allowed"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/chat_dp54"
+                    android:background="@color/chat_conversation_no_chat"
+                    android:gravity="center"
+                    android:text="@string/kit_no_chat"
+                    android:textColor="@color/chat_color_666666"
+                    android:textSize="@dimen/chat_sp14"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/multi_select_ll"

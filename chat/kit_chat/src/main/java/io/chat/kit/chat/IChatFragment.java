@@ -126,7 +126,9 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onRefer(messageInfo)) {
                 return true;
             }
-            helper.setReferMessage(messageInfo, -1);
+            if (messageViewModel.canChat()) {
+                helper.setReferMessage(messageInfo, -1);
+            }
             return true;
         }
 
@@ -137,6 +139,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onMultiSelected(messageInfo)) {
                 return true;
             }
+            if (!messageViewModel.canChat()) return true;
             UiMessage uiMessage = messageViewModel.findUIMessageById(messageInfo.getMessageId());
             if (uiMessage != null) {
                 messageViewModel.setEdit(true);
@@ -152,8 +155,10 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onForward(messageInfo)) {
                 return true;
             }
-            ChatMsgCache.addMessage(messageInfo);
-            ChatRoute.goForwardSelect(mActivity, userInfo, false);
+            if (messageViewModel.canChat()) {
+                ChatMsgCache.addMessage(messageInfo);
+                ChatRoute.goForwardSelect(mActivity, userInfo, false);
+            }
             return true;
         }
 
@@ -163,6 +168,7 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
             if (listener != null && listener.onRevoke(messageInfo)) {
                 return true;
             }
+            if (!messageViewModel.canChat()) return true;
             long revokeTime = InitChatProvider.getOptions().revokeTime;
             if (MessageCheck.checkRevokeMessage(messageInfo, revokeTime)) {
                 messageViewModel.revokeMessage(messageInfo);
@@ -402,12 +408,22 @@ public class IChatFragment extends ChatBaseFragment implements ChatExtCall, Swip
         } else {
             ChatMsgCache.clear();
             binding.multiSelectLl.setVisibility(View.GONE);
-            binding.inputPanel.setVisibility(View.VISIBLE);
+            checkCanChat();
             if (userInfo != null) {
                 binding.conversationToolbar.setTitleName(userInfo.getName());
             }
             binding.conversationToolbar.setLeftOnclick(v -> onFinish());
             binding.conversationToolbar.setLeftIcon(io.im.core.R.drawable.chat_skin_arrow_left_black);
+        }
+    }
+
+    private void checkCanChat() {
+        if (messageViewModel.canChatNoToast()) {
+            binding.inputPanel.setVisibility(View.VISIBLE);
+            binding.noChatAllowed.setVisibility(View.GONE);
+        } else {
+            binding.inputPanel.setVisibility(View.GONE);
+            binding.noChatAllowed.setVisibility(View.VISIBLE);
         }
     }
 

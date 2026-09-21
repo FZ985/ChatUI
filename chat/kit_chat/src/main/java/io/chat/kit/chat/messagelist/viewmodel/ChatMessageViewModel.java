@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.chat.kit.R;
 import io.chat.kit.chat.extension.ChatExtCall;
 import io.chat.kit.chat.voice.AudioPlayManager;
 import io.chat.kit.listener.IAudioPlayListener;
@@ -46,6 +47,7 @@ import io.im.core.model.ReMessage;
 import io.im.core.model.RoleType;
 import io.im.core.model.State;
 import io.im.core.utils.ChatExecutorHelper;
+import io.im.core.utils.ChatToast;
 import io.im.core.utils.JLog;
 import io.im.uicommon.IMCenter;
 import io.im.uicommon.MessageOperate;
@@ -485,6 +487,9 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
                 isProcess = viewModelProcessor.onViewClick(this, clickType, data);
             }
             if (!isProcess) {
+                if (!canChat()) {
+                    return;
+                }
                 if (clickType == MessageClickType.AUDIO_CLICK) {
                     //语音点击
                     onAudioClick(data);
@@ -691,6 +696,19 @@ public final class ChatMessageViewModel extends AndroidViewModel implements Chat
             return true;
         }
         return false;
+    }
+
+
+    //验证是否可聊天，可发送消息
+    public boolean canChat() {
+        boolean can = canChatNoToast();
+        ChatToast.toast(mCall.getConversationActivity(), R.string.kit_no_chat);
+        return can;
+    }
+
+    //验证是否可聊天，可发送消息
+    public boolean canChatNoToast() {
+        return true;
     }
 
     public void onAudioClick(UiMessage uiMessage) {
