@@ -1,3 +1,4 @@
+
 添加禁言相关UI及逻辑展示；
 对引用、撤回、转发、多选等相关操作添加禁言逻辑处理；
 
@@ -16,8 +17,7 @@ extra结构由开发者用户完全自定义，扩展性更广；
 新增清空消息API和清空会话API；
 
 添加markdown扩展库；
-创建AIMessage消息体；
-创建AIMessageProvider消息布局提供者；
+创建AIMessage消息体、创建AIMessageProvider消息布局提供者；
 模拟AI消息回复，打字机效果输出展示；
 已存在无法自动滑动底部效果问题；
 ProviderManager管理类添加onAttachedToRecyclerView、onViewRecycled、
@@ -36,8 +36,7 @@ MessageUser命名为UserConvert(User对象的转换类)；
 UserInfo命名为User；
 Session新增ownerId字段创建时设置当前登录账号id，livedata获取自己的session
 列表，防止切换用户获取所有session；
-新增页面路由管理；
-重构部分类的管理路径，每个模块不关联；
+新增页面路由管理，重构部分类的管理路径，每个模块不关联；
 
 优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
 messageDao新增更新更新用户昵称、头像sql语句；
