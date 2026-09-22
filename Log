@@ -1,13 +1,11 @@
 添加禁言相关UI及逻辑展示；
 对引用、撤回、转发、多选等相关操作添加禁言逻辑处理；
 
-
 撤回消息中新增撤回用户revokeUser字段；
 谁撤回的，提供给针对群聊或特殊权限人员可撤回消息功能；
 撤回消息中新增权限人roleType字段；
 撤回人员的权限，普通用户、创建者、管理者；
 完善语音消息的下载、播放及UI刷新逻辑；
-
 
 删除Message中的referMessage引用消息字段和相关逻辑；
 增加extMessage扩展消息字段，将引用消息功能扩展到该字段中；
@@ -15,10 +13,7 @@ extMessage将为后续的类似企业微信中的贴表情功能、分支回复�
 与extra字段不同，extMessage结构创建根据规范定义；
 extra结构由开发者用户完全自定义，扩展性更广；
 
-
 新增清空消息API和清空会话API；
-
-
 
 添加markdown扩展库；
 创建AIMessage消息体；
@@ -30,20 +25,14 @@ onDetachedFromRecyclerView、onViewDetachedFromWindow、onPageDestroy函数用�
 修改IChatFragment中touch外部区域导致input组件状态错乱问题；
 优化面板弹出时的返回键逻辑；
 
-
 调整AI消息体的长按菜单弹窗的位置偏移位置；
 优化面板弹出时的返回键逻辑；
-
 
 升级项目模版为Android16；
 重构KtBaseDelegateActivity类中的window监听逻辑；
 升级ImmersionBar兼容Android15，针对导航、键盘的适配；
 将debug面板代码从core中抽取；
 去除Base页面中的无用扩展函数；
-
-简游：
-去除会员、伪装、安全锁、隐私相册、
-一键返回、翻转返回、勿扰等相关功能代码，仅保留聊天功能；
 
 添加Parcelable的深度复制函数；
 
@@ -54,7 +43,6 @@ Session新增ownerId字段创建时设置当前登录账号id，livedata获取�
 新增路由管理；
 重构部分类的管理路径，每个模块不关联；
 
-
 优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
 messageDao新增更新更新用户昵称、头像语句；
 messageDao新增更新更新用户备注语句；
@@ -63,17 +51,11 @@ messageDao新增更新更新用户备注语句；
 添加消息重发功能；
 将reply命名改为refer命名；
 
-
-
-
 去除会话viewmodel中的模拟数据，以真实逻辑去渲染；
 新增会话列表仿iOS侧滑置顶、取消置顶、删除功能；
 新增会话列表添加head功能；
 编写置顶、删除逻辑；
 创建ConversationRepo、ChatRepo，本地与网络操作，对外公开，统一管理；
-
-
-
 
 会话列表添加未读数逻辑，添加列表排序规则;
 Message中将messageTime改为createTime，并添加updateTime;
@@ -83,7 +65,6 @@ Session中添加createTime和updateTime;
 创建UiSession包裹Session用于UI操作;
 扩展登录user函数直接获取登录account，不用在getUser;
 添加会话列表本地保存逻辑；
-
 
 添加置顶与非置顶的样式区分；
 处理消息更新后的排序列表未划动顶部问题；
