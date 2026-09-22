@@ -29,33 +29,29 @@ onDetachedFromRecyclerView、onViewDetachedFromWindow、onPageDestroy函数用�
 优化面板弹出时的返回键逻辑；
 
 升级项目模版为Android16；
-重构KtBaseDelegateActivity类中的window监听逻辑；
-升级ImmersionBar兼容Android15，针对导航、键盘的适配；
-将debug面板代码从core中抽取；
-去除Base页面中的无用扩展函数；
 
 添加Parcelable的深度复制函数；
 
-MessageUser命名为UserConvert；
+MessageUser命名为UserConvert(User对象的转换类)；
 UserInfo命名为User；
 Session新增ownerId字段创建时设置当前登录账号id，livedata获取自己的session
 列表，防止切换用户获取所有session；
-新增路由管理；
+新增页面路由管理；
 重构部分类的管理路径，每个模块不关联；
 
 优化P2PProcessor和TeamProcessor中的处理操作，将操作提取到ChatRepo中对外公开；
-messageDao新增更新更新用户昵称、头像语句；
-messageDao新增更新更新用户备注语句；
+messageDao新增更新更新用户昵称、头像sql语句；
+messageDao新增更新更新用户备注sql语句；
 会话列表添加网络监听；
 优化删除消息逻辑；
 添加消息重发功能；
-将reply命名改为refer命名；
+将reply(回复)命名改为refer(引用)命名，(reply后续将改为仿企微“分支回复”功能)；
 
 去除会话viewmodel中的模拟数据，以真实聊天数据去渲染；
 新增会话列表仿iOS侧滑置顶、取消置顶、删除功能；
 新增会话列表添加head功能；
 编写置顶、删除逻辑；
-创建ConversationRepo、ChatRepo，本地与网络操作，对外公开，统一管理；
+创建ConversationRepo、ChatRepo，本地与网络操作，对外公开API，统一管理；
 
 会话列表添加未读数逻辑，添加列表排序规则;
 Message中将messageTime改为createTime，并添加updateTime;
