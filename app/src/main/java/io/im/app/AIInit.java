@@ -5,10 +5,16 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.fluid.afm.AFMInitializer;
 
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import io.im.app.ai.AiImageHandler;
 import io.im.core.core.ChatSDK;
@@ -30,6 +36,8 @@ public class AIInit {
 
     private static final Handler testHandler = new Handler(Looper.getMainLooper());
 
+    private static String mdStr;
+
     public static void init(Application application) {
         AFMInitializer.init(application, null, new AiImageHandler(), null);
         CoreSingle.getInstance().setDebugCall(new ChatFun.Fun2<Message, CoreResultInterface>() {
@@ -38,7 +46,32 @@ public class AIInit {
                 onMoNi(application, message, callback);
             }
         });
+
+        if (TextUtils.isEmpty(mdStr)){
+//            mdStr = application.getResources().getString(R.string.ai_sample);
+            mdStr = readAssetsText(application,"README.md");
+        }
     }
+
+
+    public static String readAssetsText(Context context, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            InputStream is = context.getAssets().open(fileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            br.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return sb.toString();
+    }
+
 
 
     private static void onMoNi(Context context, Message message, CoreResultInterface callback) {
@@ -71,7 +104,7 @@ public class AIInit {
 //                    if (flipMessage.getMessageType() == MessageType.CHAT_TEXT) {
 //                        testHandler.postDelayed(() -> {
 //                            try {
-//                                AIMessage ai = AIMessage.obtain(context.getResources().getString(R.string.ai_sample));
+//                                AIMessage ai = AIMessage.obtain(mdStr);
 //                                flipMessage.setMessageType(AIMessage.TYPE_AI_MESSAGE);
 //                                flipMessage.updateMessageBody(ai);
 //
